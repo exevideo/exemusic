@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Roblox User Checker</title>
+  <style>
+    body {
+      font-family: Arial;
+      background: #0f172a;
+      color: white;
+      text-align: center;
+      padding: 50px;
+    }
+
+    input {
+      padding: 10px;
+      width: 200px;
+      border-radius: 8px;
+      border: none;
+      outline: none;
+    }
+
+    button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      background: #22c55e;
+      color: white;
+      cursor: pointer;
+      margin-left: 10px;
+    }
+
+    .card {
+      margin-top: 30px;
+      background: #1e293b;
+      padding: 20px;
+      border-radius: 12px;
+      display: inline-block;
+    }
+
+    img {
+      border-radius: 50%;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Roblox User Checker</h1>
+
+  <input type="number" id="userId" placeholder="Masukkan User ID">
+  <button onclick="checkUser()">Check</button>
+
+  <div id="result"></div>
+
+  <script>
+    async function checkUser() {
+      const id = document.getElementById("userId").value;
+      const result = document.getElementById("result");
+
+      if (!id) {
+        result.innerHTML = "<p>Masukkan ID dulu!</p>";
+        return;
+      }
+
+      result.innerHTML = "<p>Loading...</p>";
+
+      try {
+        // API user
+        const userRes = await fetch(`https://corsproxy.io/?https://users.roblox.com/v1/users/${id}`);
+        const userData = await userRes.json();
+
+        // API avatar
+        const avatarRes = await fetch(`https://corsproxy.io/?https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=${id}&size=150x150&format=Png&isCircular=false`);
+        const avatarData = await avatarRes.json();
+
+        if (!userData.name) {
+          result.innerHTML = "<p>User tidak ditemukan!</p>";
+          return;
+        }
+
+        const avatarUrl = avatarData.data[0].imageUrl;
+
+        result.innerHTML = `
+          <div class="card">
+            <h2>${userData.name}</h2>
+            <p>Display Name: ${userData.displayName}</p>
+            <img src="${avatarUrl}" width="120">
+            <p>User ID: ${userData.id}</p>
+          </div>
+        `;
+      } catch (err) {
+        result.innerHTML = "<p>Error ambil data (proxy mungkin down)</p>";
+        console.error(err);
+      }
+    }
+  </script>
+
+</body>
+</html>

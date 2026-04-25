@@ -1,0 +1,701 @@
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+.root{background:#080b14;border-radius:20px;overflow:hidden;max-width:420px;margin:0 auto;font-family:'DM Sans',sans-serif}
+.phone{background:#080b14;min-height:700px;position:relative;overflow:hidden;display:flex;flex-direction:column}
+.aura{position:absolute;border-radius:50%;pointer-events:none;z-index:0}
+.a1{width:320px;height:320px;background:radial-gradient(circle,#00ffb340,transparent 70%);top:-80px;right:-80px}
+.a2{width:280px;height:280px;background:radial-gradient(circle,#7b5cff30,transparent 70%);bottom:100px;left:-60px}
+.a3{width:200px;height:200px;background:radial-gradient(circle,#ff3d6e25,transparent 70%);top:42%;left:30%}
+.inner{position:relative;z-index:1;flex:1;display:flex;flex-direction:column}
+
+/* TOP */
+.tbar{display:flex;align-items:center;justify-content:space-between;padding:18px 20px 10px}
+.logo{font-family:'Syne',sans-serif;font-size:19px;font-weight:800;background:linear-gradient(135deg,#00ffb3,#7b5cff);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.logo-v{font-size:10px;font-weight:400;color:rgba(255,255,255,0.3);display:block;font-family:'DM Sans',sans-serif;margin-top:-2px}
+.top-acts{display:flex;gap:8px}
+.ib{width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.08);color:rgba(255,255,255,0.7);display:flex;align-items:center;justify-content:center;font-size:14px;cursor:pointer}
+
+/* SCREENS TAB */
+.tabs{display:flex;padding:0 20px;gap:0;border-bottom:1px solid rgba(255,255,255,0.05);margin-bottom:0}
+.tab{flex:1;text-align:center;padding:9px 0;font-size:11px;font-family:'Syne',sans-serif;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:rgba(255,255,255,0.3);cursor:pointer;border-bottom:2px solid transparent;transition:all .2s}
+.tab.on{color:#00ffb3;border-bottom-color:#00ffb3}
+
+.scr{display:none;flex-direction:column;padding:14px 16px;gap:16px;overflow-y:auto;flex:1}
+.scr.on{display:flex}
+
+/* SEARCH */
+.srch{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.07);border-radius:50px;padding:10px 16px}
+.srch-ico{color:rgba(255,255,255,0.35);font-size:14px}
+.srch input{background:none;border:none;outline:none;color:#fff;font-size:13px;font-family:'DM Sans',sans-serif;flex:1}
+.srch input::placeholder{color:rgba(255,255,255,0.3)}
+
+/* STATS */
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.stat{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:12px;text-align:center}
+.sv{font-family:'Syne',sans-serif;font-size:20px;font-weight:800;background:linear-gradient(135deg,#00ffb3,#7b5cff);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.sl{font-size:9px;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:.08em;margin-top:2px}
+
+/* FEATURED */
+.feat{border-radius:20px;overflow:hidden;position:relative;height:148px;cursor:pointer;display:flex;align-items:flex-end;padding:16px}
+.feat-bg{position:absolute;inset:0;background:linear-gradient(135deg,#7b5cff,#00ffb3,#ff3d6e);animation:hue 10s linear infinite}
+@keyframes hue{0%{filter:hue-rotate(0deg)}100%{filter:hue-rotate(360deg)}}
+.feat-ov{position:absolute;inset:0;background:linear-gradient(to top,rgba(8,11,20,.95) 0%,rgba(8,11,20,.2) 60%,transparent)}
+.feat-info{position:relative;z-index:1}
+.feat-badge{font-size:9px;font-weight:700;color:#00ffb3;letter-spacing:.12em;text-transform:uppercase;margin-bottom:5px;font-family:'Syne',sans-serif;display:flex;align-items:center;gap:5px}
+.live-dot{width:6px;height:6px;border-radius:50%;background:#ff3d6e;animation:lp 1s ease-in-out infinite;display:inline-block}
+@keyframes lp{0%,100%{opacity:1}50%{opacity:.3}}
+.feat-title{font-family:'Syne',sans-serif;font-size:20px;font-weight:800;color:#fff;line-height:1.1;margin-bottom:3px}
+.feat-sub{font-size:11px;color:rgba(255,255,255,.5)}
+
+/* SECTION HEAD */
+.sh{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.stitle{font-family:'Syne',sans-serif;font-size:14px;font-weight:700;color:#fff}
+.smore{font-size:11px;color:#00ffb3;cursor:pointer}
+.live-badge{display:inline-flex;align-items:center;gap:4px;background:rgba(255,61,110,.12);border:1px solid rgba(255,61,110,.25);border-radius:50px;padding:2px 8px;font-size:9px;font-weight:700;color:#ff3d6e;font-family:'Syne',sans-serif;letter-spacing:.05em}
+
+/* GRID THUMBS */
+.tgrid{display:flex;gap:10px;overflow-x:auto;scrollbar-width:none;padding:2px 0}
+.tgrid::-webkit-scrollbar{display:none}
+.thumb{flex-shrink:0;width:110px;cursor:pointer}
+.tart{width:110px;height:110px;border-radius:14px;margin-bottom:8px;display:flex;align-items:center;justify-content:center;font-size:26px;transition:transform .2s;position:relative;overflow:hidden}
+.thumb:hover .tart{transform:scale(1.05)}
+.tart::after{content:'▶';position:absolute;inset:0;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;font-size:18px;color:#fff;opacity:0;transition:opacity .2s}
+.thumb:hover .tart::after{opacity:1}
+.tname{font-size:12px;font-weight:600;font-family:'Syne',sans-serif;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:1px}
+.tartist{font-size:10px;color:rgba(255,255,255,.4)}
+.g1{background:linear-gradient(135deg,#00ffb3,#0088ff)}
+.g2{background:linear-gradient(135deg,#7b5cff,#ff3d6e)}
+.g3{background:linear-gradient(135deg,#ff9f00,#ff3d6e)}
+.g4{background:linear-gradient(135deg,#00c6ff,#7b5cff)}
+.g5{background:linear-gradient(135deg,#a8edea,#fed6e3)}
+.g6{background:linear-gradient(135deg,#43e97b,#38f9d7)}
+
+/* SONG ROWS */
+.slist{display:flex;flex-direction:column;gap:2px}
+.srow{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:11px;cursor:pointer;transition:background .15s}
+.srow:hover,.srow.on{background:rgba(255,255,255,.05)}
+.srow.on{border:1px solid rgba(0,255,179,.1)}
+.snum{width:18px;text-align:center;font-size:11px;color:rgba(255,255,255,.3);flex-shrink:0}
+.srow.on .snum{color:#00ffb3}
+.sart{width:40px;height:40px;border-radius:10px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:16px}
+.sinfo{flex:1;min-width:0}
+.stit{font-size:12px;font-weight:500;color:#fff;font-family:'Syne',sans-serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ssub{font-size:10px;color:rgba(255,255,255,.38);margin-top:1px}
+.slike{background:none;border:none;cursor:pointer;font-size:14px;color:rgba(255,255,255,.25);transition:all .15s;padding:4px}
+.slike.on{color:#ff3d6e}
+.slike:hover{color:#ff3d6e;transform:scale(1.2)}
+
+/* EQ BARS */
+.eq{display:flex;gap:2px;align-items:flex-end;height:14px}
+.eqb{width:2px;border-radius:1px;background:#00ffb3;animation:eq .7s ease-in-out infinite}
+.eqb:nth-child(2){animation-delay:.1s;height:60%}
+.eqb:nth-child(3){animation-delay:.2s}
+.eqb:nth-child(4){animation-delay:.05s;height:70%}
+@keyframes eq{0%,100%{transform:scaleY(.25)}50%{transform:scaleY(1)}}
+
+/* CHAT */
+.chat-box{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:16px;overflow:hidden}
+.cmsgs{height:180px;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:8px;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.08) transparent}
+.cmsg{display:flex;gap:7px;align-items:flex-start;animation:fu .25s ease}
+@keyframes fu{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+.cav{width:26px;height:26px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;font-family:'Syne',sans-serif}
+.cbub{background:rgba(255,255,255,.06);border-radius:0 10px 10px 10px;padding:7px 10px;max-width:calc(100% - 36px)}
+.cname{font-size:10px;font-weight:700;color:#00ffb3;margin-bottom:2px;font-family:'Syne',sans-serif}
+.ctext{font-size:11px;color:rgba(255,255,255,.8);line-height:1.4}
+.ctime{font-size:9px;color:rgba(255,255,255,.25);margin-top:2px}
+.cinp-row{display:flex;gap:8px;padding:8px 12px;border-top:1px solid rgba(255,255,255,.05);background:rgba(255,255,255,.02)}
+.cinp-row input{flex:1;background:none;border:none;outline:none;color:#fff;font-size:12px;font-family:'DM Sans',sans-serif}
+.cinp-row input::placeholder{color:rgba(255,255,255,.25)}
+.sbtn{background:#00ffb3;color:#080b14;border:none;border-radius:50px;padding:5px 12px;font-size:11px;font-weight:700;cursor:pointer;font-family:'Syne',sans-serif}
+
+/* ===== PLAYER SCREEN ===== */
+.pback{display:flex;align-items:center;justify-content:space-between;padding:10px 0 16px}
+.pbtn{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);border-radius:50px;padding:6px 14px;color:rgba(255,255,255,.6);font-size:12px;cursor:pointer;font-family:'DM Sans',sans-serif;display:flex;align-items:center;gap:4px}
+.pbtn-ico{font-size:14px}
+.nowplay{font-size:10px;font-family:'Syne',sans-serif;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.3)}
+
+.big-art-wrap{position:relative;margin-bottom:22px}
+.big-art{width:100%;aspect-ratio:1;border-radius:24px;position:relative;overflow:hidden;max-height:240px}
+.big-art-bg{position:absolute;inset:0;animation:hue 10s linear infinite}
+.art-inner{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:60px}
+.art-shine{position:absolute;inset:0;background:radial-gradient(circle at 30% 25%,rgba(255,255,255,.18),transparent 60%)}
+.art-glow-ring{position:absolute;inset:-12px;border-radius:28px;opacity:.4;z-index:-1;animation:hue 10s linear infinite;filter:blur(24px)}
+
+.pinfo-row{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px}
+.p-song{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;letter-spacing:-.5px;line-height:1.1;color:#fff;margin-bottom:4px}
+.p-artist{font-size:12px;color:rgba(255,255,255,.45)}
+.hbtn{font-size:22px;background:none;border:none;cursor:pointer;padding:4px;transition:all .2s}
+.hbtn.on{color:#ff3d6e}
+.hbtn:not(.on){color:rgba(255,255,255,.2)}
+
+.prog-area{margin-bottom:8px;cursor:pointer;padding:5px 0}
+.prog-tr{height:3px;background:rgba(255,255,255,.1);border-radius:2px;position:relative}
+.prog-fl{height:100%;border-radius:2px;background:linear-gradient(90deg,#00ffb3,#7b5cff);position:relative;transition:width .3s}
+.prog-fl::after{content:'';position:absolute;right:-5px;top:-4px;width:11px;height:11px;border-radius:50%;background:#fff}
+.trow{display:flex;justify-content:space-between;font-size:10px;color:rgba(255,255,255,.35);margin-bottom:20px}
+
+.ctrl-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px}
+.cside{display:flex;gap:2px}
+.cbtn{background:none;border:none;cursor:pointer;color:rgba(255,255,255,.4);font-size:18px;padding:7px;border-radius:50%;transition:all .2s}
+.cbtn:hover,.cbtn.on{color:#00ffb3;background:rgba(0,255,179,.08)}
+.playmain{width:60px;height:60px;border-radius:50%;background:linear-gradient(135deg,#00ffb3,#7b5cff);border:none;cursor:pointer;font-size:22px;color:#080b14;display:flex;align-items:center;justify-content:center;transition:transform .15s;position:relative}
+.playmain:hover{transform:scale(1.06)}
+.playmain:active{transform:scale(.94)}
+.playmain::before{content:'';position:absolute;inset:-4px;border-radius:50%;background:linear-gradient(135deg,#00ffb3,#7b5cff);opacity:.25;animation:pg 2s ease-in-out infinite;z-index:-1}
+@keyframes pg{0%,100%{transform:scale(1);opacity:.25}50%{transform:scale(1.25);opacity:0}}
+
+.vol-r{display:flex;align-items:center;gap:10px}
+.vico{font-size:12px;color:rgba(255,255,255,.35)}
+input[type=range]{-webkit-appearance:none;flex:1;height:3px;border-radius:2px;background:rgba(255,255,255,.1);outline:none}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:12px;height:12px;border-radius:50%;background:#00ffb3;cursor:pointer}
+
+.song-detail{background:rgba(255,255,255,.04);border-radius:12px;padding:12px 14px;border:1px solid rgba(255,255,255,.06);margin-top:14px}
+.sd-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:7px}
+.sd-label{font-size:9px;font-family:'Syne',sans-serif;font-weight:700;color:#00ffb3;letter-spacing:.1em;text-transform:uppercase}
+.pl-badge{background:rgba(0,255,179,.12);border:1px solid rgba(0,255,179,.2);border-radius:50px;padding:2px 10px;font-size:9px;font-weight:700;color:#00ffb3;font-family:'Syne',sans-serif}
+.sd-text{font-size:11px;color:rgba(255,255,255,.45);line-height:1.7}
+.sd-text span{color:rgba(255,255,255,.8)}
+
+/* PROFILE */
+.prof-hero{border-radius:18px;padding:18px;background:linear-gradient(135deg,rgba(123,92,255,.18),rgba(0,255,179,.08));border:1px solid rgba(255,255,255,.07);display:flex;gap:14px;align-items:center}
+.prof-av{width:66px;height:66px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:#080b14;border:2px solid #00ffb3}
+.prof-name{font-family:'Syne',sans-serif;font-size:18px;font-weight:800;color:#fff;margin-bottom:2px}
+.prof-uid{font-size:10px;color:rgba(255,255,255,.35);margin-bottom:8px;font-family:'Syne',sans-serif}
+.frow{display:flex;gap:14px}
+.fstat{text-align:center}
+.fn{font-family:'Syne',sans-serif;font-size:15px;font-weight:800;color:#00ffb3}
+.fl{font-size:9px;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:.05em}
+.tag-row{display:flex;flex-wrap:wrap;gap:6px}
+.tag{display:inline-block;padding:3px 10px;border-radius:50px;font-size:9px;font-weight:700;font-family:'Syne',sans-serif;letter-spacing:.05em}
+.tvip{background:linear-gradient(135deg,#f59e0b,#ef4444);color:#fff}
+.tcreator{background:rgba(123,92,255,.2);border:1px solid rgba(123,92,255,.35);color:#a78bfa}
+.tnew{background:rgba(0,255,179,.1);border:1px solid rgba(0,255,179,.2);color:#00ffb3}
+
+/* MINI PLAYER */
+.mini{background:rgba(14,17,32,.92);border:1px solid rgba(0,255,179,.12);border-radius:18px;margin:0 10px 8px;padding:10px 12px;display:flex;align-items:center;gap:10px;cursor:pointer;position:relative;overflow:hidden}
+.mini-art{width:38px;height:38px;border-radius:9px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:16px}
+.mini-info{flex:1;min-width:0}
+.mini-t{font-size:12px;font-weight:600;font-family:'Syne',sans-serif;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mini-s{font-size:10px;color:rgba(255,255,255,.38)}
+.mini-ctrl{display:flex;gap:4px;align-items:center}
+.mbtn{background:none;border:none;cursor:pointer;color:rgba(255,255,255,.4);font-size:16px;padding:3px;transition:color .15s}
+.mbtn:hover{color:#fff}
+.mplay{width:30px;height:30px;border-radius:50%;background:#00ffb3;border:none;display:flex;align-items:center;justify-content:center;font-size:12px;color:#080b14;font-weight:700;cursor:pointer;flex-shrink:0}
+.mini-prog-bar{position:absolute;bottom:0;left:0;right:0;height:2px;background:rgba(255,255,255,.06);border-radius:0 0 18px 18px}
+.mini-prog-fill{height:100%;background:linear-gradient(90deg,#00ffb3,#7b5cff);width:42%;border-radius:0 0 18px 18px}
+
+/* BOTTOM NAV */
+.bnav{display:flex;padding:8px 0 14px;background:rgba(8,11,20,.97);border-top:1px solid rgba(255,255,255,.05)}
+.nitem{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;color:rgba(255,255,255,.28);transition:color .2s;font-size:8px;font-family:'Syne',sans-serif;font-weight:600;letter-spacing:.05em;text-transform:uppercase}
+.nitem.on{color:#00ffb3}
+.nico{font-size:18px;line-height:1}
+
+/* UPLOAD SCREEN */
+.upa{border:2px dashed rgba(0,255,179,.2);border-radius:18px;padding:28px 16px;text-align:center;cursor:pointer}
+.upa:hover{background:rgba(0,255,179,.03);border-color:rgba(0,255,179,.4)}
+.upa-ico{font-size:30px;margin-bottom:8px;display:block}
+.upa-t{font-family:'Syne',sans-serif;font-size:14px;font-weight:700;color:#fff;margin-bottom:3px}
+.upa-s{font-size:11px;color:rgba(255,255,255,.35)}
+.inp{width:100%;padding:11px 14px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:11px;color:#fff;font-size:13px;font-family:'DM Sans',sans-serif;outline:none}
+.inp:focus{border-color:rgba(0,255,179,.35)}
+.inp::placeholder{color:rgba(255,255,255,.3)}
+.upbtn{width:100%;padding:14px;border-radius:50px;background:linear-gradient(135deg,#00ffb3,#7b5cff);border:none;color:#080b14;font-family:'Syne',sans-serif;font-size:14px;font-weight:800;cursor:pointer;transition:transform .15s}
+.upbtn:hover{transform:translateY(-1px)}
+.warn{background:rgba(255,61,110,.08);border:1px solid rgba(255,61,110,.18);border-radius:11px;padding:12px;font-size:11px;color:rgba(255,61,110,.8);line-height:1.7}
+</style>
+
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
+<style>
+.modal{position:fixed;inset:0;background:rgba(0,0,0,0.75);display:none;align-items:center;justify-content:center;padding:20px;z-index:9999}
+.modal.show{display:flex}
+.modal-card{width:100%;max-width:420px;border-radius:24px;background:rgba(12,14,25,0.98);border:1px solid rgba(255,255,255,0.08);padding:28px;backdrop-filter:blur(20px)}
+.modal-card h3{margin-bottom:18px;font-family:'Syne',sans-serif;color:#fff;font-size:20px}
+.modal-input{width:100%;padding:12px 14px;border-radius:14px;border:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.05);color:#fff;font-size:13px;margin-bottom:12px}
+.btn-act{width:100%;padding:14px;border-radius:50px;background:linear-gradient(135deg,#00ffb3,#7b5cff);border:none;color:#080b14;font-family:'Syne',sans-serif;font-size:14px;font-weight:800;cursor:pointer;transition:.15s;display:flex;align-items:center;justify-content:center;gap:10px}
+.btn-act:hover{transform:translateY(-1px)}
+.toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:rgba(0,0,0,0.9);color:#fff;padding:12px 18px;border-radius:999px;font-size:13px;box-shadow:0 20px 50px rgba(0,0,0,0.25);opacity:0;pointer-events:none;transition:.3s;z-index:10000}
+.toast.show{opacity:1;pointer-events:auto}
+</style>
+
+<div class="root">
+<div class="phone">
+<div class="aura a1"></div><div class="aura a2"></div><div class="aura a3"></div>
+<div class="inner">
+
+<div class="tbar">
+  <div>
+    <div class="logo">ExeMusic<span class="logo-v">Pro v4.0</span></div>
+  </div>
+  <div class="top-acts">
+    <div class="ib">🔔</div>
+    <div class="ib" id="topLoginBtn" onclick="openAuth()" title="Login">👤</div>
+  </div>
+</div>
+
+<div class="tabs">
+  <div class="tab on" id="t-home" onclick="sw('home')">Home</div>
+  <div class="tab" id="t-player" onclick="sw('player')">Player</div>
+  <div class="tab" id="t-upload" onclick="sw('upload')">Upload</div>
+  <div class="tab" id="t-profile" onclick="sw('profile')">Profil</div>
+</div>
+
+<!-- HOME -->
+<div class="scr on" id="s-home">
+  <div class="srch"><span class="srch-ico">⌕</span><input id="search-input" placeholder="Cari lagu, artis..."></div>
+
+  <div class="stats">
+    <div class="stat"><div class="sv" id="st1">1.2k</div><div class="sl">Lagu</div></div>
+    <div class="stat"><div class="sv" id="st2">847</div><div class="sl">User</div></div>
+    <div class="stat"><div class="sv" id="st3">93k</div><div class="sl">Plays</div></div>
+  </div>
+
+  <div class="feat" onclick="sw('player')">
+    <div class="feat-bg"></div><div class="feat-ov"></div>
+    <div class="feat-info">
+      <div class="feat-badge"><span class="live-dot"></span> Trending Sekarang</div>
+      <div class="feat-title">Neon Afterglow</div>
+      <div class="feat-sub">Cyra · 12.4k plays</div>
+    </div>
+  </div>
+
+  <div>
+    <div class="sh"><span class="stitle">✨ Terbaru</span><span class="live-badge"><span class="live-dot"></span> LIVE</span></div>
+    <div class="tgrid">
+      <div class="thumb" onclick="play(0)"><div class="tart g1">🎵</div><div class="tname">Neon Afterglow</div><div class="tartist">Cyra</div></div>
+      <div class="thumb" onclick="play(1)"><div class="tart g2">🎶</div><div class="tname">Velvet Void</div><div class="tartist">Nox</div></div>
+      <div class="thumb" onclick="play(2)"><div class="tart g3">🎸</div><div class="tname">Ember Days</div><div class="tartist">Solis</div></div>
+      <div class="thumb" onclick="play(3)"><div class="tart g4">🥁</div><div class="tname">Drift Protocol</div><div class="tartist">Lyra</div></div>
+      <div class="thumb" onclick="play(4)"><div class="tart g5">🎹</div><div class="tname">Garden Vol.2</div><div class="tartist">Mura</div></div>
+    </div>
+  </div>
+
+  <div>
+    <div class="sh"><span class="stitle">🎵 Semua Lagu</span><span class="smore">+ Upload</span></div>
+    <div class="slist" id="song-list"></div>
+  </div>
+
+  <div>
+    <div class="sh"><span class="stitle">💬 Chat Global</span><span class="live-badge"><span class="live-dot"></span> LIVE</span></div>
+    <div class="chat-box">
+      <div class="cmsgs" id="chat-area"></div>
+      <div class="cinp-row">
+        <input placeholder="Tulis pesan..." id="chat-inp" onkeydown="if(event.key==='Enter')sendMsg()" maxlength="80">
+        <button class="sbtn" onclick="sendMsg()">Kirim</button>
+      </div>
+    </div>
+  </div>
+  <div style="height:10px"></div>
+</div>
+
+<!-- PLAYER -->
+<div class="scr" id="s-player">
+  <div class="pback">
+    <button class="pbtn" onclick="sw('home')"><span class="pbtn-ico">←</span> Kembali</button>
+    <span class="nowplay">Now Playing</span>
+    <div class="ib">↗</div>
+  </div>
+  <div class="big-art-wrap">
+    <div class="big-art">
+      <div class="big-art-bg g1" id="art-bg"></div>
+      <div class="art-inner" id="art-emoji">🎵</div>
+      <div class="art-shine"></div>
+    </div>
+    <div class="art-glow-ring g1" id="art-glow"></div>
+  </div>
+  <div class="pinfo-row">
+    <div>
+      <div class="p-song" id="p-title">Neon Afterglow</div>
+      <div class="p-artist" id="p-artist">Cyra · Neon Drifts</div>
+    </div>
+    <button class="hbtn on" id="heart-btn" onclick="toggleHeart()">♥</button>
+  </div>
+  <div class="prog-area" onclick="seek(event)">
+    <div class="prog-tr"><div class="prog-fl" id="prog" style="width:38%"></div></div>
+  </div>
+  <div class="trow"><span id="cur">1:30</span><span id="dur">3:55</span></div>
+  <div class="ctrl-row">
+    <div class="cside">
+      <button class="cbtn" id="shuf" onclick="toggleShuf()">🔀</button>
+      <button class="cbtn" onclick="prev()">⏮</button>
+    </div>
+    <button class="playmain" id="mainplay" onclick="togglePlay()">⏸</button>
+    <div class="cside">
+      <button class="cbtn" onclick="nxt()">⏭</button>
+      <button class="cbtn" id="rep" onclick="toggleRep()">🔁</button>
+    </div>
+  </div>
+  <div class="vol-r">
+    <span class="vico">🔈</span>
+    <input type="range" min="0" max="100" value="75" step="1">
+    <span class="vico">🔊</span>
+  </div>
+  <div class="song-detail">
+    <div class="sd-head">
+      <span class="sd-label">Info Lagu</span>
+      <span class="pl-badge" id="play-badge">12.4k plays</span>
+    </div>
+    <div class="sd-text">Diupload oleh: <span id="uploader">Cyra</span><br><span id="desc" style="font-style:italic;color:rgba(255,255,255,.3)">Neo-ambient dari Tokyo 🌙</span></div>
+  </div>
+  <div style="height:10px"></div>
+</div>
+
+<!-- UPLOAD -->
+<div class="scr" id="s-upload">
+  <div style="font-family:'Syne',sans-serif;font-size:20px;font-weight:800;color:#fff">Upload Lagu</div>
+  <div class="upa">
+    <span class="upa-ico">🎵</span>
+    <div class="upa-t">Pilih atau drag file audio</div>
+    <div class="upa-s">MP3, WAV, M4A, OGG · Maks 50MB</div>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:10px">
+    <input id="up-title" class="inp" placeholder="Judul lagu *">
+    <input id="up-artist" class="inp" placeholder="Nama artis *">
+    <input id="up-url-inp" class="inp" placeholder="Atau paste URL audio langsung (MP3)">
+    <textarea id="up-desc" class="inp" placeholder="Deskripsi (opsional)" rows="3" style="resize:none"></textarea>
+  </div>
+  <button id="up-btn" class="upbtn" onclick="doUpload()">⬆ Upload Lagu</button>
+  <div class="warn">⚠️ Dilarang upload konten SARA, pornografi audio, atau earrape. Pelanggaran = <strong>BANNED PERMANENT</strong>.</div>
+  <div style="height:10px"></div>
+</div>
+
+<!-- PROFILE -->
+<div class="scr" id="s-profile">
+  <div class="prof-hero">
+    <div class="prof-av g1">H</div>
+    <div>
+      <div class="prof-name">Hexky</div>
+      <div class="prof-uid">@hexky · Creator</div>
+      <div class="frow">
+        <div class="fstat"><div class="fn">284</div><div class="fl">Followers</div></div>
+        <div class="fstat"><div class="fn">47</div><div class="fl">Uploads</div></div>
+        <div class="fstat"><div class="fn">1.2k</div><div class="fl">Likes</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="tag-row">
+    <span class="tag tvip">VIP</span>
+    <span class="tag tcreator">#creator</span>
+    <span class="tag tnew">#exe-sahur</span>
+    <span class="tag tcreator">#ramadhan-1447</span>
+    <span class="tag tnew">#newcomer</span>
+  </div>
+  <div>
+    <div class="stitle" style="margin-bottom:10px">🎵 Lagu Saya</div>
+    <div class="slist">
+      <div class="srow on"><div class="snum"><div class="eq"><div class="eqb"></div><div class="eqb"></div><div class="eqb"></div><div class="eqb"></div></div></div><div class="sart g1">🎵</div><div class="sinfo"><div class="stit">Neon Afterglow</div><div class="ssub">12.4k plays · 847 likes</div></div></div>
+      <div class="srow"><div class="snum">2</div><div class="sart g2">🎶</div><div class="sinfo"><div class="stit">Velvet Void</div><div class="ssub">8.1k plays · 531 likes</div></div></div>
+      <div class="srow"><div class="snum">3</div><div class="sart g3">🎸</div><div class="sinfo"><div class="stit">Ember Days</div><div class="ssub">5.7k plays · 299 likes</div></div></div>
+    </div>
+  </div>
+  <div>
+    <div class="stitle" style="margin-bottom:10px">❤️ Favorit</div>
+    <div class="slist">
+      <div class="srow"><div class="snum" style="color:#ff3d6e">♥</div><div class="sart g4">🥁</div><div class="sinfo"><div class="stit">Drift Protocol</div><div class="ssub">Lyra</div></div></div>
+      <div class="srow"><div class="snum" style="color:#ff3d6e">♥</div><div class="sart g5">🎹</div><div class="sinfo"><div class="stit">Garden Vol.2</div><div class="ssub">Mura</div></div></div>
+    </div>
+  </div>
+  <div style="height:10px"></div>
+</div>
+
+</div>
+
+<!-- MINI PLAYER -->
+<div class="mini" onclick="sw('player')">
+  <div class="mini-art g1" id="mini-art">🎵</div>
+  <div class="mini-info">
+    <div class="mini-t" id="mini-t">Neon Afterglow</div>
+    <div class="mini-s" id="mini-s">Cyra · Neon Drifts</div>
+  </div>
+  <div class="mini-ctrl">
+    <button class="mbtn" onclick="event.stopPropagation();prev()">⏮</button>
+    <button class="mplay" id="mplay-btn" onclick="event.stopPropagation();togglePlay()">⏸</button>
+    <button class="mbtn" onclick="event.stopPropagation();nxt()">⏭</button>
+  </div>
+  <div class="mini-prog-bar"><div class="mini-prog-fill" id="mini-prog"></div></div>
+</div>
+
+<div class="bnav">
+  <div class="nitem on" id="n-home" onclick="sw('home')"><span class="nico">⌂</span><span>Home</span></div>
+  <div class="nitem" id="n-player" onclick="sw('player')"><span class="nico">▶</span><span>Player</span></div>
+  <div class="nitem" id="n-upload" onclick="sw('upload')"><span class="nico">⬆</span><span>Upload</span></div>
+  <div class="nitem" id="n-profile" onclick="sw('profile')"><span class="nico">👤</span><span>Profil</span></div>
+</div>
+
+</div>
+</div>
+
+<div class="modal" id="modalAuth" onclick="if(event.target==this)closeAuth()">
+  <div class="modal-card">
+    <h3>Masuk ke ExeMusic</h3>
+    <input id="authUser" class="modal-input" placeholder="Username (min 3 karakter)">
+    <button id="googleAuthBtn" class="btn-act" onclick="handleGoogleAuth()">
+      <span id="googleBtnText">Masuk dengan Google</span>
+    </button>
+    <p style="font-size:11px;color:rgba(255,255,255,0.45);text-align:center;margin-top:8px;">🔒 Login aman dengan Google</p>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const songs=[
+  {title:'Neon Afterglow',artist:'Cyra',plays:'12.4k',g:'g1',e:'🎵',up:'Cyra',desc:'Neo-ambient dari Tokyo 🌙',likes:true},
+  {title:'Velvet Void',artist:'Nox',plays:'8.1k',g:'g2',e:'🎶',up:'Nox',desc:'Dark electronic vibes',likes:false},
+  {title:'Ember Days',artist:'Solis',plays:'5.7k',g:'g3',e:'🎸',up:'Solis',desc:'Sunset session 🌅',likes:true},
+  {title:'Drift Protocol',artist:'Lyra',plays:'3.2k',g:'g4',e:'🥁',up:'Lyra',desc:'',likes:false},
+  {title:'Garden Vol.2',artist:'Mura',plays:'2.9k',g:'g5',e:'🎹',up:'Mura',desc:'Chill lo-fi 🌿',likes:false},
+  {title:'Solstice',artist:'Aevon',plays:'1.8k',g:'g6',e:'🎺',up:'Aevon',desc:'',likes:false},
+];
+const chats=[
+  {name:'Hexky',av:'g1',txt:'Neon Afterglow beneran keren banget 🔥',t:'21:04'},
+  {name:'NoxBeat',av:'g2',txt:'Iya bro, beat-nya dapet banget!',t:'21:05'},
+  {name:'SolisID',av:'g3',txt:'Request lagu baru dong kak 🙏',t:'21:06'},
+  {name:'Lyra_',av:'g4',txt:'Auto loop terus wkwk',t:'21:07'},
+  {name:'Hexky',av:'g1',txt:'Makasih semua, next week ada release baru 😎',t:'21:09'},
+];
+
+let cur=0, playing=true, shuf=false, rep=false, liked=true;
+let prog=38, timer;
+
+function renderSongs(){
+  const query = document.getElementById('search-input')?.value.trim().toLowerCase() || '';
+  document.getElementById('song-list').innerHTML = songs.filter(s => {
+    if(!query) return true;
+    return s.title.toLowerCase().includes(query) || s.artist.toLowerCase().includes(query) || (s.up||'').toLowerCase().includes(query);
+  }).map((s,i)=>`
+    <div class="srow${songs.indexOf(s)===cur?' on':''}" onclick="play(${songs.indexOf(s)})">
+      <div class="snum">${songs.indexOf(s)===cur?'<div class="eq"><div class="eqb"></div><div class="eqb"></div><div class="eqb"></div><div class="eqb"></div></div>':(i+1)}</div>
+      <div class="sart ${s.g}">${s.e}</div>
+      <div class="sinfo"><div class="stit">${s.title}</div><div class="ssub">${s.artist} · ${s.plays} plays</div></div>
+      <button class="slike${s.likes?' on':''}" onclick="event.stopPropagation();likeSong(${songs.indexOf(s)},this)">${s.likes?'♥':'♡'}</button>
+    </div>`).join('');
+}
+function renderChat(){
+  const area=document.getElementById('chat-area');
+  area.innerHTML=chats.map(m=>`
+    <div class="cmsg">
+      <div class="cav ${m.av}">${m.name[0]}</div>
+      <div class="cbub"><div class="cname">${m.name}</div><div class="ctext">${m.txt}</div><div class="ctime">${m.t}</div></div>
+    </div>`).join('');
+  area.scrollTop=area.scrollHeight;
+}
+function updatePlayer(){
+  const s=songs[cur];
+  document.getElementById('p-title').textContent=s.title;
+  document.getElementById('p-artist').textContent=s.artist;
+  document.getElementById('uploader').textContent=s.up;
+  document.getElementById('desc').textContent=s.desc;
+  document.getElementById('play-badge').textContent=s.plays+' plays';
+  document.getElementById('art-bg').className='big-art-bg '+s.g;
+  document.getElementById('art-glow').className='art-glow-ring '+s.g;
+  document.getElementById('art-emoji').textContent=s.e;
+  document.getElementById('mini-art').className='mini-art '+s.g;
+  document.getElementById('mini-art').textContent=s.e;
+  document.getElementById('mini-t').textContent=s.title;
+  document.getElementById('mini-s').textContent=s.artist;
+  liked=s.likes;
+  const hb=document.getElementById('heart-btn');
+  hb.textContent=liked?'♥':'♡'; hb.classList.toggle('on',liked);
+  renderSongs();
+}
+window.play=function(i){cur=i;prog=0;updatePlayer();}
+window.sw=function(name){
+  document.querySelectorAll('.scr').forEach(s=>{s.classList.remove('on');});
+  document.getElementById('s-'+name).classList.add('on');
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
+  const tmap={home:'t-home',player:'t-player',upload:'t-upload',profile:'t-profile'};
+  if(tmap[name]) document.getElementById(tmap[name]).classList.add('on');
+  document.querySelectorAll('.nitem').forEach(n=>n.classList.remove('on'));
+  const nmap={home:'n-home',player:'n-player',upload:'n-upload',profile:'n-profile'};
+  if(nmap[name]) document.getElementById(nmap[name]).classList.add('on');
+}
+window.togglePlay=function(){
+  playing=!playing;
+  document.getElementById('mainplay').textContent=playing?'⏸':'▶';
+  document.getElementById('mplay-btn').textContent=playing?'⏸':'▶';
+  if(playing) startProg(); else clearInterval(timer);
+}
+window.toggleHeart=function(){
+  liked=!liked;songs[cur].likes=liked;
+  const hb=document.getElementById('heart-btn');
+  hb.textContent=liked?'♥':'♡'; hb.classList.toggle('on',liked);
+  renderSongs();
+}
+window.toggleShuf=function(){shuf=!shuf;document.getElementById('shuf').classList.toggle('on',shuf);}
+window.toggleRep=function(){rep=!rep;document.getElementById('rep').classList.toggle('on',rep);}
+window.nxt=function(){cur=(cur+1)%songs.length;prog=0;updatePlayer();}
+window.prev=function(){cur=(cur-1+songs.length)%songs.length;prog=0;updatePlayer();}
+window.seek=function(e){const r=e.currentTarget.getBoundingClientRect();prog=Math.max(0,Math.min(100,(e.clientX-r.left)/r.width*100));setProg();}
+window.likeSong=function(i,btn){songs[i].likes=!songs[i].likes;btn.textContent=songs[i].likes?'♥':'♡';btn.classList.toggle('on',songs[i].likes);}
+
+function setProg(){
+  const p=prog.toFixed(1)+'%';
+  const el=document.getElementById('prog');
+  if(el)el.style.width=p;
+  const mp=document.getElementById('mini-prog');
+  if(mp)mp.style.width=p;
+  const total=235, c=Math.floor(total*prog/100);
+  const m=Math.floor(c/60), s=c%60;
+  const cd=document.getElementById('cur');
+  if(cd)cd.textContent=m+':'+(s<10?'0':'')+s;
+}
+function startProg(){
+  clearInterval(timer);
+  timer=setInterval(()=>{
+    if(!playing)return;
+    prog=(prog+0.3)%100;
+    setProg();
+  },400);
+}
+
+window.sendMsg=function(){
+  const inp=document.getElementById('chat-inp');
+  const txt=inp.value.trim();
+  if(!txt)return;
+  const now=new Date();
+  chats.push({name:'Hexky',av:'g1',txt,t:now.getHours()+':'+(now.getMinutes()<10?'0':'')+now.getMinutes()});
+  if(chats.length>20)chats.shift();
+  renderChat();
+  inp.value='';
+}
+
+function initFirebase(){
+  const firebaseConfig = {
+    apiKey: "AIzaSyCVJYSR4nHeoRA9WTMZa3-2xliKQRrd5g4",
+    authDomain: "exemusic-execuriverp.firebaseapp.com",
+    databaseURL: "https://exemusic-execuriverp-default-rtdb.asia-southeast1.firebasedatabase.app",
+    projectId: "exemusic-execuriverp",
+    storageBucket: "exemusic-execuriverp.firebasestorage.app",
+    messagingSenderId: "722057744401",
+    appId: "1:722057744401:web:cd6a6a103692059bda61b0",
+    measurementId: "G-2P56Y7QQ18"
+  };
+  firebase.initializeApp(firebaseConfig);
+  window.auth = firebase.auth();
+  window.db = firebase.database();
+  auth.onAuthStateChanged(async user => {
+    if(user){
+      ME = user;
+      document.getElementById('topLoginBtn').title = user.email || 'Logged in';
+      document.getElementById('googleBtnText').textContent = 'Masuk dengan Google';
+      document.getElementById('authUser').style.display = 'none';
+      closeAuth();
+      await ensureUser(user, document.getElementById('authUser').value.trim());
+      loadProfile();
+    }else{
+      ME = null;
+      document.getElementById('topLoginBtn').title = 'Login';
+      document.getElementById('authUser').style.display = 'block';
+      document.getElementById('prof-name').textContent = 'Guest';
+      document.getElementById('prof-uid').textContent = '@guest';
+    }
+  });
+}
+
+let ME = null;
+function toast(message, duration = 2500){
+  const t = document.getElementById('toast');
+  if(!t) return;
+  t.textContent = message;
+  t.classList.add('show');
+  clearTimeout(t._hide);
+  t._hide = setTimeout(()=>t.classList.remove('show'), duration);
+}
+window.openAuth = function(){
+  document.getElementById('modalAuth').classList.add('show');
+};
+window.closeAuth = function(){
+  document.getElementById('modalAuth').classList.remove('show');
+};
+async function ensureUser(user, uname){
+  const snap = await db.ref('users/' + user.uid).once('value');
+  if(!snap.exists()){
+    const name = uname || user.displayName || (user.email || '').split('@')[0] || 'User';
+    await db.ref('users/' + user.uid).set({
+      username: name,
+      email: user.email,
+      followers: 0,
+      uploads: 0,
+      totalPlays: 0,
+      likes: 0,
+      coins: 0,
+      tags: ['newcomer'],
+      status: 'NONVIP',
+      createdAt: Date.now()
+    });
+  }
+}
+async function handleGoogleAuth(){
+  const provider = new firebase.auth.GoogleAuthProvider();
+  provider.setCustomParameters({ prompt: 'select_account' });
+  try{
+    const result = await auth.signInWithPopup(provider);
+    if(result.additionalUserInfo && result.additionalUserInfo.isNewUser){
+      const username = document.getElementById('authUser').value.trim();
+      if(!username || username.length < 3){
+        toast('Masukkan username minimal 3 karakter');
+        return;
+      }
+      await db.ref('users/' + result.user.uid).set({
+        username,
+        email: result.user.email,
+        followers: 0,
+        uploads: 0,
+        totalPlays: 0,
+        likes: 0,
+        coins: 0,
+        tags: ['newcomer'],
+        status: 'NONVIP',
+        createdAt: Date.now()
+      });
+    }
+    toast('Login berhasil!');
+  }catch(err){
+    toast('Login gagal: ' + (err.message || err.code));
+  }
+}
+function loadProfile(){
+  if(!ME) return;
+  db.ref('users/' + ME.uid).once('value').then(snap=>{
+    const u = snap.val() || {};
+    const name = u.username || (ME.email || '').split('@')[0] || 'User';
+    document.getElementById('prof-name').textContent = name;
+    document.getElementById('prof-uid').textContent = '@' + name.replace(/\s+/g,'').toLowerCase();
+    document.getElementById('st2').textContent = (u.followers || 0);
+    document.getElementById('st1').textContent = (u.uploads || 0);
+    document.getElementById('st3').textContent = (u.totalPlays || 0);
+  });
+}
+window.doUpload = async function(){
+  if(!ME){ toast('Login dulu!'); return; }
+  const title = document.getElementById('up-title').value.trim();
+  const artist = document.getElementById('up-artist').value.trim();
+  const urlVal = document.getElementById('up-url-inp').value.trim();
+  const desc = document.getElementById('up-desc').value.trim();
+  if(!title || !artist){ toast('Judul & artis wajib diisi!'); return; }
+  if(!urlVal){ toast('Masukkan URL audio atau gunakan file upload support'); return; }
+  const song = { title, artist, plays: '0', g: 'g1', e:'🎵', up: ME.email || 'User', desc: desc || '', likes:false };
+  songs.unshift(song);
+  renderSongs();
+  if(db) {
+    const songRef = db.ref('songs').push();
+    await songRef.set({ title, artist, desc, url: urlVal, uploadedBy: ME.email, uid: ME.uid, plays: 0, likes: 0, createdAt: Date.now() });
+    const userRef = db.ref('users/' + ME.uid);
+    userRef.child('uploads').transaction(v=> (v||0)+1);
+  }
+  toast('Upload berhasil!');
+  document.getElementById('up-title').value='';
+  document.getElementById('up-artist').value='';
+  document.getElementById('up-url-inp').value='';
+  document.getElementById('up-desc').value='';
+};
+
+document.getElementById('search-input').addEventListener('input', renderSongs);
+renderSongs();renderChat();updatePlayer();startProg();
+initFirebase();
+</script>
+</div>

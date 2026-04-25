@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>ExeMusic download</title>
+
+<style>
+body {
+    background: #0f172a;
+    color: white;
+    font-family: Arial;
+    text-align: center;
+    padding: 50px;
+}
+
+.box {
+    background: #1e293b;
+    padding: 30px;
+    border-radius: 15px;
+    width: 350px;
+    margin: auto;
+    box-shadow: 0 0 20px rgba(0,0,0,0.5);
+}
+
+input {
+    width: 100%;
+    padding: 10px;
+    border-radius: 10px;
+    border: none;
+    margin-bottom: 15px;
+}
+
+button {
+    background: #22c55e;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 10px;
+    color: white;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.progress-container {
+    margin-top: 20px;
+    background: #334155;
+    border-radius: 10px;
+    overflow: hidden;
+    height: 20px;
+}
+
+.progress-bar {
+    height: 100%;
+    width: 0%;
+    background: #22c55e;
+    transition: width 0.3s;
+}
+
+.status {
+    margin-top: 10px;
+    font-size: 14px;
+    color: #94a3b8;
+}
+</style>
+</head>
+
+<body>
+
+<div class="box">
+    <h2>ExeMusic Downloader</h2>
+
+    <input type="text" id="url" placeholder="Paste link mp3 / top4top...">
+
+    <button onclick="startDownload()">Download</button>
+
+    <div class="progress-container">
+        <div class="progress-bar" id="progress"></div>
+    </div>
+
+    <div class="status" id="status">Menunggu...</div>
+</div>
+
+<script>
+function startDownload() {
+    const url = document.getElementById("url").value;
+    const bar = document.getElementById("progress");
+    const status = document.getElementById("status");
+
+    if (!url) {
+        alert("Masukkan link dulu!");
+        return;
+    }
+
+    let progress = 0;
+    bar.style.width = "0%";
+    status.innerText = "Memulai...";
+
+    // Fake progress animation
+    let interval = setInterval(() => {
+        progress += Math.random() * 15;
+
+        if (progress >= 90) {
+            progress = 90;
+            clearInterval(interval);
+        }
+
+        bar.style.width = progress + "%";
+        status.innerText = "Downloading " + Math.floor(progress) + "%";
+    }, 300);
+
+    // Start real download (tanpa CORS)
+    setTimeout(() => {
+        window.open(url, "_blank");
+    }, 800);
+
+    // Finish animation
+    setTimeout(() => {
+        bar.style.width = "100%";
+        status.innerText = "Selesai ✅";
+    }, 3000);
+}
+</script>
+
+</body>
+</html>

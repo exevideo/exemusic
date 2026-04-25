@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>ExeMusic - Verification</title>
+  <link rel="icon" type="image/png" href="exemusicicon.png">
+  <script src="https://www.google.com/recaptcha/api.js?render=6LcGHLMsAAAAAKTJhZuNM0t_66UaGg85v4N8wFRn" async defer></script>
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Exo+2:wght@400;600;800;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --accent: #00ff88;
+      --accent2: #00d4ff;
+      --text: #ffffff;
+      --text-dim: #b3b3b3;
+      --bg: #040408;
+      --card-bg: #0d0d15;
+      --glass: rgba(255,255,255,0.05);
+      --danger: #ff3333;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      outline: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    body {
+      font-family: 'Exo 2', 'Segoe UI', sans-serif;
+      background: linear-gradient(180deg, #030308 0%, #06060f 50%, #030308 100%);
+      color: var(--text);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+    }
+
+    /* Background decorations */
+    body::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 50% -20%, rgba(0,212,255,0.1), transparent 60%),
+                  radial-gradient(ellipse at 80% 100%, rgba(0,255,136,0.08), transparent 50%);
+      pointer-events: none;
+    }
+
+    .gate-container {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 600px;
+      margin: auto;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+    }
+
+    .gate-card {
+      background: linear-gradient(135deg, rgba(13,13,21,0.95) 0%, rgba(8,8,16,0.98) 100%);
+      backdrop-filter: blur(40px);
+      -webkit-backdrop-filter: blur(40px);
+      border: 1px solid rgba(0,255,136,0.15);
+      border-radius: 24px;
+      width: 100%;
+      max-width: 520px;
+      padding: 50px 40px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.7), 
+                  0 0 40px rgba(0,255,136,0.08),
+                  inset 0 1px 0 rgba(255,255,255,0.06);
+      position: relative;
+      overflow: hidden;
+      animation: cardSlideUp 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    @keyframes cardSlideUp {
+      from {
+        opacity: 0;
+        transform: translateY(40px) scale(0.95);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .gate-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--accent), var(--accent2), transparent);
+      opacity: 0.6;
+    }
+
+    /* Corner decorations */
+    .gate-corner {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      border-color: rgba(0,255,136,0.3);
+      border-style: solid;
+    }
+
+    .gate-corner.tl { top: 15px; left: 15px; border-width: 2px 0 0 2px; }
+    .gate-corner.tr { top: 15px; right: 15px; border-width: 2px 2px 0 0; }
+    .gate-corner.bl { bottom: 15px; left: 15px; border-width: 0 0 2px 2px; }
+    .gate-corner.br { bottom: 15px; right: 15px; border-width: 0 2px 2px 0; }
+
+    .gate-header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .gate-logo {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      border: 2px solid rgba(0,255,136,0.3);
+      background: linear-gradient(135deg, rgba(0,255,136,0.1), rgba(0,212,255,0.05));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 40px;
+      margin: 0 auto 20px;
+      box-shadow: 0 0 30px rgba(0,255,136,0.15);
+      animation: logoPulse 2s ease-in-out infinite;
+    }
+
+    @keyframes logoPulse {
+      0%, 100% {
+        box-shadow: 0 0 20px rgba(0,255,136,0.15), inset 0 0 15px rgba(0,255,136,0.05);
+      }
+      50% {
+        box-shadow: 0 0 40px rgba(0,255,136,0.3), inset 0 0 25px rgba(0,255,136,0.1);
+      }
+    }
+
+    .gate-title {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: 2px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+    }
+
+    .gate-subtitle {
+      font-size: 13px;
+      color: rgba(255,255,255,0.4);
+      letter-spacing: 1px;
+      font-family: 'JetBrains Mono', monospace;
+      text-transform: uppercase;
+    }
+
+    .gate-content {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .gate-info-box {
+      background: rgba(0,255,136,0.05);
+      border: 1px solid rgba(0,255,136,0.15);
+      border-radius: 12px;
+      padding: 16px;
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+    }
+
+    .gate-info-icon {
+      font-size: 20px;
+      color: var(--accent);
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .gate-info-text {
+      font-size: 12px;
+      color: rgba(255,255,255,0.7);
+      line-height: 1.5;
+    }
+
+    .gate-info-text strong {
+      color: var(--accent);
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    /* reCAPTCHA container */
+    .gate-captcha-wrapper {
+      display: flex;
+      justify-content: center;
+      padding: 20px 0;
+      background: rgba(0,0,0,0.3);
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.03);
+    }
+
+    #recaptcha-container {
+      transform: scale(0.95);
+      transform-origin: center;
+    }
+
+    .g-recaptcha {
+      display: flex;
+      justify-content: center;
+    }
+
+    .gate-status {
+      text-align: center;
+      font-size: 12px;
+      color: rgba(255,255,255,0.5);
+      font-family: 'JetBrains Mono', monospace;
+      letter-spacing: 0.5px;
+      min-height: 20px;
+    }
+
+    .gate-status.loading {
+      color: var(--accent);
+      animation: blink 1s infinite;
+    }
+
+    @keyframes blink {
+      0%, 49%, 100% { opacity: 1; }
+      50%, 99% { opacity: 0.5; }
+    }
+
+    .gate-status.success {
+      color: #22c55e;
+    }
+
+    .gate-status.error {
+      color: var(--danger);
+    }
+
+    .gate-timer {
+      text-align: center;
+      font-size: 11px;
+      color: rgba(255,255,255,0.4);
+      font-family: 'JetBrains Mono', monospace;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .gate-loader {
+      display: none;
+      width: 40px;
+      height: 40px;
+      border: 3px solid rgba(0,255,136,0.2);
+      border-top: 3px solid var(--accent);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 20px auto;
+    }
+
+    .gate-loader.show {
+      display: block;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Responsive */
+    @media (max-width: 640px) {
+      .gate-container {
+        padding: 16px;
+        min-height: 100vh;
+      }
+
+      .gate-card {
+        padding: 32px 24px;
+        border-radius: 20px;
+      }
+
+      .gate-title {
+        font-size: 24px;
+        letter-spacing: 1px;
+      }
+
+      .gate-subtitle {
+        font-size: 11px;
+      }
+
+      .gate-info-box {
+        padding: 12px;
+      }
+
+      .gate-info-text {
+        font-size: 11px;
+      }
+
+      #recaptcha-container {
+        transform: scale(0.85);
+      }
+    }
+
+    @media (max-width: 480px) {
+      .gate-card {
+        padding: 28px 20px;
+      }
+
+      .gate-logo {
+        width: 60px;
+        height: 60px;
+        font-size: 32px;
+      }
+
+      .gate-title {
+        font-size: 20px;
+      }
+
+      .gate-content {
+        gap: 16px;
+      }
+
+      #recaptcha-container {
+        transform: scale(0.75);
+      }
+    }
+
+    /* Loading screen */
+    .gate-loading-screen {
+      position: fixed;
+      inset: 0;
+      background: linear-gradient(180deg, #030308 0%, #06060f 50%, #030308 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 999999;
+      opacity: 1;
+      transition: opacity 0.6s ease;
+    }
+
+    .gate-loading-screen.fade-out {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .gate-loading-content {
+      text-align: center;
+    }
+
+    .gate-loading-spinner {
+      width: 50px;
+      height: 50px;
+      border: 3px solid rgba(0,255,136,0.2);
+      border-top: 3px solid var(--accent);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 20px;
+    }
+
+    .gate-loading-text {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 14px;
+      letter-spacing: 2px;
+      color: rgba(255,255,255,0.5);
+      text-transform: uppercase;
+    }
+  </style>
+</head>
+<body>
+  <!-- Loading screen -->
+  <div class="gate-loading-screen" id="gateLoadingScreen">
+    <div class="gate-loading-content">
+      <div class="gate-loading-spinner"></div>
+      <div class="gate-loading-text">Loading...</div>
+    </div>
+  </div>
+
+  <!-- Main gate container -->
+  <div class="gate-container">
+    <!-- Decorative corners -->
+    <div class="gate-corner tl"></div>
+    <div class="gate-corner tr"></div>
+    <div class="gate-corner bl"></div>
+    <div class="gate-corner br"></div>
+
+    <!-- Main gate card -->
+    <div class="gate-card">
+      <div class="gate-header">
+        <div class="gate-logo">🎵</div>
+        <h1 class="gate-title">ExeMusic</h1>
+        <p class="gate-subtitle">Verification Required</p>
+      </div>
+
+      <div class="gate-content">
+        <!-- Info box -->
+        <div class="gate-info-box">
+          <div class="gate-info-icon">ℹ️</div>
+          <div class="gate-info-text">
+            <strong>Why are we verifying?</strong>
+            Kami menggunakan verifikasi untuk melindungi platform dari bot dan spam. Verifikasi ini hanya dilakukan sekali setiap 3 jam.
+          </div>
+        </div>
+
+        <!-- reCAPTCHA container -->
+        <div class="gate-captcha-wrapper">
+          <div id="recaptcha-container">
+            <!-- Google reCAPTCHA v3 will be rendered here -->
+          </div>
+        </div>
+
+        <!-- Status messages -->
+        <div class="gate-status" id="gateStatus">Mohon verifikasi Anda melalui reCAPTCHA...</div>
+        <div class="gate-loader" id="gateLoader"></div>
+        <div class="gate-timer" id="gateTimer">Verifikasi berlaku selama 3 jam</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Configuration
+    const VERIFICATION_KEY = 'exe_verified';
+    const EXPIRY_KEY = 'exe_expiry';
+    const VERIFICATION_DURATION = 3 * 60 * 60 * 1000; // 3 hours in milliseconds
+    const RECAPTCHA_SITE_KEY = '6LcGHLMsAAAAAKTJhZuNM0t_66UaGg85v4N8wFRn'; // Google reCAPTCHA v3
+
+    // Check if already verified on page load
+    window.addEventListener('load', () => {
+      checkVerificationStatus();
+      hideLoadingScreen();
+    });
+
+    function checkVerificationStatus() {
+      const verified = localStorage.getItem(VERIFICATION_KEY);
+      const expiry = localStorage.getItem(EXPIRY_KEY);
+
+      if (verified === 'true' && expiry && Date.now() < parseInt(expiry)) {
+        // Already verified and token still valid
+        redirectToMain();
+      } else {
+        // Execute reCAPTCHA v3 verification
+        setTimeout(() => {
+          executeRecaptcha();
+        }, 500);
+      }
+    }
+
+    function executeRecaptcha() {
+      if (!window.grecaptcha) {
+        console.error('reCAPTCHA not loaded');
+        setStatus('reCAPTCHA gagal dimuat', 'error');
+        return;
+      }
+
+      setStatus('Menghubungkan reCAPTCHA...', 'loading');
+      window.grecaptcha.ready(() => {
+        window.grecaptcha.execute(RECAPTCHA_SITE_KEY, { action: 'gate_verifikasi' })
+          .then((token) => {
+            if (token) {
+              onRecaptchaSuccess(token);
+            } else {
+              onRecaptchaError('Token tidak diterima');
+            }
+          })
+          .catch((error) => {
+            onRecaptchaError(error);
+          });
+      });
+    }
+
+    function onRecaptchaSuccess(token) {
+      console.log('reCAPTCHA token:', token);
+      setStatus('Verifikasi berhasil! Mengalihkan...', 'success');
+      saveVerification();
+      setTimeout(() => {
+        redirectToMain();
+      }, 1500);
+    }
+
+    function onRecaptchaError(error) {
+      console.error('reCAPTCHA error:', error);
+      setStatus('Terjadi kesalahan. Silakan coba lagi.', 'error');
+    }
+
+    function onRecaptchaExpired() {
+      console.warn('reCAPTCHA expired');
+      setStatus('Verifikasi kedaluwarsa. Silakan coba lagi.', 'error');
+    }
+
+    function saveVerification() {
+      const expiryTime = Date.now() + VERIFICATION_DURATION;
+      localStorage.setItem(VERIFICATION_KEY, 'true');
+      localStorage.setItem(EXPIRY_KEY, expiryTime.toString());
+    }
+
+    function setStatus(message, type = 'default') {
+      const statusEl = document.getElementById('gateStatus');
+      const loaderEl = document.getElementById('gateLoader');
+
+      statusEl.textContent = message;
+      statusEl.className = 'gate-status ' + type;
+
+      if (type === 'success' || type === 'loading') {
+        loaderEl.classList.add('show');
+      } else {
+        loaderEl.classList.remove('show');
+      }
+    }
+
+    function redirectToMain() {
+      const base = window.location.protocol + '//' + window.location.host + window.location.pathname.replace('/gate.html', '/');
+      window.location.href = base.replace('/gate.html', '/');
+    }
+
+    function hideLoadingScreen() {
+      const loadingScreen = document.getElementById('gateLoadingScreen');
+      if (loadingScreen) {
+        setTimeout(() => {
+          loadingScreen.classList.add('fade-out');
+        }, 500);
+      }
+    }
+
+    // Auto-check verification status periodically
+    setInterval(() => {
+      const expiry = localStorage.getItem(EXPIRY_KEY);
+      if (expiry && Date.now() > parseInt(expiry)) {
+        // Token expired, clear and show reCAPTCHA again
+        localStorage.removeItem(VERIFICATION_KEY);
+        localStorage.removeItem(EXPIRY_KEY);
+        if (window.grecaptcha) {
+          window.grecaptcha.reset();
+        }
+        setStatus('Verifikasi kedaluwarsa. Silakan verifikasi ulang.', 'error');
+      }
+    }, 60000); // Check every minute
+  </script>
+</body>
+</html>

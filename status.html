@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ExeMusic Status</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --bg: #060608;
+  --bg2: #0d0d12;
+  --bg3: #13131a;
+  --border: rgba(255,255,255,0.07);
+  --border2: rgba(255,255,255,0.12);
+  --text: #f0f0f8;
+  --muted: #6b6b80;
+  --accent: #7c6bff;
+  --accent2: #a78bfa;
+  --green: #22d37a;
+  --yellow: #f5a623;
+  --red: #ff4d6d;
+  --blue: #38b2ff;
+  --glow: rgba(124,107,255,0.15);
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Background mesh */
+body::before {
+  content:'';
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 60% 40% at 20% 10%, rgba(124,107,255,0.08) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 60% at 80% 80%, rgba(34,211,122,0.04) 0%, transparent 60%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Noise texture */
+body::after {
+  content:'';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.4;
+}
+
+.wrap { position: relative; z-index: 1; max-width: 860px; margin: 0 auto; padding: 0 24px 80px; }
+
+/* ─── HEADER ─── */
+header {
+  padding: 52px 0 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.logo-area { display: flex; align-items: center; gap: 14px; }
+
+.logo-icon {
+  width: 42px; height: 42px;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  border-radius: 12px;
+  display: grid; place-items: center;
+  font-size: 20px;
+  box-shadow: 0 0 24px rgba(124,107,255,0.4);
+}
+
+.logo-text h1 {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.35rem;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+}
+
+.logo-text span {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.7rem;
+  color: var(--muted);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.header-right { display: flex; align-items: center; gap: 10px; }
+
+/* Auth button */
+.btn {
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s;
+  font-family: 'DM Sans', sans-serif;
+}
+
+.btn-ghost {
+  background: var(--bg3);
+  color: var(--text);
+  border: 1px solid var(--border2);
+}
+.btn-ghost:hover { background: var(--bg2); border-color: var(--accent); }
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--accent), #6254e8);
+  color: #fff;
+  box-shadow: 0 0 16px rgba(124,107,255,0.35);
+}
+.btn-primary:hover { transform: translateY(-1px); box-shadow: 0 4px 20px rgba(124,107,255,0.5); }
+
+/* User avatar */
+.user-avatar {
+  display: flex; align-items: center; gap: 8px;
+  background: var(--bg3); border: 1px solid var(--border2);
+  border-radius: 8px; padding: 6px 10px; cursor: pointer;
+  transition: all 0.2s; font-size: 0.82rem;
+}
+.user-avatar:hover { border-color: var(--accent); }
+.user-avatar img { width: 22px; height: 22px; border-radius: 50%; }
+
+/* Admin badge */
+.admin-badge {
+  background: linear-gradient(135deg, #f5a623, #e8900a);
+  color: #000;
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 4px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+/* ─── OVERALL STATUS BANNER ─── */
+.overall-banner {
+  border-radius: 14px;
+  padding: 22px 26px;
+  display: flex; align-items: center; gap: 16px;
+  margin-bottom: 36px;
+  border: 1px solid transparent;
+  transition: all 0.5s;
+  position: relative;
+  overflow: hidden;
+}
+
+.overall-banner::before {
+  content:'';
+  position: absolute; inset: 0;
+  border-radius: inherit;
+  opacity: 0.06;
+  transition: opacity 0.5s;
+}
+
+.overall-banner.all-good {
+  background: rgba(34,211,122,0.06);
+  border-color: rgba(34,211,122,0.2);
+}
+.overall-banner.all-good::before { background: var(--green); }
+
+.overall-banner.incident {
+  background: rgba(255,77,109,0.06);
+  border-color: rgba(255,77,109,0.2);
+}
+
+.overall-banner.degraded {
+  background: rgba(245,166,35,0.06);
+  border-color: rgba(245,166,35,0.2);
+}
+
+.overall-banner.maintenance {
+  background: rgba(56,178,255,0.06);
+  border-color: rgba(56,178,255,0.2);
+}
+
+.status-dot-big {
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  position: relative;
+}
+.status-dot-big::after {
+  content:'';
+  position: absolute; inset: -4px;
+  border-radius: 50%;
+  opacity: 0.3;
+  animation: pulse 2s ease-in-out infinite;
+}
+.status-dot-big.green { background: var(--green); }
+.status-dot-big.green::after { background: var(--green); }
+.status-dot-big.red { background: var(--red); }
+.status-dot-big.red::after { background: var(--red); }
+.status-dot-big.yellow { background: var(--yellow); }
+.status-dot-big.yellow::after { background: var(--yellow); }
+.status-dot-big.blue { background: var(--blue); }
+.status-dot-big.blue::after { background: var(--blue); }
+
+@keyframes pulse {
+  0%,100% { transform: scale(1); opacity: 0.3; }
+  50% { transform: scale(1.8); opacity: 0; }
+}
+
+.overall-info h2 { font-family:'Syne',sans-serif; font-size:1.1rem; font-weight:700; }
+.overall-info p { font-size:0.82rem; color:var(--muted); margin-top:3px; }
+
+.overall-time {
+  margin-left: auto;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.72rem;
+  color: var(--muted);
+  text-align: right;
+  line-height: 1.6;
+}
+
+/* ─── SECTION TITLE ─── */
+.section-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 12px;
+  padding-left: 2px;
+}
+
+/* ─── SERVICE CARDS ─── */
+.services-group { margin-bottom: 36px; }
+
+.service-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px 20px;
+  display: flex; align-items: center; gap: 14px;
+  margin-bottom: 8px;
+  transition: all 0.2s;
+  cursor: default;
+  position: relative;
+  overflow: hidden;
+}
+
+.service-card::before {
+  content:'';
+  position: absolute; left: 0; top: 0; bottom: 0; width: 3px;
+  border-radius: 3px 0 0 3px;
+  transition: opacity 0.3s;
+}
+.service-card.s-green::before { background: var(--green); }
+.service-card.s-red::before { background: var(--red); }
+.service-card.s-yellow::before { background: var(--yellow); }
+.service-card.s-blue::before { background: var(--blue); }
+.service-card.s-gray::before { background: var(--muted); }
+
+.service-card:hover { border-color: var(--border2); transform: translateX(2px); }
+
+.service-icon {
+  width: 36px; height: 36px;
+  background: var(--bg3); border-radius: 9px;
+  display: grid; place-items: center; font-size: 17px;
+  flex-shrink: 0; border: 1px solid var(--border);
+}
+
+.service-info { flex:1 }
+.service-info h3 { font-size: 0.92rem; font-weight: 500; }
+.service-info .sub {
+  font-size: 0.75rem; color: var(--muted); margin-top: 2px;
+  font-family: 'DM Mono', monospace;
+}
+
+.service-right { display: flex; align-items: center; gap: 10px; }
+
+.status-pill {
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  white-space: nowrap;
+}
+.pill-green { background: rgba(34,211,122,0.12); color: var(--green); }
+.pill-red { background: rgba(255,77,109,0.12); color: var(--red); }
+.pill-yellow { background: rgba(245,166,35,0.12); color: var(--yellow); }
+.pill-blue { background: rgba(56,178,255,0.12); color: var(--blue); }
+.pill-gray { background: rgba(107,107,128,0.15); color: var(--muted); }
+
+.service-link {
+  color: var(--muted); font-size: 0.75rem; text-decoration: none;
+  padding: 4px 8px; border-radius: 6px; border: 1px solid var(--border);
+  transition: all 0.2s; white-space: nowrap;
+}
+.service-link:hover { color: var(--accent2); border-color: var(--accent); }
+
+/* ─── UPTIME BARS ─── */
+.uptime-row {
+  display: flex; gap: 2px; height: 28px; align-items: stretch;
+  margin-top: 6px;
+}
+.uptime-bar {
+  flex:1; border-radius: 3px; position: relative;
+  cursor: default; transition: transform 0.1s;
+}
+.uptime-bar:hover { transform: scaleY(1.15); }
+.bar-op { background: var(--green); opacity: 0.7; }
+.bar-inc { background: var(--red); opacity: 0.8; }
+.bar-dg { background: var(--yellow); opacity: 0.7; }
+.bar-mt { background: var(--blue); opacity: 0.6; }
+.bar-na { background: var(--border2); opacity: 0.5; }
+
+.uptime-label {
+  display: flex; justify-content: space-between;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.68rem; color: var(--muted);
+  margin-top: 4px; padding: 0 1px;
+}
+
+/* ─── INCIDENTS SECTION ─── */
+.incidents-section { margin-bottom: 36px; }
+
+.incident-card {
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: 12px; padding: 18px 20px;
+  margin-bottom: 8px;
+}
+.incident-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+.incident-title { font-size: 0.9rem; font-weight: 500; }
+.incident-date { font-family:'DM Mono',monospace; font-size:0.7rem; color:var(--muted); white-space:nowrap; }
+.incident-body { font-size: 0.8rem; color: var(--muted); margin-top: 8px; line-height: 1.6; }
+
+.timeline { margin-top: 12px; border-left: 2px solid var(--border2); padding-left: 16px; }
+.timeline-item { margin-bottom: 10px; position: relative; }
+.timeline-item::before {
+  content:''; position: absolute; left: -20px; top: 5px;
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--muted); border: 2px solid var(--bg2);
+}
+.timeline-item.t-red::before { background: var(--red); }
+.timeline-item.t-yellow::before { background: var(--yellow); }
+.timeline-item.t-green::before { background: var(--green); }
+.timeline-time { font-family:'DM Mono',monospace; font-size:0.68rem; color:var(--muted); }
+.timeline-msg { font-size:0.8rem; margin-top:2px; }
+
+.no-incidents {
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: 12px; padding: 28px 20px; text-align: center;
+  color: var(--muted); font-size: 0.85rem;
+}
+.no-incidents span { font-size: 1.5rem; display: block; margin-bottom: 8px; }
+
+/* ─── REPORT BUTTON ─── */
+.report-bar {
+  background: var(--bg2); border: 1px dashed var(--border2);
+  border-radius: 12px; padding: 16px 20px;
+  display: flex; align-items: center; gap: 12px;
+  margin-bottom: 36px;
+}
+.report-bar p { font-size: 0.82rem; color: var(--muted); flex:1; }
+
+/* ─── ADMIN PANEL ─── */
+.admin-panel {
+  background: var(--bg2); border: 1px solid rgba(245,166,35,0.25);
+  border-radius: 14px; padding: 22px 24px; margin-bottom: 36px;
+  display: none;
+}
+.admin-panel.show { display: block; }
+.admin-panel-title {
+  font-family:'Syne',sans-serif; font-size:0.82rem;
+  font-weight:700; letter-spacing:2px;
+  text-transform:uppercase; color:var(--yellow); margin-bottom:18px;
+  display: flex; align-items: center; gap: 8px;
+}
+
+.admin-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+@media(max-width:520px){ .admin-grid { grid-template-columns:1fr; } }
+
+.admin-select-wrap { display: flex; flex-direction: column; gap: 6px; }
+.admin-select-wrap label { font-size:0.75rem; color:var(--muted); }
+.admin-select {
+  background: var(--bg3); border: 1px solid var(--border2);
+  color: var(--text); border-radius: 8px; padding: 9px 12px;
+  font-family:'DM Sans',sans-serif; font-size:0.82rem;
+  cursor: pointer; outline: none;
+  transition: border-color 0.2s;
+}
+.admin-select:focus { border-color: var(--accent); }
+
+.admin-textarea-wrap { grid-column: 1/-1; display: flex; flex-direction: column; gap: 6px; }
+.admin-textarea {
+  background: var(--bg3); border: 1px solid var(--border2);
+  color: var(--text); border-radius: 8px; padding: 9px 12px;
+  font-family:'DM Sans',sans-serif; font-size:0.82rem;
+  resize: vertical; min-height: 80px; outline: none;
+  transition: border-color 0.2s;
+}
+.admin-textarea:focus { border-color: var(--accent); }
+
+.admin-actions { grid-column: 1/-1; display: flex; gap: 8px; justify-content: flex-end; margin-top: 4px; }
+
+.btn-save {
+  background: linear-gradient(135deg, var(--yellow), #e8900a);
+  color: #000; font-weight: 600;
+}
+.btn-save:hover { transform:translateY(-1px); box-shadow: 0 4px 16px rgba(245,166,35,0.4); }
+
+/* ─── MODAL ─── */
+.modal-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.7);
+  backdrop-filter: blur(6px); z-index: 100;
+  display: grid; place-items: center; padding: 20px;
+  opacity: 0; pointer-events: none; transition: opacity 0.2s;
+}
+.modal-overlay.show { opacity: 1; pointer-events: all; }
+
+.modal {
+  background: var(--bg2); border: 1px solid var(--border2);
+  border-radius: 16px; padding: 28px 28px 24px;
+  width: 100%; max-width: 380px;
+  transform: translateY(20px); transition: transform 0.2s;
+}
+.modal-overlay.show .modal { transform: translateY(0); }
+
+.modal h3 { font-family:'Syne',sans-serif; font-size:1.1rem; font-weight:700; margin-bottom:6px; }
+.modal p { font-size:0.82rem; color:var(--muted); margin-bottom:20px; line-height:1.6; }
+
+.modal-actions { display:flex; gap:8px; justify-content:flex-end; }
+
+.google-btn {
+  display: flex; align-items: center; gap: 10px;
+  background: #fff; color: #333; border: none;
+  border-radius: 8px; padding: 10px 18px;
+  font-size: 0.85rem; font-weight: 600; cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  transition: all 0.2s; width: 100%; justify-content: center;
+  margin-bottom: 10px;
+}
+.google-btn:hover { background: #f0f0f0; transform: translateY(-1px); }
+.google-btn svg { width:18px; height:18px; }
+
+.modal-close { position: absolute; top: 14px; right: 14px; background: none; border: none; color: var(--muted); cursor: pointer; font-size:1.2rem; }
+
+/* ─── REPORT MODAL ─── */
+.report-textarea {
+  width: 100%; background: var(--bg3); border: 1px solid var(--border2);
+  color: var(--text); border-radius: 8px; padding: 10px 12px;
+  font-family:'DM Sans',sans-serif; font-size:0.82rem;
+  resize: vertical; min-height: 100px; outline: none; margin-bottom: 12px;
+}
+.report-textarea:focus { border-color: var(--accent); }
+
+/* ─── FOOTER ─── */
+footer {
+  text-align: center;
+  padding: 32px 0 0;
+  border-top: 1px solid var(--border);
+  font-family:'DM Mono',monospace;
+  font-size: 0.7rem;
+  color: var(--muted);
+  line-height: 2;
+}
+footer a { color: var(--accent2); text-decoration: none; }
+footer a:hover { color: var(--accent); }
+
+/* ─── TOAST ─── */
+.toast {
+  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(60px);
+  background: var(--bg3); border: 1px solid var(--border2);
+  color: var(--text); padding: 12px 20px; border-radius: 10px;
+  font-size: 0.82rem; z-index: 200;
+  transition: transform 0.3s; white-space: nowrap;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+}
+.toast.show { transform: translateX(-50%) translateY(0); }
+
+/* Spinner */
+.spinner {
+  width: 16px; height: 16px; border: 2px solid var(--border2);
+  border-top-color: var(--accent); border-radius: 50%;
+  animation: spin 0.7s linear infinite; display: inline-block; vertical-align: middle;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ─── ANIMATIONS ─── */
+@keyframes fadeUp {
+  from { opacity:0; transform:translateY(18px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+.fade-up { animation: fadeUp 0.5s ease forwards; }
+.fade-up:nth-child(2) { animation-delay:.07s; }
+.fade-up:nth-child(3) { animation-delay:.14s; }
+.fade-up:nth-child(4) { animation-delay:.21s; }
+.fade-up:nth-child(5) { animation-delay:.28s; }
+
+/* ─── RESPONSIVE ─── */
+@media(max-width:560px){
+  header { flex-wrap:wrap; }
+  .overall-banner { flex-wrap:wrap; }
+  .overall-time { margin-left:0; }
+}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <!-- HEADER -->
+  <header class="fade-up">
+    <div class="logo-area">
+      <div class="logo-icon">🎵</div>
+      <div class="logo-text">
+        <h1>ExeMusic</h1>
+        <span>System Status</span>
+      </div>
+    </div>
+    <div class="header-right" id="headerRight">
+      <button class="btn btn-ghost" onclick="openLoginModal()">Sign In</button>
+    </div>
+  </header>
+
+  <!-- ADMIN PANEL -->
+  <div class="admin-panel" id="adminPanel">
+    <div class="admin-panel-title">⚙ Admin — Set Today's Status</div>
+    <div class="admin-grid">
+      <div class="admin-select-wrap">
+        <label>Hosting</label>
+        <select class="admin-select" id="adm-hosting">
+          <option value="operational">Operational</option>
+          <option value="degraded">Degraded Performance</option>
+          <option value="incident">Major Incident</option>
+          <option value="maintenance">Maintenance</option>
+        </select>
+      </div>
+      <div class="admin-select-wrap">
+        <label>Upload Service</label>
+        <select class="admin-select" id="adm-upload">
+          <option value="operational">Operational</option>
+          <option value="degraded">Degraded Performance</option>
+          <option value="incident">Major Incident</option>
+          <option value="maintenance">Maintenance</option>
+        </select>
+      </div>
+      <div class="admin-select-wrap">
+        <label>Music Player</label>
+        <select class="admin-select" id="adm-player">
+          <option value="operational">Operational</option>
+          <option value="degraded">Degraded Performance</option>
+          <option value="incident">Major Incident</option>
+          <option value="maintenance">Maintenance</option>
+        </select>
+      </div>
+      <div class="admin-select-wrap">
+        <label>Top4Top CDN</label>
+        <select class="admin-select" id="adm-top4top">
+          <option value="operational">Operational</option>
+          <option value="degraded">Degraded Performance</option>
+          <option value="incident">Major Incident</option>
+          <option value="maintenance">Maintenance</option>
+        </select>
+      </div>
+      <div class="admin-select-wrap">
+        <label>Database / Firebase</label>
+        <select class="admin-select" id="adm-database">
+          <option value="operational">Operational</option>
+          <option value="degraded">Degraded Performance</option>
+          <option value="incident">Major Incident</option>
+          <option value="maintenance">Maintenance</option>
+        </select>
+      </div>
+      <div class="admin-select-wrap">
+        <label>Overall System</label>
+        <select class="admin-select" id="adm-overall">
+          <option value="operational">All Systems Operational</option>
+          <option value="degraded">Degraded Performance</option>
+          <option value="incident">Major Incident</option>
+          <option value="maintenance">Under Maintenance</option>
+        </select>
+      </div>
+      <div class="admin-textarea-wrap">
+        <label>Incident / Announcement Message (optional)</label>
+        <textarea class="admin-textarea" id="adm-message" placeholder="e.g. We are investigating slow load times on the music player..."></textarea>
+      </div>
+      <div class="admin-actions">
+        <button class="btn btn-ghost" onclick="clearAdminMessage()">Clear Message</button>
+        <button class="btn btn-save btn-primary" onclick="saveAdminStatus()">Save Status</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- OVERALL BANNER -->
+  <div class="overall-banner all-good fade-up" id="overallBanner">
+    <div class="status-dot-big green" id="overallDot"></div>
+    <div class="overall-info">
+      <h2 id="overallTitle">All Systems Operational</h2>
+      <p id="overallSub">No issues detected across all services.</p>
+    </div>
+    <div class="overall-time">
+      <div id="liveClock">—</div>
+      <div>WIB (UTC+7)</div>
+    </div>
+  </div>
+
+  <!-- SERVICES -->
+  <div class="services-group fade-up">
+    <div class="section-title">Core Services</div>
+
+    <div class="service-card s-green" id="card-hosting">
+      <div class="service-icon">🖥️</div>
+      <div class="service-info">
+        <h3>Hosting & Web Server</h3>
+        <div class="sub">exemusic.github.io · GitHub Pages</div>
+        <div class="uptime-row" id="uptime-hosting"></div>
+        <div class="uptime-label"><span>90 days ago</span><span>Today</span></div>
+      </div>
+      <div class="service-right">
+        <span class="status-pill pill-green" id="pill-hosting">Operational</span>
+      </div>
+    </div>
+
+    <div class="service-card s-green" id="card-upload">
+      <div class="service-icon">📤</div>
+      <div class="service-info">
+        <h3>Upload Service</h3>
+        <div class="sub">Firebase Storage · Supabase</div>
+        <div class="uptime-row" id="uptime-upload"></div>
+        <div class="uptime-label"><span>90 days ago</span><span>Today</span></div>
+      </div>
+      <div class="service-right">
+        <span class="status-pill pill-green" id="pill-upload">Operational</span>
+      </div>
+    </div>
+
+    <div class="service-card s-green" id="card-player">
+      <div class="service-icon">▶️</div>
+      <div class="service-info">
+        <h3>Music Player</h3>
+        <div class="sub">Streaming & Playback Engine</div>
+        <div class="uptime-row" id="uptime-player"></div>
+        <div class="uptime-label"><span>90 days ago</span><span>Today</span></div>
+      </div>
+      <div class="service-right">
+        <span class="status-pill pill-green" id="pill-player">Operational</span>
+      </div>
+    </div>
+
+    <div class="service-card s-green" id="card-top4top">
+      <div class="service-icon">🔗</div>
+      <div class="service-info">
+        <h3>Top4Top CDN</h3>
+        <div class="sub">top4top.io · External CDN</div>
+        <div class="uptime-row" id="uptime-top4top"></div>
+        <div class="uptime-label"><span>90 days ago</span><span>Today</span></div>
+      </div>
+      <div class="service-right">
+        <a href="https://www.semrush.com/website/top4top.io/overview/" target="_blank" class="service-link" title="View Top4Top on SEMrush">↗ SEMrush</a>
+        <span class="status-pill pill-green" id="pill-top4top">Operational</span>
+      </div>
+    </div>
+
+    <div class="service-card s-green" id="card-database">
+      <div class="service-icon">🗄️</div>
+      <div class="service-info">
+        <h3>Database</h3>
+        <div class="sub">Firebase Realtime Database · asia-southeast1</div>
+        <div class="uptime-row" id="uptime-database"></div>
+        <div class="uptime-label"><span>90 days ago</span><span>Today</span></div>
+      </div>
+      <div class="service-right">
+        <span class="status-pill pill-green" id="pill-database">Operational</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- INCIDENT NOTICE (shown when admin sets a message) -->
+  <div id="incidentNoticeWrap" style="display:none; margin-bottom:36px;">
+    <div class="section-title">Active Incident</div>
+    <div class="incident-card">
+      <div class="incident-head">
+        <div class="incident-title" id="incidentNoticeTitle">—</div>
+        <div class="incident-date" id="incidentNoticeDate">—</div>
+      </div>
+      <div class="incident-body" id="incidentNoticeBody">—</div>
+    </div>
+  </div>
+
+  <!-- REPORT BAR -->
+  <div class="report-bar fade-up" id="reportBar">
+    <span style="font-size:1.1rem">📣</span>
+    <p id="reportText">Experiencing an issue? Sign in to submit a report.</p>
+    <button class="btn btn-ghost" id="reportBtn" onclick="handleReport()">Report Issue</button>
+  </div>
+
+  <!-- PAST INCIDENTS -->
+  <div class="incidents-section fade-up">
+    <div class="section-title">Past Incidents</div>
+    <div id="pastIncidentsList">
+      <div class="no-incidents">
+        <span>✅</span>
+        No incidents in the past 30 days.
+      </div>
+    </div>
+  </div>
+
+  <footer class="fade-up">
+    <div>ExeMusic Status · Powered by Firebase Realtime Database</div>
+    <div><a href="https://exemusic.github.io" target="_blank">exemusic.github.io</a> · All times in WIB (UTC+7)</div>
+  </footer>
+
+</div>
+
+<!-- LOGIN MODAL -->
+<div class="modal-overlay" id="loginModal">
+  <div class="modal" style="position:relative">
+    <h3>Sign In to ExeMusic</h3>
+    <p>Sign in with Google to submit issue reports. Your identity helps us respond faster.</p>
+    <button class="google-btn" onclick="signInWithGoogle()">
+      <svg viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+      Continue with Google
+    </button>
+    <button class="btn btn-ghost" style="width:100%;justify-content:center;display:flex" onclick="closeLoginModal()">Cancel</button>
+  </div>
+</div>
+
+<!-- REPORT MODAL -->
+<div class="modal-overlay" id="reportModal">
+  <div class="modal" style="position:relative">
+    <h3>Report an Issue</h3>
+    <p>Describe the problem you're experiencing. Our team will review all reports.</p>
+    <select class="admin-select" id="reportService" style="width:100%;margin-bottom:10px;">
+      <option value="hosting">Hosting / Web Server</option>
+      <option value="upload">Upload Service</option>
+      <option value="player">Music Player</option>
+      <option value="top4top">Top4Top CDN</option>
+      <option value="database">Database</option>
+      <option value="other">Other</option>
+    </select>
+    <textarea class="report-textarea" id="reportDescription" placeholder="e.g. Music won't load, keeps buffering..."></textarea>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeReportModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="submitReport()">Submit Report</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- Firebase SDKs -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getDatabase, ref, get, set, push, onValue, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCVJYSR4nHeoRA9WTMZa3-2xliKQRrd5g4",
+  authDomain: "exemusic-execuriverp.firebaseapp.com",
+  databaseURL: "https://exemusic-execuriverp-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "exemusic-execuriverp",
+  storageBucket: "exemusic-execuriverp.firebasestorage.app",
+  messagingSenderId: "722057744401",
+  appId: "1:722057744401:web:cd6a6a103692059bda61b0",
+  measurementId: "G-2P56Y7QQ18"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getDatabase(app);
+const provider = new GoogleAuthProvider();
+
+let currentUser = null;
+let isOwner = false;
+
+// ─── CLOCK ───
+function updateClock() {
+  const now = new Date();
+  const wib = new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Jakarta' }));
+  const h = String(wib.getHours()).padStart(2,'0');
+  const m = String(wib.getMinutes()).padStart(2,'0');
+  const s = String(wib.getSeconds()).padStart(2,'0');
+  document.getElementById('liveClock').textContent = `${h}:${m}:${s}`;
+}
+setInterval(updateClock, 1000);
+updateClock();
+
+// ─── UPTIME BARS (simulated history) ───
+function generateUptimeBars(containerId, currentStatus) {
+  const el = document.getElementById(containerId);
+  if (!el) return;
+  el.innerHTML = '';
+  for (let i = 0; i < 90; i++) {
+    const bar = document.createElement('div');
+    bar.className = 'uptime-bar ';
+    if (i === 89) {
+      // today
+      const cls = { operational:'bar-op', incident:'bar-inc', degraded:'bar-dg', maintenance:'bar-mt' };
+      bar.className += (cls[currentStatus] || 'bar-op');
+    } else {
+      const r = Math.random();
+      if (r > 0.03) bar.className += 'bar-op';
+      else if (r > 0.015) bar.className += 'bar-dg';
+      else bar.className += 'bar-inc';
+    }
+    el.appendChild(bar);
+  }
+}
+
+// ─── STATUS CONFIG ───
+const statusConfig = {
+  operational: { pill:'pill-green', text:'Operational', cardClass:'s-green' },
+  degraded:    { pill:'pill-yellow', text:'Degraded',    cardClass:'s-yellow' },
+  incident:    { pill:'pill-red',   text:'Incident',    cardClass:'s-red' },
+  maintenance: { pill:'pill-blue',  text:'Maintenance', cardClass:'s-blue' },
+};
+
+const overallConfig = {
+  operational: { banner:'all-good', dot:'green', title:'All Systems Operational', sub:'All services are running normally.' },
+  degraded:    { banner:'degraded', dot:'yellow', title:'Degraded Performance', sub:'Some services may be slower than usual.' },
+  incident:    { banner:'incident', dot:'red',    title:'Major Incident', sub:'We are actively investigating an issue.' },
+  maintenance: { banner:'maintenance', dot:'blue', title:'Under Maintenance', sub:'Scheduled maintenance is in progress.' },
+};
+
+function applyServiceStatus(serviceKey, status) {
+  const cfg = statusConfig[status] || statusConfig.operational;
+  const card = document.getElementById('card-' + serviceKey);
+  const pill = document.getElementById('pill-' + serviceKey);
+  if (card) {
+    card.className = 'service-card ' + cfg.cardClass;
+  }
+  if (pill) {
+    pill.className = 'status-pill ' + cfg.pill;
+    pill.textContent = cfg.text;
+  }
+  generateUptimeBars('uptime-' + serviceKey, status);
+}
+
+function applyOverallStatus(status) {
+  const cfg = overallConfig[status] || overallConfig.operational;
+  const banner = document.getElementById('overallBanner');
+  const dot = document.getElementById('overallDot');
+  const title = document.getElementById('overallTitle');
+  const sub = document.getElementById('overallSub');
+  banner.className = 'overall-banner ' + cfg.banner + ' fade-up';
+  dot.className = 'status-dot-big ' + cfg.dot;
+  title.textContent = cfg.title;
+  sub.textContent = cfg.sub;
+}
+
+// ─── LOAD STATUS FROM DB ───
+const statusRef = ref(db, 'status/current');
+onValue(statusRef, (snap) => {
+  const data = snap.val();
+  if (!data) {
+    // default all operational
+    ['hosting','upload','player','top4top','database'].forEach(k => applyServiceStatus(k, 'operational'));
+    applyOverallStatus('operational');
+    return;
+  }
+
+  const services = ['hosting','upload','player','top4top','database'];
+  services.forEach(k => applyServiceStatus(k, data[k] || 'operational'));
+  applyOverallStatus(data.overall || 'operational');
+
+  // Incident message
+  const noticeWrap = document.getElementById('incidentNoticeWrap');
+  if (data.message && data.message.trim()) {
+    noticeWrap.style.display = 'block';
+    document.getElementById('incidentNoticeTitle').textContent = overallConfig[data.overall]?.title || 'Notice';
+    document.getElementById('incidentNoticeBody').textContent = data.message;
+    const d = data.updatedAt ? new Date(data.updatedAt).toLocaleString('en-US',{timeZone:'Asia/Jakarta',dateStyle:'medium',timeStyle:'short'}) : '—';
+    document.getElementById('incidentNoticeDate').textContent = d;
+  } else {
+    noticeWrap.style.display = 'none';
+  }
+
+  // Sync admin selects if owner
+  if (isOwner) syncAdminSelects(data);
+});
+
+// ─── LOAD REPORTS ───
+const reportsRef = ref(db, 'reports');
+onValue(reportsRef, (snap) => {
+  const data = snap.val();
+  const container = document.getElementById('pastIncidentsList');
+  if (!data) {
+    container.innerHTML = '<div class="no-incidents"><span>✅</span>No incidents in the past 30 days.</div>';
+    return;
+  }
+  const items = Object.entries(data).reverse().slice(0, 10);
+  if (!items.length) {
+    container.innerHTML = '<div class="no-incidents"><span>✅</span>No incidents in the past 30 days.</div>';
+    return;
+  }
+  container.innerHTML = items.map(([id, r]) => {
+    const d = r.timestamp ? new Date(r.timestamp).toLocaleString('en-US',{timeZone:'Asia/Jakarta',dateStyle:'medium',timeStyle:'short'}) : '—';
+    const serviceLabel = {hosting:'Hosting',upload:'Upload Service',player:'Music Player',top4top:'Top4Top CDN',database:'Database',other:'Other'}[r.service] || r.service;
+    return `<div class="incident-card">
+      <div class="incident-head">
+        <div class="incident-title">📋 User Report — ${serviceLabel}</div>
+        <div class="incident-date">${d}</div>
+      </div>
+      <div class="incident-body">${escHtml(r.description || '—')}</div>
+      <div style="font-size:0.72rem;color:var(--muted);margin-top:8px;">Reported by: ${escHtml(r.userName || 'Anonymous')}</div>
+    </div>`;
+  }).join('');
+});
+
+function escHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+// ─── AUTH ───
+onAuthStateChanged(auth, async (user) => {
+  currentUser = user;
+  const hr = document.getElementById('headerRight');
+  if (!user) {
+    isOwner = false;
+    hr.innerHTML = '<button class="btn btn-ghost" onclick="openLoginModal()">Sign In</button>';
+    document.getElementById('adminPanel').classList.remove('show');
+    document.getElementById('reportText').textContent = 'Experiencing an issue? Sign in to submit a report.';
+    document.getElementById('reportBtn').textContent = 'Report Issue';
+    return;
+  }
+
+  // Check role
+  try {
+    const roleSnap = await get(ref(db, `users/${user.uid}/role`));
+    isOwner = roleSnap.exists() && roleSnap.val() === 'owner';
+  } catch(e) { isOwner = false; }
+
+  const adminBadge = isOwner ? ' <span class="admin-badge">Owner</span>' : '';
+  hr.innerHTML = `<div class="user-avatar" onclick="handleSignOut()">
+    <img src="${user.photoURL || ''}" onerror="this.style.display='none'">
+    <span>${user.displayName?.split(' ')[0] || 'User'}</span>${adminBadge}
+    <span style="color:var(--muted);font-size:0.7rem" title="Sign out">✕</span>
+  </div>`;
+
+  if (isOwner) {
+    document.getElementById('adminPanel').classList.add('show');
+    // Load current values
+    const snap = await get(ref(db, 'status/current'));
+    if (snap.val()) syncAdminSelects(snap.val());
+  }
+
+  document.getElementById('reportText').textContent = 'Found something broken? Let us know.';
+  document.getElementById('reportBtn').textContent = 'Report Issue';
+});
+
+function syncAdminSelects(data) {
+  const keys = ['hosting','upload','player','top4top','database','overall'];
+  keys.forEach(k => {
+    const el = document.getElementById('adm-' + k);
+    if (el && data[k]) el.value = data[k];
+  });
+  const msg = document.getElementById('adm-message');
+  if (msg) msg.value = data.message || '';
+}
+
+// ─── GOOGLE SIGN IN ───
+window.signInWithGoogle = async () => {
+  try {
+    await signInWithPopup(auth, provider);
+    closeLoginModal();
+    showToast('✅ Signed in successfully');
+  } catch(e) {
+    showToast('❌ Sign in failed: ' + e.message);
+  }
+};
+
+window.handleSignOut = async () => {
+  await signOut(auth);
+  showToast('👋 Signed out');
+};
+
+// ─── ADMIN SAVE ───
+window.saveAdminStatus = async () => {
+  if (!isOwner) return;
+  const data = {
+    hosting:  document.getElementById('adm-hosting').value,
+    upload:   document.getElementById('adm-upload').value,
+    player:   document.getElementById('adm-player').value,
+    top4top:  document.getElementById('adm-top4top').value,
+    database: document.getElementById('adm-database').value,
+    overall:  document.getElementById('adm-overall').value,
+    message:  document.getElementById('adm-message').value.trim(),
+    updatedAt: Date.now(),
+    updatedBy: currentUser?.uid || 'unknown'
+  };
+  try {
+    await set(ref(db, 'status/current'), data);
+    showToast('✅ Status updated successfully');
+  } catch(e) {
+    showToast('❌ Failed to save: ' + e.message);
+  }
+};
+
+window.clearAdminMessage = () => {
+  document.getElementById('adm-message').value = '';
+};
+
+// ─── REPORT ───
+window.handleReport = () => {
+  if (!currentUser) { openLoginModal(); return; }
+  document.getElementById('reportModal').classList.add('show');
+};
+
+window.submitReport = async () => {
+  if (!currentUser) return;
+  const service = document.getElementById('reportService').value;
+  const desc = document.getElementById('reportDescription').value.trim();
+  if (!desc) { showToast('⚠️ Please describe the issue'); return; }
+  try {
+    await push(ref(db, 'reports'), {
+      service, description: desc,
+      userName: currentUser.displayName || 'Anonymous',
+      userEmail: currentUser.email,
+      userId: currentUser.uid,
+      timestamp: Date.now()
+    });
+    closeReportModal();
+    document.getElementById('reportDescription').value = '';
+    showToast('✅ Report submitted. Thank you!');
+  } catch(e) {
+    showToast('❌ Failed to submit: ' + e.message);
+  }
+};
+
+// ─── MODALS ───
+window.openLoginModal  = () => document.getElementById('loginModal').classList.add('show');
+window.closeLoginModal = () => document.getElementById('loginModal').classList.remove('show');
+window.closeReportModal= () => document.getElementById('reportModal').classList.remove('show');
+
+document.getElementById('loginModal').addEventListener('click', e => {
+  if (e.target === document.getElementById('loginModal')) closeLoginModal();
+});
+document.getElementById('reportModal').addEventListener('click', e => {
+  if (e.target === document.getElementById('reportModal')) closeReportModal();
+});
+
+// ─── TOAST ───
+window.showToast = (msg) => {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3200);
+};
+
+// ─── INIT uptime bars ───
+['hosting','upload','player','top4top','database'].forEach(k => generateUptimeBars('uptime-' + k, 'operational'));
+
+</script>
+</body>
+</html>

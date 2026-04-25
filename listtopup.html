@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>List Donate | Execurive Roleplay</title>
+<link rel="icon" href="favicon.png">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#020617;
+  --panel:#0b1224;
+  --panel2:#0f172a;
+  --border:#1e293b;
+  --blue:#38bdf8;
+  --purple:#6366f1;
+  --gold:#facc15;
+  --green:#22c55e;
+  --text:#e5e7eb;
+  --muted:#94a3b8;
+}
+
+/* ===== BODY ===== */
+body{
+  background:
+    radial-gradient(1000px 400px at top,rgba(56,189,248,.18),transparent),
+    radial-gradient(800px 300px at bottom,rgba(99,102,241,.16),transparent),
+    var(--bg);
+  font-family:Inter,Segoe UI,Arial,sans-serif;
+  color:var(--text);
+}
+
+/* ===== LOADING WA ===== */
+.loading{
+  position:fixed;
+  inset:0;
+  background:rgba(2,6,23,.85);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:9999;
+}
+.loading.active{display:flex}
+.loading-box{
+  background:linear-gradient(160deg,#0b1224,#0f172a);
+  border:1px solid var(--border);
+  border-radius:22px;
+  padding:38px 46px;
+  text-align:center;
+}
+.spinner{
+  width:44px;height:44px;
+  border:4px solid var(--border);
+  border-top:4px solid var(--blue);
+  border-radius:50%;
+  margin:0 auto 16px;
+  animation:spin 1s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ===== MODAL NAMAIN IC ===== */
+.modal{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.6);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:9998;
+}
+.modal.active{display:flex;}
+.modal-box{
+  background:linear-gradient(160deg,#0b1224,#0f172a);
+  padding:28px 32px;
+  border-radius:20px;
+  border:1px solid var(--border);
+  width:90%;
+  max-width:400px;
+  text-align:center;
+  box-shadow:0 0 26px rgba(56,189,248,.25);
+  position:relative;
+}
+.modal-box h3{
+  font-size:18px;
+  font-weight:900;
+  margin-bottom:18px;
+}
+.modal-box input{
+  width:100%;
+  padding:12px 14px;
+  border-radius:14px;
+  border:1px solid var(--border);
+  margin-bottom:16px;
+  background:var(--panel2);
+  color:var(--text);
+  font-weight:600;
+}
+.modal-box button{
+  width:100%;
+  padding:14px;
+  border:none;
+  border-radius:16px;
+  background:linear-gradient(135deg,var(--green),var(--blue));
+  color:#020617;
+  font-weight:900;
+  cursor:pointer;
+  transition:.25s;
+}
+.modal-box button:hover{
+  transform:translateY(-2px) scale(1.03);
+  box-shadow:0 12px 28px rgba(56,189,248,.45);
+}
+.modal-close{
+  position:absolute;
+  top:12px;
+  right:12px;
+  font-weight:900;
+  cursor:pointer;
+  color:var(--muted);
+  font-size:16px;
+}
+.modal-close:hover{color:var(--gold);}
+
+/* ===== NAVBAR ===== */
+.nav{
+  position:sticky;
+  top:0;
+  z-index:999;
+  background:rgba(2,6,23,.8);
+  backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--border);
+}
+.nav-inner{
+  max-width:1200px;
+  margin:auto;
+  padding:14px 18px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+.nav-left{display:flex;gap:10px;align-items:center}
+.logo{
+  width:40px;height:40px;
+  border-radius:12px;
+  overflow:hidden;
+  box-shadow:0 0 18px rgba(56,189,248,.4);
+}
+.logo img{width:100%;height:100%}
+.nav-title{
+  font-weight:900;
+  letter-spacing:2px;
+  font-size:14px;
+  background:linear-gradient(90deg,var(--blue),var(--purple));
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  position:relative;
+}
+.nav-title::after{
+  content:" | LIST TOPUP";
+  font-size:11px;
+  font-weight:600;
+  color:var(--muted);
+  margin-left:6px;
+}
+
+/* nav right */
+.nav-right{display:flex;gap:10px}
+.nav-right a{
+  padding:10px 16px;
+  border-radius:12px;
+  font-size:11px;
+  font-weight:900;
+  letter-spacing:1.3px;
+  text-decoration:none;
+  color:var(--muted);
+}
+.nav-right a.active{
+  background:linear-gradient(135deg,var(--blue),var(--purple));
+  color:#020617;
+}
+
+/* ===== MAIN ===== */
+.wrapper{
+  max-width:1200px;
+  margin:auto;
+  padding:40px 22px;
+}
+
+/* ===== HEADER ===== */
+.header{
+  background:linear-gradient(160deg,#020617,#0b1224);
+  border:1px solid var(--border);
+  border-radius:26px;
+  padding:60px 26px;
+  text-align:center;
+}
+
+/* ===== SLIDER GAMBAR ===== */
+.slider-container{
+  position:relative;
+  overflow:hidden;
+  border-radius:20px;
+  border:1px solid var(--gold);
+  margin-top:30px;
+  width:100%;
+}
+.slider-track{
+  display:flex;
+  transition:transform 1.5s ease;
+}
+.slider-track img{
+  width:100%;
+  height:auto;
+  flex-shrink:0;
+  object-fit:contain;
+  user-select:none;
+}
+
+/* ===== SLIDER DOT ===== */
+.slider-dots{
+  text-align:center;
+  margin-top:12px;
+}
+.slider-dots span{
+  display:inline-block;
+  width:10px;height:10px;
+  margin:0 6px;
+  background:var(--muted);
+  border-radius:50%;
+  cursor:pointer;
+  transition:.3s;
+}
+.slider-dots span.active{
+  background:var(--gold);
+}
+
+/* ===== CATEGORY ===== */
+.category{
+  margin-top:60px;
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+  gap:14px;
+}
+.category button{
+  padding:18px;
+  border-radius:20px;
+  border:1px solid var(--border);
+  background:var(--panel2);
+  color:var(--text);
+  font-weight:900;
+  cursor:pointer;
+}
+.category button.active{
+  background:linear-gradient(135deg,var(--blue),var(--purple));
+  color:#020617;
+}
+
+/* ===== SECTION ===== */
+.section{margin-top:80px}
+.section h3{
+  margin-bottom:26px;
+  padding-left:16px;
+  border-left:4px solid var(--blue);
+}
+
+/* ===== GRID ===== */
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  gap:26px;
+}
+
+/* ===== CARD ===== */
+.card{
+  background:linear-gradient(160deg,#0b1224,#0f172a);
+  border:1px solid var(--border);
+  border-radius:24px;
+  padding:26px;
+  transition:.3s;
+}
+.card:hover{
+  transform:translateY(-8px);
+  border-color:var(--blue);
+}
+.limited{border:1px solid var(--gold)}
+.item{font-weight:900}
+.price{
+  margin-top:8px;
+  color:var(--gold);
+  font-weight:900;
+  font-size:18px;
+}
+
+/* ===== IMAGE ===== */
+.vehicle-img{
+  width:100%;
+  height:160px;
+  border-radius:16px;
+  overflow:hidden;
+  margin-bottom:16px;
+  background:#020617;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.vehicle-img img{
+  width:100%;
+  height:100%;
+  object-fit:contain;
+}
+
+/* ===== PROFESSIONAL BUTTON ===== */
+.btn{
+  margin-top:18px;
+  width:100%;
+  padding:16px;
+  border:none;
+  border-radius:18px;
+  font-weight:900;
+  cursor:pointer;
+  letter-spacing:1px;
+  background:linear-gradient(135deg,var(--green),var(--blue));
+  color:#020617;
+  transition:.25s;
+  box-shadow:0 8px 26px rgba(56,189,248,.35);
+}
+.btn:hover{
+  transform:translateY(-2px) scale(1.03);
+  box-shadow:0 14px 34px rgba(56,189,248,.6);
+}
+.btn:active{transform:scale(.96)}
+
+.footer{
+  margin:90px 0 30px;
+  text-align:center;
+  color:var(--muted);
+}
+
+/* ===== MOBILE ===== */
+@media(max-width:768px){
+  .nav-inner{padding:12px 14px}
+  .logo{width:36px;height:36px}
+  .nav-title{font-size:13px}
+  .nav-right a{
+    padding:8px 12px;
+    font-size:10px;
+  }
+
+  .wrapper{padding:28px 14px}
+  .header{padding:44px 18px}
+  .category{
+    grid-template-columns:repeat(2,1fr);
+    gap:12px;
+  }
+  .category button{
+    padding:14px;
+    font-size:11px;
+    border-radius:16px;
+  }
+  .section{margin-top:60px}
+  .grid{
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:18px;
+  }
+  .card{padding:20px;border-radius:20px}
+  .price{font-size:16px}
+  .btn{
+    padding:13px;
+    font-size:12px;
+    border-radius:16px;
+  }
+  .vehicle-img{height:130px}
+}
+</style>
+</head>
+
+<body>
+
+<!-- LOADING -->
+<div class="loading" id="loading">
+  <div class="loading-box">
+    <div class="spinner"></div>
+    <b>Menghubungi Owner...</b>
+  </div>
+</div>
+
+<!-- MODAL NAMAIN IC -->
+<div class="modal" id="modal">
+  <div class="modal-box">
+    <div class="modal-close" onclick="closeModal()">×</div>
+    <h3>Masukkan Nama IC</h3>
+    <input type="text" id="namaIC" placeholder="Nama_Kamu">
+    <button id="submitIC">Submit</button>
+  </div>
+</div>
+
+<!-- NAVBAR -->
+<div class="nav">
+  <div class="nav-inner">
+    <div class="nav-left">
+      <div class="logo"><img src="favicon.png"></div>
+      <div class="nav-title">EXECURIVE</div>
+    </div>
+    <div class="nav-right">
+      <a href="index.html">HOME</a>
+      <a class="active">LIST TOPUP</a>
+    </div>
+  </div>
+</div>
+
+<div class="wrapper">
+
+<div class="header">
+
+  <!-- SLIDER GAMBAR -->
+  <div class="slider-container" id="slider">
+<div class="slider-track">
+  <img src="fotowebsite/top3donatur.png" alt="loading image...">
+  <img src="fotowebsite/benefit50k.png" alt="loading image...">
+</div>
+  </div>
+  <div class="slider-dots" id="slider-dots"></div>
+
+</div>
+
+<div class="category">
+  <button class="active" onclick="filterCat('all',this)">SEMUA</button>
+  <button onclick="filterCat('package',this)">PACKAGE</button>
+  <button onclick="filterCat('vehicle',this)">VEHICLE</button>
+  <button onclick="filterCat('skin',this)">SKIN</button>
+</div>
+
+<!-- PACKAGE -->
+<div class="section" data-cat="package">
+<h3>DONATE PACKAGE</h3>
+<div class="grid">
+<script>
+const pkg=[["Skin Import","15K"],["Mobil Import","15K"],["Kendaraan Udara/Air","20K"],["Rumah Import Bebas","25K"],["Rumah Import + Mapping","35K"],["Uang IC 20JT","10K"],["Level +5","10K"],["Workshop Bebas","30K"],["Workshop + Mapping","40K"],["Gudang Import","25K"],["Pasang Gate","15K"],["Pasang Garkot","15K"],["Rubel 750","10K"],["Biz Market / Elektronik","25K"],["Biz + Mapping","35K"],["Pom (No Mapping)","40K"],["Pom + Mapping","50K"]];
+document.write(pkg.map(p=>`<div class="card"><div class="item">${p[0]}</div><div class="price">${p[1]}</div><button class="btn" onclick="openModal('${p[0]}','${p[1]}')">TOP UP</button></div>`).join(""));
+</script>
+</div>
+</div>
+
+<!-- VEHICLE -->
+<div class="section" data-cat="vehicle">
+<h3>KENDARAAN LIMITED</h3>
+<div class="grid">
+<script>
+const veh=[
+["Kart","fotowebsite/Kart.png","40K"],
+["Super GT","fotowebsite/Supergt.png","45K"],
+["Hotknife","fotowebsite/Hotknife.png","35K"],
+["Heli Seaparrow","fotowebsite/Sparrow.png","50K"],
+["Mobil Caddy","fotowebsite/Caddy.png","35K"],
+["Jet Hydra","fotowebsite/hydra.png","60K"]
+];
+document.write(veh.map(v=>`
+<div class="card limited">
+  <div class="vehicle-img"><img src="${v[1]}"></div>
+  <div class="item">${v[0]}</div>
+  <div class="price">${v[2]}</div>
+  <button class="btn" onclick="openModal('${v[0]}','${v[2]}')">TOP UP</button>
+</div>`).join(""));
+</script>
+</div>
+</div>
+
+<!-- SKIN -->
+<div class="section" data-cat="skin">
+<h3>SKIN LIMITED</h3>
+<div class="grid">
+<script>
+const skin=[
+["ID 303","fotowebsite/303.png","45K"],
+["ID 304","fotowebsite/304.png","45K"],
+["ID 305","fotowebsite/305.png","45K"],
+["ID 295","fotowebsite/295.png","45K"],
+["ID 289","fotowebsite/289.png","45K"],
+["ID 285","fotowebsite/285.png","55K"],
+["ID 277","fotowebsite/277.png","55K"],
+["ID 278","fotowebsite/278.png","55K"],
+["ID 279","fotowebsite/279.png","55K"],
+["ID 217","fotowebsite/217.png","65K"],
+["ID 99","fotowebsite/99.png","45K"]
+];
+document.write(skin.map(s=>`
+<div class="card limited">
+  <div class="vehicle-img"><img src="${s[1]}"></div>
+  <div class="item">${s[0]}</div>
+  <div class="price">${s[2]}</div>
+  <button class="btn" onclick="openModal('${s[0]}','${s[2]}')">TOP UP</button>
+</div>`).join(""));
+</script>
+</div>
+</div>
+
+<div class="footer">© Execurive Roleplay</div>
+</div>
+
+<script>
+const waNumber="6282126437107";
+let currentItem="", currentPrice="";
+
+// MODAL SYSTEM
+function openModal(item,price){
+  currentItem=item;
+  currentPrice=price;
+  document.getElementById("namaIC").value="";
+  document.getElementById("modal").classList.add("active");
+}
+function closeModal(){
+  document.getElementById("modal").classList.remove("active");
+}
+
+// SUBMIT MODAL
+document.getElementById("submitIC").addEventListener("click",()=>{
+  const namaIC=document.getElementById("namaIC").value.trim();
+  if(!namaIC){alert("Masukkan Nama IC terlebih dahulu!");return;}
+  document.getElementById("modal").classList.remove("active");
+  document.getElementById("loading").classList.add("active");
+  const msg=`Halo Min, saya mau TOP UP\n\nItem: ${currentItem}\nHarga: ${currentPrice}\nNama IC: ${namaIC}\nServer: Execurive Roleplay`;
+  setTimeout(()=>{window.location.href=`https://wa.me/${waNumber}?text=${encodeURIComponent(msg)}`},1100);
+});
+
+// FILTER CATEGORY
+function filterCat(cat,el){
+  document.querySelectorAll('.category button').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  document.querySelectorAll('.section[data-cat]').forEach(s=>{s.style.display=(cat==="all"||s.dataset.cat===cat)?"block":"none";});
+}
+
+// SLIDER
+const sliderTrack = document.querySelector('.slider-track');
+const dotsContainer = document.getElementById('slider-dots');
+const slides = Array.from(sliderTrack.children);
+let sliderIndex = 0;
+slides.forEach((s,i)=>{
+  const dot=document.createElement('span');
+  if(i===0) dot.classList.add('active');
+  dot.addEventListener('click',()=>{sliderIndex=i;updateSlider();});
+  dotsContainer.appendChild(dot);
+});
+function updateSlider(){
+  sliderTrack.style.transform=`translateX(-${sliderIndex*100}%)`;
+  dotsContainer.querySelectorAll('span').forEach((d,i)=>{d.classList.toggle('active',i===sliderIndex);});
+}
+setInterval(()=>{
+  if(slides.length<=1) return;
+  sliderIndex=(sliderIndex+1)%slides.length;
+  updateSlider();
+},6000);
+</script>
+
+</body>
+</html>
