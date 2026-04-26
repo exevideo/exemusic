@@ -2817,6 +2817,19 @@
     .active-btn { color: var(--accent) !important; opacity: 1 !important; text-shadow: 0 0 10px var(--accent); }
 
     .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.85); display: none; z-index: 2000; backdrop-filter: blur(8px); align-items: center; justify-content: center; padding: 16px; overflow-y: auto; }
+    #feedbackOverlay {
+      position: fixed;
+      inset: 0;
+      display: none;
+      z-index: 100050;
+      background: rgba(0,0,0,0.85);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      overflow-y: auto;
+    }
     #modalLeaderboard.modal {
       z-index: 100050 !important;
       align-items: center;
@@ -6737,7 +6750,7 @@
   </div>
 
   <!-- FEEDBACK MODAL -->
-  <div class="modal" id="modalFeedback" onclick="if(event.target==this)closeFeedbackModal()">
+  <div id="feedbackOverlay" class="feedback-overlay" onclick="if(event.target==this)closeFeedbackModal()">
     <div class="feedback-sheet">
       <div class="feedback-header">
         <div class="feedback-title">
@@ -7558,16 +7571,19 @@
         return;
       }
       console.log('User logged in, opening modal');
-      const modal = document.getElementById('modalFeedback');
+      const modal = document.getElementById('feedbackOverlay');
       if (modal) {
         modal.style.display = 'flex';
-        modal.style.zIndex = '2000';
+        modal.style.zIndex = '100050';
         // Reset form
-        document.getElementById('feedbackForm').reset();
-        document.getElementById('charCount').textContent = '0';
+        const form = document.getElementById('feedbackForm');
+        if (form) form.reset();
+        const charCount = document.getElementById('charCount');
+        if (charCount) charCount.textContent = '0';
         // Focus on textarea
         setTimeout(() => {
-          document.getElementById('feedbackMessage').focus();
+          const textarea = document.getElementById('feedbackMessage');
+          if (textarea) textarea.focus();
         }, 100);
       } else {
         console.log('Modal not found');
@@ -7575,7 +7591,7 @@
     };
 
     window.closeFeedbackModal = function() {
-      const modal = document.getElementById('modalFeedback');
+      const modal = document.getElementById('feedbackOverlay');
       if (modal) {
         modal.style.display = 'none';
         modal.style.zIndex = '';
