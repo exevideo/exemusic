@@ -7600,6 +7600,10 @@
       const feedbackMessage = document.getElementById('feedbackMessage');
       const charCount = document.getElementById('charCount');
 
+      console.log('initFeedbackForm called');
+      console.log('Form element:', feedbackForm);
+      console.log('Message textarea:', feedbackMessage);
+
       if (feedbackMessage && charCount) {
         feedbackMessage.addEventListener('input', function() {
           charCount.textContent = this.value.length;
@@ -7609,13 +7613,16 @@
       if (feedbackForm) {
         feedbackForm.addEventListener('submit', async function(e) {
           e.preventDefault();
+          console.log('Form submit event fired');
 
           if (!auth.currentUser) {
+            console.log('User not logged in');
             showToast('Login dulu untuk mengirim feedback', 'error');
             return;
           }
 
           const message = feedbackMessage.value.trim();
+          console.log('Message:', message);
           if (!message) {
             showToast('Tulis pesan feedback dulu', 'error');
             return;
@@ -7651,36 +7658,56 @@
               second: '2-digit'
             });
 
-            // Send to Netlify function with environment variable
-            const response = await fetch('/.netlify/functions/send-feedback', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({
-                username: username,
-                userId: uid,
-                message: message,
-                timestamp: timestamp
-              })
+            // Save feedback to Firebase
+            const feedbacksRef = db.ref('feedbacks');
+            const feedbackId = feedbacksRef.push().key;
+            
+            await feedbacksRef.child(feedbackId).set({
+              userId: uid,
+              username: username,
+              message: message,
+              timestamp: timestamp,
+              date: today,
+              status: 'unread'
             });
 
-            if (response.ok) {
-              // Mark as sent today
-              await userRef.child(feedbackKey).set(true);
+            // Send to Discord via Netlify function
+            try {
+              const discordResponse = await fetch('/.netlify/functions/send-feedback', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                  username: username,
+                  userId: uid,
+                  message: message,
+                  timestamp: timestamp
+                })
+              });
 
-              // Close modal and show thank you
-              closeFeedbackModal();
-              showThankYouAnimation(username);
-
-              showToast('Feedback berhasil dikirim! Terima kasih atas masukan Anda.', 'success');
-            } else {
-              throw new Error('Failed to send feedback');
+              if (!discordResponse.ok) {
+                console.warn('Discord notification may have failed, but feedback saved locally');
+              }
+            } catch (discordError) {
+              console.warn('Could not send Discord notification:', discordError);
+              // Continue anyway since feedback is saved in Firebase
             }
 
+            // Mark as sent today in user data
+            await userRef.child(feedbackKey).set(true);
+
+            // Close modal and show thank you
+            closeFeedbackModal();
+            showThankYouAnimation(username);
+
+            showToast('Feedback berhasil dikirim! Terima kasih atas masukan Anda.', 'success');
+
           } catch (error) {
-            console.error('Feedback error:', error);
-            showToast('Gagal mengirim feedback. Coba lagi nanti.', 'error');
+            console.error('Feedback error - Full error:', error);
+            console.error('Error message:', error.message);
+            console.error('Error stack:', error.stack);
+            showToast('Gagal mengirim feedback: ' + error.message, 'error');
           } finally {
             if (submitBtn) submitBtn.disabled = false;
           }
