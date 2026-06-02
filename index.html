@@ -62,162 +62,208 @@
     }
 
     /* ============================================================
-       LOADING SCREEN - GAME STYLE
+       LOADING SCREEN - SHINY RESPONSIVE
     ============================================================ */
-    #gameLoadScreen {
-      position: fixed; inset: 0; z-index: 99999;
-      background: radial-gradient(ellipse at 50% -20%, rgba(0,212,255,0.15), transparent 60%),
-                  radial-gradient(ellipse at 80% 100%, rgba(0,255,136,0.1), transparent 50%),
-                  linear-gradient(180deg, #030308 0%, #06060f 50%, #030308 100%);
-      display: flex; flex-direction: column; align-items: center; justify-content: center;
-      transition: opacity 0.8s ease, transform 0.8s ease;
+    #loader {
+      position: fixed;
+      inset: 0;
+      z-index: 99999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      background: radial-gradient(circle at top, rgba(30,215,96,0.12), transparent 28%),
+                  linear-gradient(180deg, #050608 0%, #020204 48%, #080a12 100%);
     }
-    #gameLoadScreen.fade-out {
-      opacity: 0;
-      transform: scale(1.05);
+
+    #loader .stars {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
       pointer-events: none;
     }
 
-    .load-logo-wrap {
-      position: relative;
-      margin-bottom: 40px;
-    }
-    .load-logo-ring {
-      width: 110px; height: 110px; border-radius: 50%;
-      border: 2px solid transparent;
-      background: linear-gradient(#030308, #030308) padding-box,
-                  linear-gradient(135deg, var(--accent), var(--accent2), var(--purple)) border-box;
-      display: flex; align-items: center; justify-content: center;
-      position: relative;
-      animation: ringPulse 2s ease-in-out infinite;
-    }
-    @keyframes ringPulse {
-      0%, 100% { box-shadow: 0 0 15px rgba(0,255,136,0.3), inset 0 0 15px rgba(0,255,136,0.05); }
-      50% { box-shadow: 0 0 35px rgba(0,255,136,0.6), 0 0 60px rgba(0,212,255,0.2), inset 0 0 25px rgba(0,255,136,0.1); }
-    }
-    .load-logo-ring-outer {
-      position: absolute; inset: -8px; border-radius: 50%;
-      border: 1px solid rgba(0,255,136,0.2);
-      animation: ringOuterSpin 8s linear infinite;
-    }
-    @keyframes ringOuterSpin {
-      to { transform: rotate(360deg); }
-    }
-    .load-logo-ring-outer::before {
-      content: '';
-      position: absolute; top: -2px; left: 50%; transform: translateX(-50%);
-      width: 6px; height: 6px; border-radius: 50%;
-      background: var(--accent);
-      box-shadow: 0 0 10px var(--accent), 0 0 20px var(--accent);
-    }
-    .load-logo-icon {
-      font-size: 40px; color: var(--accent);
-      text-shadow: 0 0 20px var(--accent);
+    .star {
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.9);
+      box-shadow: 0 0 10px rgba(255,255,255,0.22);
+      opacity: 0;
+      animation: twinkle 4s ease-in-out infinite;
     }
 
-    .load-title {
-      font-family: 'Rajdhani', sans-serif;
-      font-size: 32px; font-weight: 700;
-      letter-spacing: 6px;
-      background: linear-gradient(135deg, var(--accent), var(--accent2));
+    .star:nth-child(odd) {
+      opacity: 0.65;
+      box-shadow: none;
+    }
+
+    .loader-card {
+      position: relative;
+      z-index: 2;
+      width: min(680px, 100%);
+      border-radius: 32px;
+      background: rgba(10,12,20,0.86);
+      border: 1px solid rgba(255,255,255,0.08);
+      box-shadow: 0 40px 120px rgba(0,0,0,0.45);
+      padding: clamp(30px, 5vw, 48px);
+      text-align: center;
+      overflow: hidden;
+    }
+
+    .loader-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at top, rgba(30,215,96,0.08), transparent 22%),
+                  radial-gradient(circle at bottom right, rgba(0,212,255,0.08), transparent 18%);
+      pointer-events: none;
+    }
+
+    .logo-wrap {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .logo {
+      position: relative;
+      font-size: clamp(3.2rem, 9vw, 6.4rem);
+      font-weight: 900;
+      letter-spacing: -0.26rem;
+      line-height: 0.95;
+      text-transform: uppercase;
+      color: transparent;
+      background: linear-gradient(90deg, rgba(255,255,255,0.96), rgba(30,215,96,1), rgba(255,255,255,0.96));
+      background-size: 220% 100%;
       -webkit-background-clip: text;
       background-clip: text;
-      -webkit-text-fill-color: transparent;
-      text-transform: uppercase;
-      margin-bottom: 6px;
-    }
-    .load-subtitle {
-      font-size: 11px; color: rgba(255,255,255,0.3);
-      letter-spacing: 3px; text-transform: uppercase;
-      font-family: 'JetBrains Mono', monospace;
-      margin-bottom: 50px;
+      animation: logoShine 4s ease-in-out infinite;
     }
 
-    .load-bar-wrap {
-      width: 320px; max-width: 90vw;
-      margin-bottom: 16px;
+    .logo-shine {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, transparent 15%, rgba(255,255,255,0.45), transparent 75%);
+      transform: translateX(-150%);
+      filter: blur(10px);
+      pointer-events: none;
+      animation: shineSweep 3s ease-in-out infinite;
     }
-    .load-bar-track {
-      width: 100%; height: 6px;
-      background: rgba(255,255,255,0.06);
-      border-radius: 10px;
-      position: relative;
+
+    .status {
+      margin-top: 20px;
+      font-size: clamp(0.85rem, 1vw, 1rem);
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.72);
+    }
+
+    .progress-bar {
+      margin: 32px auto 0;
+      width: 100%;
+      max-width: 580px;
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .progress-track {
+      flex: 1 1 260px;
+      min-width: 260px;
+      height: 16px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.08);
+      box-shadow: inset 0 0 30px rgba(0,0,0,0.18);
       overflow: hidden;
-      border: 1px solid rgba(255,255,255,0.05);
-    }
-    .load-bar-fill {
-      height: 100%;
-      background: linear-gradient(90deg, var(--accent), var(--accent2), var(--accent));
-      background-size: 200% 100%;
-      border-radius: 10px;
-      width: 0%;
-      transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       position: relative;
-      animation: barShimmer 1.5s linear infinite;
     }
-    @keyframes barShimmer {
-      0% { background-position: 200% 0; }
-      100% { background-position: -200% 0; }
+
+    .progress-fill {
+      position: absolute;
+      inset: 0;
+      width: 0;
+      border-radius: 999px;
+      background: linear-gradient(90deg, rgba(30,215,96,1), rgba(179,255,204,0.95));
+      box-shadow: 0 0 20px rgba(30,215,96,0.5);
+      overflow: hidden;
     }
-    .load-bar-fill::after {
+
+    .progress-fill::before {
       content: '';
-      position: absolute; right: 0; top: 50%; transform: translateY(-50%);
-      width: 12px; height: 12px; border-radius: 50%;
-      background: white;
-      box-shadow: 0 0 10px var(--accent), 0 0 20px var(--accent2);
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.45), transparent);
+      transform: translateX(-100%);
+      animation: progressLight 1.8s ease-in-out infinite;
     }
-    .load-bar-glow {
-      position: absolute; inset: 0;
-      background: linear-gradient(90deg, transparent, rgba(0,255,136,0.15), transparent);
-      animation: glowSlide 1.5s ease-in-out infinite;
+
+    .progress-thumb {
+      min-width: 64px;
+      padding: 8px 16px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.12);
+      color: #fff;
+      font-size: clamp(0.88rem, 1vw, 1rem);
+      font-weight: 700;
+      backdrop-filter: blur(10px);
+      text-align: center;
     }
-    @keyframes glowSlide {
+
+    .hint {
+      margin-top: 18px;
+      color: rgba(255,255,255,0.55);
+      font-size: clamp(0.8rem, 0.95vw, 0.95rem);
+      line-height: 1.6;
+    }
+
+    /* ============================================================
+       TAG SELECTOR V2
+    ============================================================ */
+    .tagv2-modal { position: fixed; inset: 0; display: none; z-index: 12000; align-items: center; justify-content: center; background: rgba(0,0,0,0.6); padding: 18px; }
+    .tagv2-sheet { width: min(720px, 96vw); max-height: 84vh; overflow-y: auto; border-radius: 14px; background: linear-gradient(180deg,#0b0b10,#0f1116); border:1px solid rgba(255,255,255,0.06); padding:18px; }
+    .tagv2-header { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:12px; }
+    .tagv2-title { font-family: 'Rajdhani',sans-serif; color:var(--accent); font-weight:700; letter-spacing:1px; }
+    .tagv2-list { display:flex; flex-direction:column; gap:10px; }
+    .tagv2-item { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:10px; border-radius:10px; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.03); }
+    .tagv2-left { display:flex; align-items:center; gap:12px; }
+    .tagv2-name { font-weight:700; color:#fff; }
+    .tagv2-desc { font-size:12px; color:rgba(255,255,255,0.6); }
+    .tagv2-use { background: linear-gradient(135deg,var(--accent),var(--accent2)); color:#000; border:none; padding:8px 12px; border-radius:999px; cursor:pointer; font-weight:700; }
+    .tagv2-use[disabled] { opacity:0.5; cursor:not-allowed; }
+    @media (max-width:480px){ .tagv2-sheet{ padding:12px; border-radius:8px; } .tagv2-item{ padding:8px } }
+
+    @keyframes logoShine {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+
+    @keyframes shineSweep {
+      0% { transform: translateX(-150%); }
+      50% { transform: translateX(120%); }
+      100% { transform: translateX(120%); }
+    }
+
+    @keyframes progressLight {
       0% { transform: translateX(-100%); }
       100% { transform: translateX(100%); }
     }
 
-    .load-info-row {
-      display: flex; justify-content: space-between;
-      align-items: center;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 11px;
-    }
-    .load-status { color: rgba(255,255,255,0.4); letter-spacing: 1px; }
-    .load-percent {
-      font-weight: 700; font-size: 16px;
-      background: linear-gradient(135deg, var(--accent), var(--accent2));
-      -webkit-background-clip: text;
-      background-clip: text;
-      -webkit-text-fill-color: transparent;
+    @keyframes twinkle {
+      0%, 100% { opacity: 0.15; transform: scale(0.8); }
+      50% { opacity: 1; transform: scale(1.25); }
     }
 
-    .load-dots {
-      display: flex; gap: 8px; margin-top: 30px;
+    @media (max-width: 540px) {
+      .loader-card { padding: 24px; }
+      .logo { font-size: clamp(2.5rem, 14vw, 4.8rem); letter-spacing: -0.18rem; }
+      .progress-bar { gap: 12px; }
+      .progress-track { min-width: 220px; }
+      .progress-thumb { min-width: 54px; padding: 7px 14px; }
     }
-    .load-dot {
-      width: 6px; height: 6px; border-radius: 50%;
-      background: rgba(255,255,255,0.15);
-      animation: dotPulse 1.2s ease-in-out infinite;
-    }
-    .load-dot:nth-child(1) { animation-delay: 0s; }
-    .load-dot:nth-child(2) { animation-delay: 0.2s; }
-    .load-dot:nth-child(3) { animation-delay: 0.4s; }
-    @keyframes dotPulse {
-      0%, 100% { background: rgba(255,255,255,0.15); transform: scale(1); }
-      50% { background: var(--accent); transform: scale(1.4); box-shadow: 0 0 8px var(--accent); }
-    }
-
-    /* corner decorations */
-    .load-corner {
-      position: absolute;
-      width: 30px; height: 30px;
-      border-color: rgba(0,255,136,0.3);
-      border-style: solid;
-    }
-    .load-corner.tl { top: 20px; left: 20px; border-width: 2px 0 0 2px; }
-    .load-corner.tr { top: 20px; right: 20px; border-width: 2px 2px 0 0; }
-    .load-corner.bl { bottom: 20px; left: 20px; border-width: 0 0 2px 2px; }
-    .load-corner.br { bottom: 20px; right: 20px; border-width: 0 2px 2px 0; }
 
     /* ============================================================
        VELLY TAG - PINK HEARTS EFFECT
@@ -788,23 +834,13 @@
     #btnNotif:hover { background: var(--accent); color: black; border-color: var(--accent); }
     #btnNotif .notif-badge { position: absolute; top: -2px; right: -2px; min-width: 17px; height: 17px; background: var(--danger); border-radius: 9px; font-size: 9px; font-weight: 700; display: none; align-items: center; justify-content: center; padding: 0 3px; }
     #btnNotif .notif-badge.show { display: flex; }
-    #btnFeedback {
-      width: 40px; height: 40px;
-      background: rgba(0,255,136,0.12);
-      border: 1px solid rgba(0,255,136,0.45);
-      border-radius: 50%;
-      color: var(--accent);
-      cursor: pointer;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 16px;
-      transition: 0.2s;
-      position: relative;
-      z-index: 10;
-    }
-    #btnFeedback:hover {
-      background: rgba(0,255,136,0.28);
-      color: #fff;
-      box-shadow: 0 0 16px rgba(0,255,136,0.45);
+    .tag-selector-sheet {
+      max-width: 640px;
+      padding: 24px;
+      background: rgba(8,10,20,0.98);
+      border: 1px solid rgba(0,255,136,0.18);
+      box-shadow: 0 0 40px rgba(0,255,136,0.12);
+      border-radius: 18px;
     }
     #btnEvent {
       width: 40px; height: 40px;
@@ -1391,321 +1427,6 @@
       border: 1px solid rgba(75,85,99,0.95);
     }
 
-    /* Top-up game (Roblox) — Event & Quest */
-    .event-topup-wrap {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-    .event-topup-head {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 10px 12px;
-      border-radius: 14px;
-      background: linear-gradient(135deg, rgba(224,30,90,0.12), rgba(0,162,255,0.08));
-      border: 1px solid rgba(224,30,90,0.35);
-    }
-    .event-topup-head-icon {
-      width: 44px;
-      height: 44px;
-      border-radius: 12px;
-      background: rgba(224,30,90,0.2);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 22px;
-      color: #fff;
-    }
-    .event-topup-head-text h4 {
-      font-size: 13px;
-      font-weight: 700;
-      color: #fff;
-      letter-spacing: 0.5px;
-    }
-    .event-topup-head-text p {
-      font-size: 10px;
-      color: #9ca3af;
-      margin-top: 2px;
-      line-height: 1.4;
-    }
-    .event-topup-user-row label {
-      font-size: 10px;
-      text-transform: uppercase;
-      letter-spacing: 0.6px;
-      color: #9ca3af;
-      display: block;
-      margin-bottom: 4px;
-    }
-    .event-topup-user-row input.inp-dark {
-      width: 100%;
-      max-width: 100%;
-    }
-    .event-topup-packs {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-    .event-topup-card {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) auto;
-      gap: 10px;
-      align-items: center;
-      padding: 10px 12px;
-      border-radius: 14px;
-      background: rgba(15,23,42,0.95);
-      border: 1px solid rgba(55,65,81,0.9);
-    }
-    .event-topup-card-title {
-      font-size: 13px;
-      font-weight: 700;
-      color: #f9fafb;
-    }
-    .event-topup-card-title span {
-      color: #38bdf8;
-    }
-    .event-topup-card-meta {
-      font-size: 10px;
-      color: #9ca3af;
-      margin-top: 4px;
-    }
-    .event-topup-card-meta strong {
-      color: #fbbf24;
-    }
-    .event-topup-go {
-      font-size: 10px;
-      padding: 8px 12px;
-      border-radius: 12px;
-      border: 1px solid rgba(224,30,90,0.55);
-      background: linear-gradient(135deg, rgba(224,30,90,0.35), rgba(185,28,28,0.25));
-      color: #fff;
-      font-weight: 700;
-      cursor: pointer;
-      white-space: nowrap;
-    }
-    .event-topup-go:hover {
-      box-shadow: 0 0 16px rgba(224,30,90,0.35);
-    }
-    .event-topup-go:disabled {
-      opacity: 0.45;
-      cursor: not-allowed;
-      box-shadow: none;
-    }
-    .event-topup-card--gamepass {
-      border: 1px solid rgba(251,191,36,0.35);
-      background: linear-gradient(135deg, rgba(251,191,36,0.08), rgba(15,23,42,0.6));
-      border-radius: 14px;
-      padding: 10px 10px;
-    }
-    .event-topup-card--gamepass .event-topup-card-title span.gp-pill {
-      display: inline-block;
-      margin-left: 6px;
-      font-size: 9px;
-      font-weight: 800;
-      letter-spacing: 0.6px;
-      padding: 3px 8px;
-      border-radius: 999px;
-      background: rgba(251,191,36,0.2);
-      border: 1px solid rgba(251,191,36,0.55);
-      color: #fde68a;
-      vertical-align: middle;
-    }
-    .event-topup-stock {
-      font-size: 10px;
-      font-weight: 700;
-      color: #fca5a5;
-      margin-top: 6px;
-      letter-spacing: 0.3px;
-    }
-    .event-topup-stock.ok {
-      color: #86efac;
-    }
-    .event-topup-restock {
-      font-size: 9px;
-      color: #94a3b8;
-      margin-top: 2px;
-      font-family: 'JetBrains Mono', monospace;
-    }
-    .event-topup-progress-panel {
-      display: none;
-      flex-direction: column;
-      gap: 0;
-      padding: 0;
-      border-radius: 16px;
-      position: relative;
-      overflow: hidden;
-      background: linear-gradient(155deg, rgba(12,14,28,0.99) 0%, rgba(6,8,18,0.99) 50%, rgba(10,12,24,0.99) 100%);
-      border: 1px solid rgba(255,255,255,0.08);
-      box-shadow:
-        0 0 0 1px rgba(224,30,90,0.12) inset,
-        0 16px 40px rgba(0,0,0,0.45),
-        0 0 48px rgba(224,30,90,0.08);
-    }
-    .event-topup-progress-panel.show {
-      display: flex;
-    }
-    .event-topup-progress-panel.rbx-mode-gamepass .event-topup-progress-topline {
-      background: linear-gradient(90deg, transparent, #fbbf24, #f97316, #fb7185, transparent);
-      background-size: 200% 100%;
-    }
-    .event-topup-progress-topline {
-      height: 3px;
-      width: 100%;
-      background: linear-gradient(90deg, transparent, #e01e5a, #00a2ff, #22c55e, transparent);
-      background-size: 200% 100%;
-      animation: rbxToplineMove 2.2s linear infinite;
-    }
-    @keyframes rbxToplineMove {
-      to { background-position: 200% 0; }
-    }
-    .event-topup-progress-inner {
-      padding: 14px 14px 12px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-    .event-topup-progress-headrow {
-      display: flex;
-      align-items: flex-start;
-      gap: 12px;
-    }
-    .rbx-prog-pulse {
-      flex-shrink: 0;
-      width: 46px;
-      height: 46px;
-      border-radius: 14px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 20px;
-      color: #fff;
-      background: linear-gradient(145deg, rgba(224,30,90,0.45), rgba(0,162,255,0.2));
-      border: 1px solid rgba(255,255,255,0.12);
-      box-shadow: 0 0 24px rgba(224,30,90,0.25);
-      position: relative;
-    }
-    .rbx-prog-pulse::after {
-      content: '';
-      position: absolute;
-      inset: -4px;
-      border-radius: 18px;
-      border: 2px solid rgba(34,197,94,0.25);
-      animation: rbxRingPulse 1.4s ease-out infinite;
-      pointer-events: none;
-    }
-    @keyframes rbxRingPulse {
-      0% { transform: scale(1); opacity: 0.9; }
-      100% { transform: scale(1.15); opacity: 0; }
-    }
-    .event-topup-progress-headtext { min-width: 0; flex: 1; }
-    .event-topup-progress-panel .lbl {
-      font-family: 'Rajdhani', sans-serif;
-      font-size: 15px;
-      font-weight: 700;
-      color: #f8fafc;
-      letter-spacing: 0.4px;
-      line-height: 1.2;
-    }
-    .event-topup-progress-panel .sub {
-      font-size: 11px;
-      color: rgba(148,163,184,0.95);
-      line-height: 1.45;
-      margin-top: 4px;
-    }
-    .rbx-prog-chips {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-    }
-    .rbx-chip {
-      font-size: 9px;
-      font-weight: 700;
-      letter-spacing: 0.5px;
-      text-transform: uppercase;
-      padding: 5px 10px;
-      border-radius: 999px;
-      background: rgba(34,197,94,0.12);
-      border: 1px solid rgba(34,197,94,0.35);
-      color: #86efac;
-    }
-    .rbx-chip-dim {
-      background: rgba(51,65,85,0.5);
-      border-color: rgba(100,116,139,0.45);
-      color: #cbd5e1;
-    }
-    .event-topup-progress-bar-wrap {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .event-topup-progress-bar {
-      position: relative;
-      flex: 1;
-      height: 10px;
-      border-radius: 999px;
-      background: rgba(15,23,42,0.95);
-      overflow: hidden;
-      border: 1px solid rgba(255,255,255,0.06);
-      box-shadow: inset 0 1px 8px rgba(0,0,0,0.5);
-    }
-    .event-topup-progress-fill {
-      position: absolute;
-      left: 0;
-      top: 0;
-      bottom: 0;
-      width: 0%;
-      border-radius: 999px;
-      background: linear-gradient(90deg, #e01e5a, #f97316, #22c55e, #38bdf8);
-      background-size: 160% 100%;
-      transition: width 0.32s cubic-bezier(0.33, 1, 0.68, 1);
-      box-shadow: 0 0 18px rgba(34,197,94,0.35);
-    }
-    .event-topup-progress-panel.show .event-topup-progress-fill {
-      animation: rbxBarShimmer 1.8s ease-in-out infinite;
-    }
-    @keyframes rbxBarShimmer {
-      0%, 100% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-    }
-    .event-topup-progress-pct {
-      font-size: 11px;
-      font-family: 'JetBrains Mono', monospace;
-      font-weight: 700;
-      color: #4ade80;
-      min-width: 38px;
-      text-align: right;
-      text-shadow: 0 0 12px rgba(74,222,128,0.35);
-    }
-    .rbx-prog-steps {
-      display: flex;
-      gap: 5px;
-      margin-top: 2px;
-    }
-    .rbx-step {
-      flex: 1;
-      text-align: center;
-      font-size: 8px;
-      font-weight: 700;
-      letter-spacing: 0.2px;
-      text-transform: uppercase;
-      color: rgba(100,116,139,0.85);
-      padding: 7px 3px;
-      border-radius: 10px;
-      background: rgba(30,41,59,0.65);
-      border: 1px solid rgba(51,65,85,0.6);
-      transition: color 0.2s, border-color 0.2s, background 0.2s, box-shadow 0.2s;
-    }
-    .rbx-step.active {
-      color: #f8fafc;
-      border-color: rgba(56,189,248,0.65);
-      background: linear-gradient(180deg, rgba(56,189,248,0.2), rgba(15,23,42,0.9));
-      box-shadow: 0 0 14px rgba(56,189,248,0.2);
-    }
-    .rbx-step.done {
-      color: #bbf7d0;
-      border-color: rgba(34,197,94,0.55);
-      background: rgba(34,197,94,0.12);
-    }
     @media (max-width: 900px) {
       .event-center-layout {
         grid-template-columns: minmax(0, 1fr);
@@ -1729,13 +1450,6 @@
       .event-quest-action,
       .event-shop-action {
         align-items: flex-start;
-      }
-      .event-topup-card {
-        grid-template-columns: minmax(0, 1fr);
-      }
-      .event-topup-go {
-        width: 100%;
-        justify-content: center;
       }
     }
 
@@ -2088,255 +1802,6 @@
       }
       .leaderboard-value-number {
         font-size: 16px;
-      }
-    }
-
-    /* ============================================================
-       FEEDBACK MODAL - Modern UI
-    ============================================================ */
-    .feedback-sheet {
-      background: linear-gradient(145deg, rgba(18,18,28,0.97) 0%, rgba(8,10,20,0.98) 100%);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 20px;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.8), 0 0 0 1px rgba(255,255,255,0.04) inset;
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      width: 90%;
-      max-width: 500px;
-      max-height: 80vh;
-      overflow: hidden;
-      animation: feedbackSheetIn 0.4s cubic-bezier(0.175,0.885,0.32,1.275);
-    }
-    @keyframes feedbackSheetIn {
-      from {
-        opacity: 0;
-        transform: translateY(-20px) scale(0.95);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-      }
-    }
-    .feedback-header {
-      padding: 20px 24px;
-      border-bottom: 1px solid rgba(255,255,255,0.06);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .feedback-title {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      font-size: 18px;
-      font-weight: 700;
-      color: var(--accent);
-      font-family: 'Rajdhani', sans-serif;
-      letter-spacing: 1px;
-    }
-    .feedback-title i {
-      font-size: 20px;
-    }
-    .feedback-close {
-      background: none;
-      border: none;
-      color: #888;
-      font-size: 24px;
-      cursor: pointer;
-      padding: 4px;
-      border-radius: 8px;
-      transition: 0.2s;
-    }
-    .feedback-close:hover {
-      background: rgba(255,255,255,0.1);
-      color: #fff;
-    }
-    .feedback-content {
-      padding: 24px;
-    }
-    .feedback-info {
-      background: rgba(0,255,136,0.1);
-      border: 1px solid rgba(0,255,136,0.2);
-      border-radius: 12px;
-      padding: 16px;
-      margin-bottom: 20px;
-      font-size: 14px;
-      color: #e5e7eb;
-      line-height: 1.5;
-    }
-    .feedback-info i {
-      color: var(--accent);
-      margin-right: 8px;
-    }
-    .feedback-form {
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-    }
-    .feedback-field {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-    .feedback-field label {
-      font-size: 14px;
-      font-weight: 600;
-      color: #f8fafc;
-      font-family: 'Rajdhani', sans-serif;
-      letter-spacing: 0.5px;
-    }
-    .feedback-field textarea {
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 12px;
-      padding: 16px;
-      color: #f8fafc;
-      font-size: 14px;
-      line-height: 1.5;
-      resize: vertical;
-      min-height: 120px;
-      transition: 0.2s;
-      font-family: 'Exo 2', sans-serif;
-    }
-    .feedback-field textarea:focus {
-      outline: none;
-      border-color: var(--accent);
-      box-shadow: 0 0 0 3px rgba(0,255,136,0.1);
-    }
-    .feedback-field textarea::placeholder {
-      color: #9ca3af;
-    }
-    .char-count {
-      text-align: right;
-      font-size: 12px;
-      color: #6b7280;
-      font-family: 'JetBrains Mono', monospace;
-    }
-    .btn-feedback-submit {
-      background: linear-gradient(135deg, var(--accent), var(--accent2));
-      border: none;
-      border-radius: 12px;
-      padding: 16px 24px;
-      color: #000;
-      font-size: 16px;
-      font-weight: 700;
-      cursor: pointer;
-      transition: 0.3s;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      font-family: 'Rajdhani', sans-serif;
-      letter-spacing: 1px;
-    }
-    .btn-feedback-submit:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 25px rgba(0,255,136,0.4);
-    }
-    .btn-feedback-submit:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-      transform: none;
-      box-shadow: none;
-    }
-
-    /* THANK YOU ANIMATION */
-    .thank-you-overlay {
-      position: fixed;
-      inset: 0;
-      z-index: 10000;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      background: rgba(0,0,0,0.8);
-      backdrop-filter: blur(10px);
-    }
-    .thank-you-card {
-      background: linear-gradient(145deg, rgba(18,18,28,0.97) 0%, rgba(8,10,20,0.98) 100%);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 20px;
-      padding: 40px 32px;
-      text-align: center;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.8);
-      animation: thankYouIn 0.6s cubic-bezier(0.175,0.885,0.32,1.275);
-      max-width: 400px;
-      width: 90%;
-    }
-    @keyframes thankYouIn {
-      from {
-        opacity: 0;
-        transform: scale(0.8) translateY(20px);
-      }
-      to {
-        opacity: 1;
-        transform: scale(1) translateY(0);
-      }
-    }
-    .thank-you-icon {
-      font-size: 48px;
-      color: var(--accent);
-      margin-bottom: 20px;
-      animation: heartPulse 1.5s ease-in-out infinite;
-    }
-    @keyframes heartPulse {
-      0%, 100% {
-        transform: scale(1);
-        color: var(--accent);
-      }
-      50% {
-        transform: scale(1.1);
-        color: #ff69b4;
-      }
-    }
-    .thank-you-card h3 {
-      color: #f8fafc;
-      font-size: 24px;
-      font-weight: 700;
-      margin-bottom: 12px;
-      font-family: 'Rajdhani', sans-serif;
-      letter-spacing: 1px;
-    }
-    .thank-you-card p {
-      color: #e5e7eb;
-      font-size: 16px;
-      line-height: 1.5;
-    }
-
-    @media (max-width: 640px) {
-      .feedback-sheet {
-        width: calc(100% - 20px);
-        margin: 20px auto;
-        max-height: 85vh;
-      }
-      .feedback-header {
-        padding: 16px 20px;
-      }
-      .feedback-content {
-        padding: 20px;
-      }
-      .feedback-info {
-        padding: 12px;
-        font-size: 13px;
-      }
-      .feedback-field textarea {
-        padding: 14px;
-        min-height: 100px;
-      }
-      .btn-feedback-submit {
-        padding: 14px 20px;
-        font-size: 15px;
-      }
-      .thank-you-card {
-        padding: 32px 24px;
-      }
-      .thank-you-icon {
-        font-size: 40px;
-      }
-      .thank-you-card h3 {
-        font-size: 20px;
-      }
-      .thank-you-card p {
-        font-size: 14px;
       }
     }
 
@@ -2807,29 +2272,20 @@
        FOOTER NAV
     ============================================================ */
     .footer {
-      margin-top: auto; display: flex; justify-content: space-between;
+      margin-top: auto; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px;
       background: rgba(0,0,0,0.4);
       border: 1px solid rgba(255,255,255,0.05);
-      padding: 13px 25px; border-radius: 20px; flex-shrink: 0; z-index: 10;
+      padding: 13px 18px; border-radius: 20px; flex-shrink: 0; z-index: 10;
     }
-    .footer button { background: none; border: none; color: white; font-size: 17px; opacity: 0.4; cursor: pointer; transition: 0.2s; }
+    .footer button {
+      background: none; border: none; color: white; font-size: 17px;
+      opacity: 0.4; cursor: pointer; transition: 0.2s;
+      flex: 1 1 0; min-width: 0;
+    }
     .footer button:hover { opacity: 0.8; }
     .active-btn { color: var(--accent) !important; opacity: 1 !important; text-shadow: 0 0 10px var(--accent); }
 
     .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.85); display: none; z-index: 2000; backdrop-filter: blur(8px); align-items: center; justify-content: center; padding: 16px; overflow-y: auto; }
-    #feedbackOverlay {
-      position: fixed;
-      inset: 0;
-      display: none;
-      z-index: 100050;
-      background: rgba(0,0,0,0.85);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      align-items: center;
-      justify-content: center;
-      padding: 16px;
-      overflow-y: auto;
-    }
     #modalLeaderboard.modal {
       z-index: 100050 !important;
       align-items: center;
@@ -2852,7 +2308,10 @@
     .sheet {
       position: absolute; bottom: 0; width: 100%; max-width: 400px; left: 50%; transform: translateX(-50%);
       background: linear-gradient(180deg, #121220, #0a0a16);
-      border-radius: 28px 28px 0 0; padding: 24px; max-height: 88vh; overflow-y: auto;
+      border-radius: 28px 28px 0 0;
+      padding: 24px 24px calc(24px + env(safe-area-inset-bottom, 18px));
+      max-height: calc(100vh - env(safe-area-inset-top, 20px));
+      overflow-y: auto;
       box-shadow: 0 -10px 50px rgba(0,0,0,0.6), 0 -1px 0 rgba(0,255,136,0.1);
       border-top: 1px solid rgba(0,255,136,0.1);
       animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
@@ -2860,6 +2319,17 @@
     @keyframes slideUp { from { transform: translate(-50%, 100%); } to { transform: translate(-50%, 0); } }
     .sheet::-webkit-scrollbar { width: 4px; }
     .sheet::-webkit-scrollbar-thumb { background: rgba(0,255,136,0.3); border-radius: 10px; }
+
+    .request-status {
+      margin-top: 10px;
+      padding: 10px 12px;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      background: rgba(0,255,255,0.06);
+      color: #c0f7ff;
+      font-size: 12px;
+      line-height: 1.4;
+    }
 
     /* ============================================================
        SUPABASE FILE UPLOAD - v3.2.3
@@ -3906,6 +3376,11 @@
     }
     .tag-selector-sheet {
       max-width: 640px;
+      padding: 22px;
+      background: rgba(5,12,30,0.95);
+      border: 1px solid rgba(0,255,136,0.18);
+      box-shadow: 0 0 48px rgba(0,255,136,0.12);
+      backdrop-filter: blur(16px);
     }
     .tag-selector-layout {
       display: flex;
@@ -3947,6 +3422,24 @@
     .tag-chip:hover {
       background: rgba(255,255,255,0.12);
       transform: translateY(-1px);
+    }
+    .tag-chip-owned {
+      border: 1px solid rgba(0,255,136,0.18);
+      background: rgba(0,255,136,0.08);
+      color: #eafaf1;
+    }
+    .tag-chip-owned:hover {
+      background: rgba(0,255,136,0.15);
+    }
+    .tag-chip-locked {
+      background: rgba(255,255,255,0.03);
+      color: #777;
+      cursor: default;
+      opacity: 0.65;
+    }
+    .tag-chip-locked:hover {
+      transform: none;
+      background: rgba(255,255,255,0.04);
     }
     .tag-chip-none {
       background: rgba(255,80,80,0.1);
@@ -4625,6 +4118,209 @@
     .about-dev-link:hover { color: #7df9ff; }
 
     /* ============================================================
+       EXEPREMIUM STYLING - Shiny Green Effect v3.3.2
+    ============================================================ */
+    .premium-modal-body {
+      background: linear-gradient(135deg, rgba(10, 50, 20, 0.4) 0%, rgba(5, 25, 10, 0.5) 100%);
+      border: 2px solid #00ff88;
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 0 60px rgba(0, 255, 136, 0.3), inset 0 0 30px rgba(0, 255, 136, 0.1);
+      position: relative;
+      overflow: hidden;
+    }
+    .premium-modal-body::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(45deg, transparent 30%, rgba(0, 255, 136, 0.05) 50%, transparent 70%);
+      animation: shimmer 6s ease-in-out infinite;
+      pointer-events: none;
+    }
+    @keyframes shimmer {
+      0%, 100% { transform: translate(-100%, -100%) rotate(45deg); }
+      50% { transform: translate(100%, 100%) rotate(45deg); }
+    }
+    
+    .premium-header {
+      text-align: center;
+      margin-bottom: 24px;
+      position: relative;
+      z-index: 1;
+    }
+    .premium-header h2 {
+      font-size: 32px;
+      color: #00ff88;
+      text-shadow: 0 0 20px rgba(0, 255, 136, 0.6);
+      margin-bottom: 8px;
+      font-weight: 900;
+    }
+    .premium-header p {
+      color: #b3b3b3;
+      font-size: 14px;
+    }
+
+    .premium-packages {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .premium-card {
+      background: linear-gradient(135deg, rgba(0, 255, 136, 0.05) 0%, rgba(0, 212, 255, 0.03) 100%);
+      border: 2px solid #00ff88;
+      border-radius: 12px;
+      padding: 20px;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      cursor: pointer;
+    }
+    .premium-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 20px 40px rgba(0, 255, 136, 0.4), 0 0 30px rgba(0, 255, 136, 0.2);
+      border-color: #7df9ff;
+    }
+    .premium-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, #00ff88, transparent);
+      animation: slide 3s ease-in-out infinite;
+    }
+    @keyframes slide {
+      0%, 100% { transform: translateX(-100%); }
+      50% { transform: translateX(100%); }
+    }
+
+    .premium-card-content { position: relative; z-index: 1; }
+    .premium-package-name {
+      font-size: 20px;
+      font-weight: 800;
+      color: #00ff88;
+      margin-bottom: 8px;
+    }
+    .premium-price {
+      font-size: 24px;
+      font-weight: 900;
+      color: #fff;
+      margin-bottom: 4px;
+    }
+    .premium-price-period {
+      font-size: 12px;
+      color: #999;
+      margin-bottom: 16px;
+    }
+    .premium-features {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 16px 0;
+    }
+    .premium-features li {
+      font-size: 13px;
+      color: #d0d0d0;
+      margin-bottom: 8px;
+      padding-left: 20px;
+      position: relative;
+    }
+    .premium-features li::before {
+      content: '✓';
+      position: absolute;
+      left: 0;
+      color: #00ff88;
+      font-weight: bold;
+    }
+
+    .premium-btn {
+      background: linear-gradient(135deg, #00ff88 0%, #00d4ff 100%);
+      color: #000;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 8px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      width: 100%;
+      text-transform: uppercase;
+      font-size: 13px;
+      letter-spacing: 0.5px;
+      box-shadow: 0 5px 20px rgba(0, 255, 136, 0.3);
+    }
+    .premium-btn:hover {
+      box-shadow: 0 10px 40px rgba(0, 255, 136, 0.6);
+      transform: scale(1.05);
+    }
+    .premium-btn:active {
+      transform: scale(0.98);
+    }
+
+    .premium-benefit-detail {
+      background: rgba(0, 255, 136, 0.08);
+      border-left: 4px solid #00ff88;
+      padding: 16px;
+      border-radius: 8px;
+      margin-top: 16px;
+      font-size: 13px;
+      color: #d0d0d0;
+      position: relative;
+      z-index: 1;
+    }
+
+    .premium-badge {
+      display: inline-block;
+      background: linear-gradient(135deg, #00ff88, #00d4ff);
+      color: #000;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 700;
+      margin-top: 8px;
+    }
+    .premium-offer-banner {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 14px 18px;
+      background: rgba(3, 20, 10, 0.92);
+      border: 1px solid rgba(0, 255, 136, 0.25);
+      border-radius: 18px;
+      box-shadow: 0 10px 40px rgba(0, 255, 136, 0.18);
+      cursor: pointer;
+      min-width: 260px;
+      max-width: 320px;
+      backdrop-filter: blur(10px);
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.35s ease, transform 0.35s ease;
+    }
+    .premium-offer-banner.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    @media (max-width: 580px) {
+      .premium-offer-banner {
+        right: 12px;
+        left: 12px;
+        bottom: 12px;
+        min-width: auto;
+      }
+    }
+
+    /* ============================================================
        GAMING STYLE ENHANCEMENTS - v3.2.3
     ============================================================ */
     .event-quest-btn-gaming {
@@ -5273,9 +4969,14 @@
       .app { 
         width: 100vw !important;
         max-width: 100vw !important;
-        height: 100vh !important;
+        min-height: 100vh !important;
+        height: auto !important;
         border-radius: 0 !important;
-        padding: 16px !important;
+        padding: 16px 16px calc(16px + env(safe-area-inset-bottom, 16px)) !important;
+        box-sizing: border-box;
+      }
+      .footer {
+        padding-bottom: calc(13px + env(safe-area-inset-bottom, 10px)) !important;
       }
       .event-center-sheet {
         width: calc(100vw - 20px) !important;
@@ -5585,33 +5286,21 @@
   </div>
 
   <!-- LOADING SCREEN -->
-  <div id="gameLoadScreen">
-    <div class="load-corner tl"></div>
-    <div class="load-corner tr"></div>
-    <div class="load-corner bl"></div>
-    <div class="load-corner br"></div>
-    <div class="load-logo-wrap">
-      <div class="load-logo-ring">
-        <div class="load-logo-ring-outer"></div>
-        <div class="load-logo-icon"><i class="fas fa-music"></i></div>
+  <div id="loader">
+    <div class="stars" id="stars"></div>
+    <div class="loader-card">
+      <div class="logo-wrap">
+        <div class="logo" id="typing"></div>
+        <div class="logo-shine"></div>
       </div>
-    </div>
-    <div class="load-title">ExeMusic</div>
-    <div class="load-subtitle">v3.2.3 · Premium Audio</div>
-    <div class="load-bar-wrap">
-      <div class="load-bar-track">
-        <div class="load-bar-fill" id="loadBarFill"></div>
-        <div class="load-bar-glow"></div>
+      <div class="status" id="status">Memuat ExeMusic...</div>
+      <div class="progress-bar">
+        <div class="progress-track">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+        <div class="progress-thumb" id="percent">0%</div>
       </div>
-    </div>
-    <div class="load-info-row load-bar-wrap">
-      <span class="load-status" id="loadStatus">INITIALIZING...</span>
-      <span class="load-percent" id="loadPercent">0%</span>
-    </div>
-    <div class="load-dots">
-      <div class="load-dot"></div>
-      <div class="load-dot"></div>
-      <div class="load-dot"></div>
+      <div class="hint">Sedang menyiapkan pengalaman audio Anda. Mohon tunggu sebentar.</div>
     </div>
   </div>
 
@@ -5730,6 +5419,24 @@
     </div>
   </div>
 
+  <!-- TAG SELECTOR V2 -->
+  <div id="modalTagSelectorV2" class="tagv2-modal" onclick="if(event.target==this)closeTagSelectorV2()">
+    <div class="tagv2-sheet">
+      <div class="tagv2-header">
+        <div>
+          <div class="tagv2-title">Pilih Tag (V2)</div>
+          <div style="font-size:12px;color:rgba(255,255,255,0.6)">Hanya tag yang dimiliki akan muncul</div>
+        </div>
+        <div>
+          <button onclick="closeTagSelectorV2()" style="background:none;border:1px solid rgba(255,255,255,0.06);color:#fff;padding:6px 10px;border-radius:8px">Tutup</button>
+        </div>
+      </div>
+      <div id="tagv2List" class="tagv2-list">
+        <div style="color:rgba(255,255,255,0.4);font-size:13px">Memuat tag...</div>
+      </div>
+    </div>
+  </div>
+
   <!-- MAIN APP -->
   <div class="app">
   <div class="ml-corner-tl ml-corner"></div>
@@ -5756,14 +5463,14 @@
         <button id="btnEvent" onclick="openEventCenter()" title="Event">
           <i class="fas fa-calendar-alt"></i>
         </button>
-        <button id="btnFeedback" onclick="openFeedbackModal()" type="button" title="Masukkan/Feedback">
-          <i class="fas fa-comment-dots"></i>
-        </button>
         <button id="btnAdmin" onclick="openAdminPanel()" title="Admin Panel">
           <i class="fas fa-shield-alt"></i>
         </button>
         <button id="btnCreatorPanel" onclick="openCreatorPanel()" title="Creator Panel">
           <i class="fas fa-star"></i>
+        </button>
+        <button id="btnTagV2" onclick="openTagSelectorV2()" title="Pilih Tag" style="display:flex; align-items:center; justify-content:center; width:40px; height:40px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.06); border-radius:50%">
+          <i class="fas fa-tags"></i>
         </button>
         <button id="topLoginBtn" onclick="openProfile()" title="Profile">👤</button>
       </div>
@@ -5866,6 +5573,7 @@
         <button class="admin-nav-btn active" onclick="switchAdminView('dash', this)"><i class="fas fa-th-large"></i> DASH</button>
         <button class="admin-nav-btn" onclick="switchAdminView('users', this)"><i class="fas fa-users"></i> USERS</button>
         <button class="admin-nav-btn" onclick="switchAdminView('songs', this)"><i class="fas fa-music"></i> SONGS</button>
+        <button class="admin-nav-btn" onclick="switchAdminView('requests', this)"><i class="fas fa-inbox"></i> REQUESTS</button>
         <button class="admin-nav-btn" onclick="switchAdminView('notif', this)"><i class="fas fa-paper-plane"></i> NOTIF</button>
         <button class="admin-nav-btn" onclick="switchAdminView('visual', this)"><i class="fas fa-palette"></i> VISUAL</button>
         <button class="admin-nav-btn" onclick="switchAdminView('theme', this)"><i class="fas fa-moon"></i> THEME</button>
@@ -6051,6 +5759,18 @@
             <button class="admin-btn admin-btn-green admin-btn-full" onclick="adManualAdd()">UPLOAD TO DATABASE</button>
           </div>
           <input class="admin-search" placeholder="Cari lagu..." id="adSongSearch" oninput="adFilterSongs(this.value)">
+        </div>
+
+        <div id="adv-requests" class="admin-view">
+          <div class="admin-card">
+            <h3><i class="fas fa-inbox"></i> UPLOAD REQUESTS</h3>
+            <p style="font-size:12px; color:#bbb; margin-bottom:10px">Request upload akan kadaluarsa otomatis setelah 7 hari. Admin dapat accept dan memberi pesan balik.</p>
+            <input class="admin-search" placeholder="Cari request..." id="adReqSearch" oninput="adFilterRequests(this.value)" style="width:100%; margin-bottom:10px">
+            <div id="adRequestList" class="admin-request-list">
+              <div style="text-align:center; padding:30px; color:#444; font-size:13px">Memuat request...</div>
+            </div>
+          </div>
+        </div>
           <div id="adSongList"></div>
         </div>
 
@@ -6178,9 +5898,9 @@
         <div class="mp-actions">
           <button class="mp-btn mp-btn-sec" onclick="openChangeNameModal()"><i class="fas fa-edit"></i> Edit</button>
           <button class="mp-btn mp-btn-sec" onclick="openChangePasswordModal()"><i class="fas fa-lock"></i> Pass</button>
-          <button class="mp-btn mp-btn-sec" onclick="openTagSelector()"><i class="fas fa-tag"></i> Tag</button>
           <button class="mp-btn mp-btn-sec" id="btnProfileMusic" style="display:none" onclick="toggleProfileMusicInput()"><i class="fas fa-music"></i> Music</button>
           <button class="mp-btn mp-btn-sec" onclick="shareProfile(auth.currentUser&&auth.currentUser.uid, userData&&userData.username)"><i class="fas fa-share"></i> Share</button>
+          <button class="mp-btn" style="background: linear-gradient(135deg, #00ff88, #00d4ff); color: #000; border: none; font-weight: 700;" onclick="openExePremiumModal()"><i class="fas fa-star"></i> Upgrade Premium</button>
           <button class="mp-btn" style="background:rgba(239,68,68,0.15); color:#ef4444; border:1px solid rgba(239,68,68,0.2)" onclick="clearExeLoginCookies(); auth.signOut(); location.reload()"><i class="fas fa-sign-out-alt"></i></button>
         </div>
         <div id="profileMusicRow" style="width:100%; padding:0 18px 8px; display:none">
@@ -6226,61 +5946,72 @@
       <div class="rules-warn"><b>⚠️ PERHATIAN:</b> Dilarang upload konten SARA, pornografi audio, atau earrape. Pelanggaran = <b>BANNED PERMANENT</b>!</div>
       <p style="font-size:12px; color:#88c; margin:10px 0">Belum tau cara buat Top4Top? <span class="tutorial-link" onclick="openTutorial()">klik disini</span></p>
       <div id="uploadFormUser" style="display:none">
-        <input id="rLagu" class="inp-dark" placeholder="Judul Lagu - Artist">
-        
-        <!-- Upload Tabs -->
-        <div class="upload-tabs">
-          <button class="upload-tab-btn active" onclick="switchUploadTab('file')" id="tabFileBtn">
-            <i class="fas fa-cloud-upload-alt"></i> Upload File
-          </button>
-          <button class="upload-tab-btn" onclick="switchUploadTab('url')" id="tabUrlBtn">
-            <i class="fas fa-link"></i> Pakai Link
-          </button>
-        </div>
-        
-        <!-- File Upload Section -->
-        <div id="uploadSectionFile" class="upload-section active">
-          <input type="file" id="supabaseFileInput" accept="audio/*" onchange="handleFileSelect(this)">
-          <div class="file-upload-area" id="fileUploadArea" onclick="document.getElementById('supabaseFileInput').click()">
-            <div class="file-upload-icon"><i class="fas fa-music"></i></div>
-            <div class="file-upload-text">Klik atau drag file lagu kesini</div>
-            <div class="file-upload-hint">Max 50MB (MP3, WAV, M4A, OGG)</div>
+        <div id="uploadAllowedSection">
+          <input id="rLagu" class="inp-dark" placeholder="Judul Lagu - Artist">
+          
+          <!-- Upload Tabs -->
+          <div class="upload-tabs">
+            <button class="upload-tab-btn active" onclick="switchUploadTab('file')" id="tabFileBtn">
+              <i class="fas fa-cloud-upload-alt"></i> Upload File
+            </button>
+            <button class="upload-tab-btn" onclick="switchUploadTab('url')" id="tabUrlBtn">
+              <i class="fas fa-link"></i> Pakai Link
+            </button>
           </div>
-          <div id="fileSelectedInfo" class="file-selected-info" style="display:none">
-            <div>
-              <div class="file-selected-name" id="fileSelectedName">filename.mp3</div>
-              <div class="file-selected-size" id="fileSelectedSize">0 MB</div>
+          
+          <!-- File Upload Section -->
+          <div id="uploadSectionFile" class="upload-section active">
+            <input type="file" id="supabaseFileInput" accept="audio/*" onchange="handleFileSelect(this)">
+            <div class="file-upload-area" id="fileUploadArea" onclick="document.getElementById('supabaseFileInput').click()">
+              <div class="file-upload-icon"><i class="fas fa-music"></i></div>
+              <div class="file-upload-text">Klik atau drag file lagu kesini</div>
+              <div class="file-upload-hint">Max 50MB (MP3, WAV, M4A, OGG)</div>
             </div>
-            <button class="file-remove-btn" onclick="removeSelectedFile(event)"><i class="fas fa-times"></i></button>
-          </div>
-          <div id="uploadProgress" class="upload-progress-wrap">
-            <div class="upload-progress-bar">
-              <div class="upload-progress-fill" id="uploadProgressFill"></div>
+            <div id="fileSelectedInfo" class="file-selected-info" style="display:none">
+              <div>
+                <div class="file-selected-name" id="fileSelectedName">filename.mp3</div>
+                <div class="file-selected-size" id="fileSelectedSize">0 MB</div>
+              </div>
+              <button class="file-remove-btn" onclick="removeSelectedFile(event)"><i class="fas fa-times"></i></button>
             </div>
-            <div class="upload-progress-text" id="uploadProgressText">Mengupload...</div>
+            <div id="uploadProgress" class="upload-progress-wrap">
+              <div class="upload-progress-bar">
+                <div class="upload-progress-fill" id="uploadProgressFill"></div>
+              </div>
+              <div class="upload-progress-text" id="uploadProgressText">Mengupload...</div>
+            </div>
+            <div id="uploadError" class="upload-error"></div>
           </div>
-          <div id="uploadError" class="upload-error"></div>
-        </div>
-        
-        <!-- URL Section (Hidden by default) -->
-        <div id="uploadSectionUrl" class="upload-section">
-          <input id="rUrl" class="inp-dark" placeholder="Link MP3 (Top4Top)">
-        </div>
-        
-        <button onclick="confirmAndSave()" class="btn-act" id="postBtn">POST SEKARANG</button>
-        <div id="uploadCdCard" class="upload-cd-card">
-          <div class="upload-cd-row">
-            <span class="upload-cd-label">COOLDOWN</span>
-            <span id="uploadCdTimer" class="upload-cd-timer">00:00</span>
+          
+          <!-- URL Section (Hidden by default) -->
+          <div id="uploadSectionUrl" class="upload-section">
+            <input id="rUrl" class="inp-dark" placeholder="Link MP3 (Top4Top)">
           </div>
-          <div class="upload-cd-sub" id="uploadCdSub">Menunggu...</div>
+          
+          <button onclick="confirmAndSave()" class="btn-act" id="postBtn">POST SEKARANG</button>
+          <div id="uploadCdCard" class="upload-cd-card">
+            <div class="upload-cd-row">
+              <span class="upload-cd-label">COOLDOWN</span>
+              <span id="uploadCdTimer" class="upload-cd-timer">00:00</span>
+            </div>
+            <div class="upload-cd-sub" id="uploadCdSub">Menunggu...</div>
+          </div>
+        </div>
+        <div id="requestFormUser" style="display:none">
+          <div class="rules-warn"><b>⚠️ PERHATIAN:</b> Akses upload harus disetujui admin atau lewat VIP. Kirim request jika ingin mengupload lagu.</div>
+          <input id="rqTitle" class="inp-dark" placeholder="Nama Lagu (optional)">
+          <textarea id="rqMessage" class="inp-dark" placeholder="Kirim pesan ke admin, bisa sertakan link kalau ada" style="min-height:100px;"></textarea>
+          <div id="requestStatusUser" class="request-status">Belum ada request pending.</div>
+          <button onclick="submitUploadRequest(false)" class="btn-act" style="background:#00bcd4; color:#fff">KIRIM REQUEST</button>
+          <div class="upload-request-info" style="margin-top:12px; font-size:12px; color:#bbb">Request upload akan kadaluarsa dalam 7 hari. Tunggu admin meninjau dan memberi jawaban.</div>
         </div>
       </div>
       <div id="uploadFormGuest">
-        <input id="guestName" class="inp-dark" placeholder="Nama Anda">
-        <input id="guestLagu" class="inp-dark" placeholder="Judul Lagu - Artist">
-        <input id="guestUrl" class="inp-dark" placeholder="Link MP3 Top4Top">
-        <button onclick="sendWA()" class="btn-act" style="background:#25D366; color:white">WHATSAPP REQUEST</button>
+        <input id="guestName" class="inp-dark" placeholder="Nama Kamu">
+        <input id="guestLagu" class="inp-dark" placeholder="Nama Lagu (optional)">
+        <textarea id="guestMessage" class="inp-dark" placeholder="Kirim pesan ke admin, bisa sertakan link kalau ada" style="min-height:100px;"></textarea>
+        <div id="requestStatusGuest" class="request-status">Belum ada request pending.</div>
+        <button onclick="submitUploadRequest(true)" class="btn-act" style="background:#00bcd4; color:#fff">KIRIM REQUEST</button>
       </div>
     </div>
   </div>
@@ -6321,10 +6052,83 @@
         <p style="margin-top:12px; color:#ddd">
           📱 WhatsApp — <a href="https://wa.me/62895329018240" target="_blank" class="about-dev-link">click here</a><br>
            Use Boombox — <a href="javascript:void(0)" onclick="openBoomboxTutorial()" class="about-dev-link">click here</a><br>
-           Update info — <a href="javascript:void(0)" onclick="openUpdateInfo()" class="about-dev-link">click here</a>
+           Update info — <a href="javascript:void(0)" onclick="openUpdateInfo()" class="about-dev-link">click here</a><br>
+           Premium Upgrade — <a href="javascript:void(0)" onclick="openExePremiumModal()" class="about-dev-link">cek paket</a>
         </p>
         <p style="font-size:11px; color:#555; margin-top:10px">Dibuat oleh <a href="?profile_userid=GsU6ThLD9gb5P3k8RS87ro553Ks2" class="about-dev-link">Hexky</a><br>© 2026 ExeMusic</p>
         <button onclick="closeModal()" class="btn-act">SAYA MENGERTI</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="premium-offer-banner" id="premiumOfferBanner" onclick="openExePremiumModal()">
+    <div>
+      <div style="font-size:13px; font-weight:700; color:#fff;">Upgrade ke ExePremium</div>
+      <div style="font-size:11px; color:#b3b3b3; margin-top:4px;">Nikmati theme hijau premium, badge eksklusif, upload tambah</div>
+    </div>
+    <button style="background: linear-gradient(135deg, #00ff88, #00d4ff); border: none; color: #000; padding: 10px 12px; border-radius: 10px; font-weight:700;">Upgrade</button>
+  </div>
+
+  <!-- ExePremium Modal -->
+  <div class="modal" id="modalExePremium" onclick="if(event.target==this)this.style.display='none'">
+    <div class="sheet" style="max-height: 90vh; overflow-y: auto;">
+      <div class="premium-modal-body">
+        <div class="premium-header">
+          <h2>✨ ExePremium</h2>
+          <p>Unlock Premium Features & Exclusive Benefits</p>
+        </div>
+
+        <div class="premium-packages" id="premiumPackagesContainer">
+          <!-- Premium packages akan di-render by JavaScript -->
+        </div>
+
+        <div class="premium-benefit-detail">
+          <strong>📌 BENEFIT COMPARISON:</strong><br><br>
+          <strong style="color: #00ff88;">ExePremium:</strong> Badge + Premium Tags + Green Shiny Theme + Upload 2 Music/Day<br><br>
+          <strong style="color: #00d4ff;">ExePremium Plus:</strong> All Premium features + VIP features + Priority Support + Custom Role + Verified Badge + Gift Premium
+        </div>
+
+        <button onclick="closeModal()" class="btn-act" style="margin-top: 16px; width: 100%;">TUTUP</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="modalPremiumCheckout" onclick="if(event.target==this)this.style.display='none'">
+    <div class="sheet" style="max-height: 90vh; overflow-y: auto;">
+      <div class="premium-modal-body">
+        <div class="premium-header">
+          <h2>💳 Pembayaran</h2>
+          <p id="checkoutPackageName">ExePremium</p>
+        </div>
+
+        <div style="position: relative; z-index: 1;">
+          <div style="background: rgba(0, 255, 136, 0.1); border: 2px dashed #00ff88; border-radius: 12px; padding: 20px; text-align: center; margin-bottom: 20px;">
+            <div style="font-size: 14px; color: #999; margin-bottom: 10px;">QR Code akan tampil di sini</div>
+            <div id="checkoutQRCode" style="height: 200px; display: flex; align-items: center; justify-content: center;">
+              <div style="color: #666;">Generating QR Code...</div>
+            </div>
+          </div>
+
+          <div style="background: rgba(0, 212, 255, 0.1); border: 1px solid #00d4ff; border-radius: 8px; padding: 16px; margin-bottom: 16px;">
+            <strong style="color: #00d4ff;">📋 Detail Transaksi:</strong>
+            <div style="font-size: 13px; color: #d0d0d0; margin-top: 8px; line-height: 1.6;">
+              <div>Paket: <span id="checkoutPackageLabel">ExePremium</span></div>
+              <div>Harga: Rp<span id="checkoutPrice">9.900</span></div>
+              <div>Durasi: <span id="checkoutDuration">1 Bulan</span></div>
+              <div style="margin-top: 8px; color: #00ff88;">Invoice ID: <code id="checkoutInvoiceId" style="font-size: 11px;">--</code></div>
+            </div>
+          </div>
+
+          <div style="font-size: 12px; color: #999; text-align: center; background: rgba(0,0,0,0.3); padding: 12px; border-radius: 8px; margin-bottom: 16px;">
+            <i class="fas fa-info-circle"></i> Scan QR code dengan aplikasi e-wallet favorit kamu (Dana, OVO, GCash, etc)<br>
+            Pembayaran akan diproses otomatis dalam hitungan detik
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+            <button onclick="closePremiumCheckout()" class="btn-act">BATAL</button>
+            <button onclick="checkPremiumStatus()" class="btn-act" style="background: linear-gradient(135deg, #00ff88, #00d4ff); color: #000; border: none;">CEK STATUS</button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -6334,16 +6138,8 @@
       <div class="about-box">
         <h3>📋 Update Info v3.3.2</h3>
         <p><b>Version:</b> 3.3.2</p>
-        <p><b>Date:</b> 20 April 2026</p>
-        <p><b>Changelog (ringkas):</b></p>
-        <ul class="about-features">
-          <li><b>Top Up Robux — Game Pass (pending)</b> – Paket 320 ExeCoin: set Game Pass 143 Robux, kamu dapat 100 Robux setelah pajak; estimasi hingga 5 hari. Stok global <b>2 slot/hari (WIB)</b>, restock tiap <b>00.00 WIB</b>.</li>
-          <li><b>Leaderboard</b> – Tombol dipindah ke header; UI &amp; stylesheet modal diperbarui; perbaikan layout yang sebelumnya terkunci oleh aturan CSS global.</li>
-          <li><b>Event Center</b> – Tampilan glass/modern v3.3.2 (tab, panel, sisi).</li>
-          <li><b>ExeCoin tampilan</b> – Singkatan 1k–999k; nilai ≥1M ditampilkan sebagai 999k+ (nilai asli di database tetap utuh).</li>
-          <li><b>Gate &amp; notifikasi sistem</b> – Tetap aktif dari versi sebelumnya; penyempurnaan minor alur UI.</li>
-          <li><b>Firebase</b> – Untuk stok Game Pass harian, izinkan user terautentikasi menulis ke path <code>shopStocks/robuxGamepassDaily</code> (struktur: <code>dateKey</code> + <code>sold</code>).</li>
-        </ul>
+        <p><b>Date:</b> 2 Juni 2026</p>
+        <p><b>Changelog (ringkas):</b> None</p>
         <button onclick="closeModal()" class="btn-act">TUTUP</button>
       </div>
     </div>
@@ -6394,16 +6190,6 @@
             <button class="event-tab-btn active" data-tab="daily" onclick="switchEventTab('daily', this)"><i class="fas fa-sun"></i> Tugas Harian</button>
             <button class="event-tab-btn" data-tab="weekly" onclick="switchEventTab('weekly', this)"><i class="fas fa-calendar-week"></i> Misi Mingguan</button>
             <button class="event-tab-btn" data-tab="shop" onclick="switchEventTab('shop', this)"><i class="fas fa-store"></i> Toko ExeCoin</button>
-            <button class="event-tab-btn" data-tab="topup" onclick="switchEventTab('topup', this)"><i class="fas fa-cube"></i> Top Up Game</button>
-          </div>
-          <div id="evExecoinRobuxCard" class="event-execoin-info-card">
-            <div class="event-execoin-info-icon"><i class="fas fa-coins"></i></div>
-            <div class="event-execoin-info-body">
-              <div class="event-execoin-info-title">ExeCoin bisa dipakai top-up Robux</div>
-              <div class="event-execoin-info-desc">Tab <b>Top Up Game</b>: instant Robux, atau paket <b>Game Pass pending ~5 hari</b> (320 ExeCoin, stok 2/hari WIB). Pastikan username benar.</div>
-            </div>
-            <button type="button" class="event-execoin-info-go" onclick="switchEventTab('topup', null)">Buka top up</button>
-            <button type="button" class="event-execoin-info-dismiss" onclick="dismissExecoinRobuxInfoCard()" title="Sembunyikan">×</button>
           </div>
           <div id="evTabDaily" class="event-tab-view active">
             <div class="event-tab-caption">Reset tiap 24 jam untuk semua akun.</div>
@@ -6416,75 +6202,6 @@
           <div id="evTabShop" class="event-tab-view">
             <div class="event-tab-caption">Tukar ExeCoin dengan tag eksklusif dan VIP.</div>
             <div id="evShopList" class="event-quest-list"></div>
-          </div>
-          <div id="evTabTopup" class="event-tab-view">
-            <div class="event-tab-caption">Tukar ExeCoin ke Robux (Roblox). Pastikan username Roblox benar.</div>
-            <div class="event-quest-list event-topup-wrap">
-              <div class="event-topup-head">
-                <div class="event-topup-head-icon"><i class="fas fa-cube"></i></div>
-                <div class="event-topup-head-text">
-                  <h4>ROBLOX — Top Up via ExeCoin</h4>
-                  <p>Paket tetap: 5.999 ExeCoin → 500 Robux · 15.000 ExeCoin → 1.200 Robux. Setelah saldo dan username terverifikasi, Robux diproses lewat antrian resmi.</p>
-                </div>
-              </div>
-              <div class="event-topup-user-row">
-                <label for="robloxTopupUsername">Username Roblox</label>
-                <input type="text" id="robloxTopupUsername" class="inp-dark" placeholder="contoh: Builderman" autocomplete="username" maxlength="20">
-              </div>
-              <div id="robloxTopupProgress" class="event-topup-progress-panel" aria-live="polite">
-                <div class="event-topup-progress-topline"></div>
-                <div class="event-topup-progress-inner">
-                  <div class="event-topup-progress-headrow">
-                    <div class="rbx-prog-pulse" aria-hidden="true"><i class="fas fa-cube"></i></div>
-                    <div class="event-topup-progress-headtext">
-                      <div class="lbl" id="robloxTopupProgressTitle">Mengirim Robux…</div>
-                      <div class="sub" id="robloxTopupProgressDetail">Menyiapkan koneksi…</div>
-                    </div>
-                  </div>
-                  <div class="rbx-prog-chips">
-                    <span class="rbx-chip" id="robloxTopupChipRbx">— Robux</span>
-                    <span class="rbx-chip rbx-chip-dim" id="robloxTopupChipUser">@—</span>
-                    <span class="rbx-chip rbx-chip-dim" id="robloxTopupChipPaid">— ExeCoin</span>
-                  </div>
-                  <div class="event-topup-progress-bar-wrap">
-                    <div class="event-topup-progress-bar">
-                      <div id="robloxTopupProgressFill" class="event-topup-progress-fill"></div>
-                    </div>
-                    <div class="event-topup-progress-pct" id="robloxTopupProgressPct">0%</div>
-                  </div>
-                  <div class="rbx-prog-steps" id="robloxTopupStepDots"></div>
-                </div>
-              </div>
-              <div class="event-topup-packs">
-                <div class="event-topup-card">
-                  <div>
-                    <div class="event-topup-card-title"><span>500</span> Robux</div>
-                    <div class="event-topup-card-meta">Harga: <strong>5.999</strong> ExeCoin</div>
-                  </div>
-                  <button type="button" class="event-topup-go" id="robloxBtn500" onclick="startRobloxTopupFromUi(500, 5999)">Cek &amp; kirim</button>
-                </div>
-                <div class="event-topup-card">
-                  <div>
-                    <div class="event-topup-card-title"><span>1.200</span> Robux</div>
-                    <div class="event-topup-card-meta">Harga: <strong>15.000</strong> ExeCoin</div>
-                  </div>
-                  <button type="button" class="event-topup-go" id="robloxBtn1200" onclick="startRobloxTopupFromUi(1200, 15000)">Cek &amp; kirim</button>
-                </div>
-                <div class="event-topup-card event-topup-card--gamepass">
-                  <div>
-                    <div class="event-topup-card-title">
-                      <span>100</span> Robux <span class="gp-pill">Game Pass · pending ~5 hari</span>
-                    </div>
-                    <div class="event-topup-card-meta">
-                      Set Game Pass: <strong>143</strong> Robux — Kamu dapat: <strong>100</strong> Robux (setelah pajak). Harga <strong>320</strong> ExeCoin.
-                    </div>
-                    <div class="event-topup-stock" id="robloxGpStockLine">Stock hari ini (WIB): …</div>
-                    <div class="event-topup-restock" id="robloxGpRestockLine">Restock jam 00.00 WIB · countdown: …</div>
-                  </div>
-                  <button type="button" class="event-topup-go" id="robloxBtnGp" onclick="startRobloxGamepassTopupFromUi()">Rebut slot</button>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
         <div class="event-center-sidepanel">
@@ -6749,42 +6466,13 @@
     </div>
   </div>
 
-  <!-- FEEDBACK MODAL -->
-  <div id="feedbackOverlay" class="feedback-overlay" onclick="if(event.target==this)closeFeedbackModal()">
-    <div class="feedback-sheet">
-      <div class="feedback-header">
-        <div class="feedback-title">
-          <i class="fas fa-comment-dots"></i>
-          <span>MASUKKAN & FEEDBACK</span>
-        </div>
-        <button type="button" class="feedback-close" onclick="closeFeedbackModal()" title="Tutup">×</button>
+  <div class="tutorial-overlay" id="tutorialOverlay">
+    <div class="tutorial-card">
+      <button class="close-btn" onclick="closeTutorial()">×</button>
+      <h3>Tutorial Upload via Top4Top</h3>
+      <div class="video-container">
+        <iframe id="tutorialVideo" src="https://www.youtube.com/embed/eLNvOj2lFNk" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
       </div>
-      <div class="feedback-content">
-        <div class="feedback-info">
-          <p><i class="fas fa-info-circle"></i> Masukkan Anda sangat berharga untuk pengembangan ExeMusic. Kirim feedback maksimal 1x per hari.</p>
-        </div>
-        <form id="feedbackForm" class="feedback-form">
-          <div class="feedback-field">
-            <label for="feedbackMessage">Pesan Feedback</label>
-            <textarea id="feedbackMessage" placeholder="Tulis masukan atau saran Anda di sini..." maxlength="500" required></textarea>
-            <div class="char-count"><span id="charCount">0</span>/500</div>
-          </div>
-          <button type="submit" class="btn-feedback-submit">
-            <i class="fas fa-paper-plane"></i> Kirim Feedback
-          </button>
-        </form>
-      </div>
-    </div>
-  </div>
-
-  <!-- THANK YOU ANIMATION -->
-  <div class="thank-you-overlay" id="thankYouOverlay">
-    <div class="thank-you-card">
-      <div class="thank-you-icon">
-        <i class="fas fa-heart"></i>
-      </div>
-      <h3>Terima Kasih!</h3>
-      <p id="thankYouMessage">Feedback Anda telah diterima, [username].</p>
     </div>
   </div>
 
@@ -6804,9 +6492,10 @@
       <h3 style="text-align:center; margin-bottom:8px; color:var(--accent); font-family:'Rajdhani',sans-serif; letter-spacing:1px">PILIH TAG</h3>
       <div class="tag-selector-layout">
         <div class="tag-selector-col">
-          <div class="tag-section-title">EDIT TAG</div>
+          <div class="tag-section-title">TAG MILIKMU</div>
+          <div id="tagSelectorOwnedGrid" class="tag-chip-grid"></div>
+          <div class="tag-section-title" style="margin-top:14px">TAG AKTIF</div>
           <div id="tagSelectorCurrent" class="tag-current-text"></div>
-          <div id="tagSelectorChipGrid" class="tag-chip-grid"></div>
         </div>
         <div class="tag-selector-col">
           <div class="tag-section-title">ALL TAG & CARA DAPET</div>
@@ -6876,6 +6565,8 @@
     const auth = firebase.auth();
     const db = firebase.database();
     const storage = firebase.storage();
+    window.auth = auth;
+    window.db = db;
 
     // ============================================================
     // SUPABASE CONFIGURATION - v3.2.3
@@ -6895,47 +6586,78 @@
     // LOADING SCREEN LOGIC
     // ============================================================
     const loadSteps = [
-      { pct: 8, msg: 'INITIALIZING...' },
-      { pct: 20, msg: 'CONNECTING DATABASE...' },
-      { pct: 38, msg: 'LOADING AUDIO ENGINE...' },
-      { pct: 55, msg: 'FETCHING SONGS...' },
-      { pct: 72, msg: 'SYNCING PROFILE...' },
-      { pct: 88, msg: 'PREPARING UI...' },
+      { pct: 12, msg: 'INITIALIZING MODULES...' },
+      { pct: 30, msg: 'LOADING SOUNDS...' },
+      { pct: 52, msg: 'PREPARING INTERFACE...' },
+      { pct: 70, msg: 'SYNCING ASSETS...' },
+      { pct: 88, msg: 'ALMOST READY...' },
       { pct: 100, msg: 'READY!' }
     ];
-    let loadIdx = 0;
-    function advanceLoader(targetPct, msg) {
-      const bar = document.getElementById('loadBarFill');
-      const pctEl = document.getElementById('loadPercent');
-      const statusEl = document.getElementById('loadStatus');
-      if (statusEl) statusEl.textContent = msg;
-      if (bar) bar.style.width = targetPct + '%';
-      if (pctEl) pctEl.textContent = targetPct + '%';
+
+    const typing = document.getElementById('typing');
+    const percent = document.getElementById('percent');
+    const statusText = document.getElementById('status');
+    const progressFill = document.getElementById('progressFill');
+    const loader = document.getElementById('loader');
+    const stars = document.getElementById('stars');
+
+    function createStars(count) {
+      for (let i = 0; i < count; i++) {
+        const star = document.createElement('div');
+        star.className = 'star';
+        const size = Math.random() * 2.5 + 0.8;
+        star.style.width = `${size}px`;
+        star.style.height = `${size}px`;
+        star.style.top = `${Math.random() * 100}%`;
+        star.style.left = `${Math.random() * 100}%`;
+        star.style.animationDuration = `${3 + Math.random() * 3}s`;
+        star.style.animationDelay = `${Math.random() * 4}s`;
+        star.style.opacity = `${0.2 + Math.random() * 0.75}`;
+        stars.appendChild(star);
+      }
     }
+
+    function typeLogo() {
+      const logoText = 'EXEMUSIC';
+      let index = 0;
+      const interval = setInterval(() => {
+        typing.textContent += logoText[index];
+        index += 1;
+        if (index >= logoText.length) clearInterval(interval);
+      }, 120);
+    }
+
+    function setLoaderProgress(pct, msg) {
+      if (progressFill) progressFill.style.width = pct + '%';
+      if (percent) percent.textContent = pct + '%';
+      if (statusText) statusText.textContent = msg;
+    }
+
     function runLoadSequence() {
       let idx = 0;
-      function next() {
+      const next = () => {
         if (idx >= loadSteps.length) return;
-        const s = loadSteps[idx++];
-        advanceLoader(s.pct, s.msg);
-        if (idx < loadSteps.length) setTimeout(next, 350 + Math.random() * 200);
-      }
+        const step = loadSteps[idx++];
+        setLoaderProgress(step.pct, step.msg);
+        if (idx < loadSteps.length) setTimeout(next, 350 + Math.random() * 220);
+        else setTimeout(finishLoader, 650);
+      };
       next();
     }
-    function dismissLoader() {
-      advanceLoader(100, 'READY!');
+
+    function finishLoader() {
+      if (!loader) return;
+      loader.style.transition = 'opacity 0.9s ease, visibility 0.9s ease';
+      loader.style.opacity = '0';
+      loader.style.visibility = 'hidden';
       setTimeout(() => {
-        const screen = document.getElementById('gameLoadScreen');
-        if (screen) {
-          screen.classList.add('fade-out');
-          setTimeout(() => { 
-            screen.style.display = 'none';
-            // Show welcome animation after loading completes
-            showWelcomeAnimation();
-          }, 800);
-        }
-      }, 400);
+        loader.remove();
+        if (typeof showWelcomeAnimation === 'function') showWelcomeAnimation();
+      }, 900);
     }
+
+    createStars(48);
+    typeLogo();
     runLoadSequence();
 
     let heartsInterval = null;
@@ -7129,7 +6851,7 @@
     let userCache = {};
     let isFirstTimeUser = false;
     let trendingSongs = {};
-    let adAllUsers = [], adAllSongs = [];
+    let adAllUsers = [], adAllSongs = [], adAllRequests = [];
     let adminLoaded = false;
     let adminDrag = { active: false, offsetX: 0, offsetY: 0 };
     let adminMode = 'normal';
@@ -7309,6 +7031,19 @@
       if (u && u.vip) return 'permanent';
       if (u && u.trialvip && u.trialvip.expireAt && now < u.trialvip.expireAt) return 'trial';
       return false;
+    }
+    function getPremiumStatus(u) {
+      const now = Date.now();
+      if (!u) return { status: 'none', daysLeft: 0, isPremium: false, isPremiumPlus: false };
+      if (u.exepremium && u.exepremium.endTime && now < u.exepremium.endTime) {
+        const daysLeft = Math.ceil((u.exepremium.endTime - now) / (24 * 60 * 60 * 1000));
+        return { status: 'premium', daysLeft, isPremium: true, isPremiumPlus: false };
+      }
+      if (u.exepremiumplus && u.exepremiumplus.endTime && now < u.exepremiumplus.endTime) {
+        const daysLeft = Math.ceil((u.exepremiumplus.endTime - now) / (24 * 60 * 60 * 1000));
+        return { status: 'premiumplus', daysLeft, isPremium: false, isPremiumPlus: true };
+      }
+      return { status: 'none', daysLeft: 0, isPremium: false, isPremiumPlus: false };
     }
     function computeQuestTags(u, folCount, flgCount) {
       const tags = {};
@@ -7498,7 +7233,6 @@
       }
       if (!modal) return;
       modal.style.display = 'block';
-      ensureRobloxGamepassStockListener();
       loadUserQuests().then(() => {
         renderEventCenter();
       });
@@ -7510,8 +7244,7 @@
         'daily': 'evTabDaily',
         'weekly': 'evTabWeekly',
         'ramadhan': 'evTabRamadhan',
-        'shop': 'evTabShop',
-        'topup': 'evTabTopup'
+        'shop': 'evTabShop'
       };
       const tab = document.getElementById(tabMap[id] || 'evTabDaily');
       if (tab) tab.classList.add('active');
@@ -7525,23 +7258,6 @@
       }
       renderEventCenter();
     }
-    function dismissExecoinRobuxInfoCard() {
-      try {
-        sessionStorage.setItem('exeRobuxBannerDismiss', '1');
-      } catch (e) {}
-      const card = document.getElementById('evExecoinRobuxCard');
-      if (card) card.classList.add('is-hidden');
-    }
-    function syncExecoinRobuxInfoCard() {
-      const card = document.getElementById('evExecoinRobuxCard');
-      if (!card) return;
-      let hide = false;
-      try {
-        hide = sessionStorage.getItem('exeRobuxBannerDismiss') === '1';
-      } catch (e) {}
-      card.classList.toggle('is-hidden', hide);
-    }
-
     // ============================================================
     // LEADERBOARD SYSTEM - v3.3.2
     // ============================================================
@@ -7560,202 +7276,23 @@
       }
     }
 
-    // ============================================================
-    // FEEDBACK SYSTEM - Modern UI with Anti-Spam
-    // ============================================================
-    window.openFeedbackModal = function() {
-      console.log('openFeedbackModal called');
-      if (!auth.currentUser) {
-        console.log('User not logged in');
-        showToast('Login dulu untuk mengirim feedback', 'error');
-        return;
-      }
-      console.log('User logged in, opening modal');
-      const modal = document.getElementById('feedbackOverlay');
-      if (modal) {
-        modal.style.display = 'flex';
-        modal.style.zIndex = '100050';
-        // Reset form
-        const form = document.getElementById('feedbackForm');
-        if (form) form.reset();
-        const charCount = document.getElementById('charCount');
-        if (charCount) charCount.textContent = '0';
-        // Focus on textarea
-        setTimeout(() => {
-          const textarea = document.getElementById('feedbackMessage');
-          if (textarea) textarea.focus();
-        }, 100);
-      } else {
-        console.log('Modal not found');
-      }
-    };
-
-    window.closeFeedbackModal = function() {
-      const modal = document.getElementById('feedbackOverlay');
-      if (modal) {
-        modal.style.display = 'none';
-        modal.style.zIndex = '';
-      }
-    };
-
-    window.showThankYouAnimation = function(username) {
-      const overlay = document.getElementById('thankYouOverlay');
-      const message = document.getElementById('thankYouMessage');
-      if (overlay && message) {
-        message.textContent = `Feedback Anda telah diterima, ${username}.`;
-        overlay.style.display = 'flex';
-        setTimeout(() => {
-          overlay.style.display = 'none';
-        }, 3000);
-      }
-    };
-
-    // Initialize feedback form
-    function initFeedbackForm() {
-      const feedbackForm = document.getElementById('feedbackForm');
-      const feedbackMessage = document.getElementById('feedbackMessage');
-      const charCount = document.getElementById('charCount');
-
-      console.log('initFeedbackForm called');
-      console.log('Form element:', feedbackForm);
-      console.log('Message textarea:', feedbackMessage);
-
-      if (feedbackMessage && charCount) {
-        feedbackMessage.addEventListener('input', function() {
-          charCount.textContent = this.value.length;
-        });
-      }
-
-      if (feedbackForm) {
-        feedbackForm.addEventListener('submit', async function(e) {
-          e.preventDefault();
-          console.log('Form submit event fired');
-
-          if (!auth.currentUser) {
-            console.log('User not logged in');
-            showToast('Login dulu untuk mengirim feedback', 'error');
-            return;
-          }
-
-          const message = feedbackMessage.value.trim();
-          console.log('Message:', message);
-          if (!message) {
-            showToast('Tulis pesan feedback dulu', 'error');
-            return;
-          }
-
-          const submitBtn = feedbackForm.querySelector('.btn-feedback-submit');
-          if (submitBtn) submitBtn.disabled = true;
-
-          try {
-            // Check daily limit
-            const uid = auth.currentUser.uid;
-            const today = new Date().toISOString().split('T')[0];
-            const feedbackKey = `feedback_${today}`;
-
-            const userRef = db.ref('users/' + uid);
-            const snapshot = await userRef.once('value');
-            const userData = snapshot.val() || {};
-
-            if (userData[feedbackKey]) {
-              showToast('Anda sudah mengirim feedback hari ini. Coba lagi besok.', 'error');
-              return;
-            }
-
-            // Get user info
-            const username = userData.username || userData.displayName || 'User';
-            const timestamp = new Date().toLocaleString('id-ID', {
-              timeZone: 'Asia/Jakarta',
-              year: 'numeric',
-              month: 'long',
-              day: 'numeric',
-              hour: '2-digit',
-              minute: '2-digit',
-              second: '2-digit'
-            });
-
-            // Save feedback to Firebase
-            const feedbacksRef = db.ref('feedbacks');
-            const feedbackId = feedbacksRef.push().key;
-            
-            await feedbacksRef.child(feedbackId).set({
-              userId: uid,
-              username: username,
-              message: message,
-              timestamp: timestamp,
-              date: today,
-              status: 'unread'
-            });
-
-            // Send to Discord via Netlify function
-            try {
-              const discordResponse = await fetch('/.netlify/functions/send-feedback', {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                  username: username,
-                  userId: uid,
-                  message: message,
-                  timestamp: timestamp
-                })
-              });
-
-              if (!discordResponse.ok) {
-                console.warn('Discord notification may have failed, but feedback saved locally');
-              }
-            } catch (discordError) {
-              console.warn('Could not send Discord notification:', discordError);
-              // Continue anyway since feedback is saved in Firebase
-            }
-
-            // Mark as sent today in user data
-            await userRef.child(feedbackKey).set(true);
-
-            // Close modal and show thank you
-            closeFeedbackModal();
-            showThankYouAnimation(username);
-
-            showToast('Feedback berhasil dikirim! Terima kasih atas masukan Anda.', 'success');
-
-          } catch (error) {
-            console.error('Feedback error - Full error:', error);
-            console.error('Error message:', error.message);
-            console.error('Error stack:', error.stack);
-            showToast('Gagal mengirim feedback: ' + error.message, 'error');
-          } finally {
-            if (submitBtn) submitBtn.disabled = false;
-          }
-        });
-      }
-    }
-
-    // Initialize feedback button
-    function initFeedbackButton() {
-      const btn = document.getElementById('btnFeedback');
+    function initProfileTagButton() {
+      const btn = document.getElementById('btnProfileTag');
       if (btn) {
         btn.addEventListener('click', function(e) {
           e.preventDefault();
           e.stopPropagation();
-          console.log('Feedback button clicked');
-          window.openFeedbackModal();
+          console.log('Profile Tag button clicked');
+          window.openTagSelector();
         });
-        console.log('Feedback button initialized');
-      } else {
-        console.log('Feedback button not found');
       }
     }
-
-    // Call init when DOM is ready
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', function() {
-        initFeedbackButton();
-        initFeedbackForm();
+        initProfileTagButton();
       });
     } else {
-      initFeedbackButton();
-      initFeedbackForm();
+      initProfileTagButton();
     }
 
     function openLeaderboard(defaultCategory = 'followers') {
@@ -8436,304 +7973,6 @@
     function fmt(s) { if (isNaN(s)) return '0:00'; let m = Math.floor(s / 60), sec = Math.floor(s % 60); return m + ':' + (sec < 10 ? '0' + sec : sec); }
     function addLog(msg) { db.ref('logs').push({ msg, time: new Date().toLocaleTimeString() }); }
 
-    let robloxTopupBusy = false;
-    const RBX_GP_STOCK_PATH = 'shopStocks/robuxGamepassDaily';
-    const RBX_GP_DAILY_CAP = 2;
-    const RBX_GP_PRICE = 320;
-    function isValidRobloxUsername(name) {
-      const s = String(name || '').trim();
-      if (s.length < 3 || s.length > 20) return false;
-      return /^[A-Za-z0-9_]+$/.test(s);
-    }
-    function getJakartaYmd(d) {
-      return new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Jakarta', year: 'numeric', month: '2-digit', day: '2-digit' }).format(d || new Date());
-    }
-    function getNextJakartaMidnightMs() {
-      const ymd = getJakartaYmd(new Date());
-      const start = new Date(ymd + 'T00:00:00+07:00').getTime();
-      const now = Date.now();
-      if (now < start) return start;
-      return start + 86400000;
-    }
-    function formatCountdownHms(ms) {
-      if (ms <= 0) return '00:00:00';
-      const s = Math.floor(ms / 1000);
-      const h = Math.floor(s / 3600);
-      const m = Math.floor((s % 3600) / 60);
-      const sec = s % 60;
-      return String(h).padStart(2, '0') + ':' + String(m).padStart(2, '0') + ':' + String(sec).padStart(2, '0');
-    }
-    function normalizeGpDaily(val) {
-      const today = getJakartaYmd();
-      let sold = 0;
-      if (val && typeof val === 'object' && val.dateKey === today && typeof val.sold === 'number') sold = val.sold;
-      sold = Math.min(RBX_GP_DAILY_CAP, Math.max(0, sold));
-      return { sold: sold, remaining: RBX_GP_DAILY_CAP - sold };
-    }
-    function updateRobloxGamepassStockUi() {
-      const line = document.getElementById('robloxGpStockLine');
-      if (!line) return;
-      const rest = document.getElementById('robloxGpRestockLine');
-      const btn = document.getElementById('robloxBtnGp');
-      const st = normalizeGpDaily(window._rbxGpDaily);
-      const left = st.remaining;
-      if (line) {
-        line.textContent = 'Stock hari ini (WIB): ' + left + ' / ' + RBX_GP_DAILY_CAP + ' slot';
-        line.classList.toggle('ok', left > 0);
-      }
-      const ms = Math.max(0, getNextJakartaMidnightMs() - Date.now());
-      if (rest) rest.textContent = 'Restock jam 00.00 WIB · countdown: ' + formatCountdownHms(ms);
-      const coins = userData && typeof userData.coins === 'number' ? userData.coins : (userData && userData.coins) || 0;
-      if (btn && !robloxTopupBusy) {
-        btn.disabled = left <= 0 || coins < RBX_GP_PRICE;
-      }
-    }
-    function ensureRobloxGamepassStockListener() {
-      if (!db || window._rbxGpListenerStarted) return;
-      window._rbxGpListenerStarted = true;
-      try {
-        db.ref(RBX_GP_STOCK_PATH).on('value', function (snap) {
-          window._rbxGpDaily = snap.val();
-          updateRobloxGamepassStockUi();
-        });
-      } catch (e) {}
-      if (!window._rbxGpUiTimer) {
-        window._rbxGpUiTimer = setInterval(updateRobloxGamepassStockUi, 1000);
-      }
-    }
-    function setRobloxTopupButtonsDisabled(dis) {
-      ['robloxBtn500', 'robloxBtn1200', 'robloxBtnGp'].forEach(function (id) {
-        const b = document.getElementById(id);
-        if (b) b.disabled = !!dis;
-      });
-      if (!dis) updateRobloxGamepassStockUi();
-    }
-    function startRobloxGamepassTopupFromUi() {
-      if (robloxTopupBusy) return;
-      if (!auth.currentUser || !userData) {
-        msg('Login dulu untuk top up');
-        return;
-      }
-      const raw = document.getElementById('robloxTopupUsername');
-      const username = raw ? String(raw.value || '').trim() : '';
-      if (!isValidRobloxUsername(username)) {
-        showToast('Username Roblox tidak valid (3–20 karakter, huruf/angka/_ saja)', 'error');
-        return;
-      }
-      const coins = userData.coins || 0;
-      if (coins < RBX_GP_PRICE) {
-        showToast('ExeCoin belum cukup (min. ' + formatExecoinDisplay(RBX_GP_PRICE) + ')', 'error');
-        return;
-      }
-      const stPre = normalizeGpDaily(window._rbxGpDaily);
-      if (stPre.remaining <= 0) {
-        showToast('Stock paket Game Pass habis hari ini. Restock 00.00 WIB.', 'error');
-        return;
-      }
-      const uid = auth.currentUser.uid;
-      const stockRef = db.ref(RBX_GP_STOCK_PATH);
-      const coinsRef = db.ref('users/' + uid + '/coins');
-      robloxTopupBusy = true;
-      setRobloxTopupButtonsDisabled(true);
-      showToast('Memeriksa slot & saldo…', 'info');
-      stockRef.transaction(function (cur) {
-        const today = getJakartaYmd();
-        let sold = 0;
-        if (cur && typeof cur === 'object' && cur.dateKey === today && typeof cur.sold === 'number') sold = cur.sold;
-        if (sold >= RBX_GP_DAILY_CAP) return;
-        return { dateKey: today, sold: sold + 1 };
-      }).then(function (res) {
-        if (!res.committed) {
-          robloxTopupBusy = false;
-          setRobloxTopupButtonsDisabled(false);
-          showToast('Slot habis — orang lain lebih dulu. Coba setelah restock.', 'error');
-          return;
-        }
-        return coinsRef.transaction(function (c) {
-          const base = typeof c === 'number' ? c : 0;
-          if (base < RBX_GP_PRICE) return;
-          return base - RBX_GP_PRICE;
-        }).then(function (res2) {
-          if (!res2.committed) {
-            stockRef.transaction(function (c) {
-              const today = getJakartaYmd();
-              if (!c || typeof c !== 'object' || c.dateKey !== today || typeof c.sold !== 'number' || c.sold <= 0) return c;
-              return { dateKey: today, sold: c.sold - 1 };
-            });
-            robloxTopupBusy = false;
-            setRobloxTopupButtonsDisabled(false);
-            showToast('ExeCoin tidak cukup', 'error');
-            return;
-          }
-          return coinsRef.once('value').then(function (cs) {
-            userData.coins = cs.val() || 0;
-            const balEl = document.getElementById('evCoinBalance');
-            if (balEl) balEl.textContent = formatExecoinDisplay(userData.coins);
-            runRobloxTopupProgress(username, 100, RBX_GP_PRICE, 'gamepass');
-          });
-        });
-      }).catch(function () {
-        robloxTopupBusy = false;
-        setRobloxTopupButtonsDisabled(false);
-        showToast('Gagal memproses order Game Pass', 'error');
-      });
-    }
-    function startRobloxTopupFromUi(robuxAmount, priceExeCoin) {
-      if (robloxTopupBusy) return;
-      if (!auth.currentUser || !userData) {
-        msg('Login dulu untuk top up');
-        return;
-      }
-      const raw = document.getElementById('robloxTopupUsername');
-      const username = raw ? String(raw.value || '').trim() : '';
-      if (!isValidRobloxUsername(username)) {
-        showToast('Username Roblox tidak valid (3–20 karakter, huruf/angka/_ saja)', 'error');
-        return;
-      }
-      const coins = userData.coins || 0;
-      if (coins < priceExeCoin) {
-        showToast('ExeCoin belum cukup untuk paket ini', 'error');
-        return;
-      }
-      const uid = auth.currentUser.uid;
-      const coinsRef = db.ref('users/' + uid + '/coins');
-      robloxTopupBusy = true;
-      setRobloxTopupButtonsDisabled(true);
-      showToast('Memeriksa username & saldo…', 'info');
-      coinsRef.transaction(cur => {
-        const base = typeof cur === 'number' ? cur : 0;
-        if (base < priceExeCoin) return;
-        return base - priceExeCoin;
-      }).then(res => {
-        if (!res.committed) {
-          robloxTopupBusy = false;
-          setRobloxTopupButtonsDisabled(false);
-          showToast('ExeCoin belum cukup', 'error');
-          return;
-        }
-        return coinsRef.once('value').then(csnap => {
-          userData.coins = csnap.val() || 0;
-          const balEl = document.getElementById('evCoinBalance');
-          if (balEl) balEl.textContent = formatExecoinDisplay(userData.coins);
-          runRobloxTopupProgress(username, robuxAmount, priceExeCoin, 'instant');
-        });
-      }).catch(() => {
-        robloxTopupBusy = false;
-        setRobloxTopupButtonsDisabled(false);
-        showToast('Gagal memproses top up', 'error');
-      });
-    }
-    function runRobloxTopupProgress(username, robuxAmount, paidCoins, mode) {
-      if (mode === void 0) mode = 'instant';
-      const isGp = mode === 'gamepass';
-      const panel = document.getElementById('robloxTopupProgress');
-      const fill = document.getElementById('robloxTopupProgressFill');
-      const pctEl = document.getElementById('robloxTopupProgressPct');
-      const titleEl = document.getElementById('robloxTopupProgressTitle');
-      const detailEl = document.getElementById('robloxTopupProgressDetail');
-      const chipRbx = document.getElementById('robloxTopupChipRbx');
-      const chipUser = document.getElementById('robloxTopupChipUser');
-      const chipPaid = document.getElementById('robloxTopupChipPaid');
-      const dotsWrap = document.getElementById('robloxTopupStepDots');
-      const paidNum = typeof paidCoins === 'number' ? paidCoins : parseInt(paidCoins, 10) || 0;
-      if (panel) panel.classList.toggle('rbx-mode-gamepass', isGp);
-      if (chipRbx) chipRbx.textContent = isGp ? (String(robuxAmount) + ' Robux (net)') : (String(robuxAmount) + ' Robux');
-      if (chipUser) chipUser.textContent = '@' + username;
-      if (chipPaid) chipPaid.textContent = (paidNum >= 1000 ? formatExecoinDisplay(paidNum) : String(paidNum)) + ' ExeCoin';
-      if (dotsWrap) {
-        const labels = isGp
-          ? ['Slot', 'Bayar', 'Game Pass', 'Pending', 'Antrian']
-          : ['Verifikasi', 'Antrian', 'Settlement', 'Transfer', 'Selesai'];
-        dotsWrap.innerHTML = '';
-        labels.forEach(function (lab) {
-          const s = document.createElement('span');
-          s.className = 'rbx-step';
-          s.textContent = lab;
-          dotsWrap.appendChild(s);
-        });
-      }
-      function setStepVisual(stepIndex) {
-        if (!dotsWrap) return;
-        const nodes = dotsWrap.querySelectorAll('.rbx-step');
-        nodes.forEach(function (node, k) {
-          node.classList.remove('active', 'done');
-          if (stepIndex >= nodes.length) {
-            node.classList.add('done');
-          } else if (k < stepIndex) {
-            node.classList.add('done');
-          } else if (k === stepIndex) {
-            node.classList.add('active');
-          }
-        });
-      }
-      if (panel) panel.classList.add('show');
-      if (fill) fill.style.width = '0%';
-      if (pctEl) pctEl.textContent = '0%';
-      setStepVisual(0);
-      const steps = isGp
-        ? [
-            { p: 16, t: 'Slot & username', d: 'Mengamankan 1 slot stok harian (WIB) untuk @' + username + '…' },
-            { p: 38, t: 'Settlement ExeCoin', d: formatExecoinDisplay(paidNum) + ' ExeCoin dikunci untuk order Game Pass…' },
-            { p: 56, t: 'Set Game Pass 143', d: 'Menerapkan konfigurasi Game Pass (list 143 Robux) ke pipeline Roblox…' },
-            { p: 78, t: 'Pending verifikasi', d: 'Estimasi hingga 5 hari kerja sistem Roblox sebelum payout 100 Robux (net).' },
-            { p: 100, t: 'Order aktif', d: 'Order tercatat. Pantau saldo Roblox kamu; payout mengikuti status Game Pass.' }
-          ]
-        : [
-            { p: 14, t: 'Verifikasi order', d: 'Mencocokkan username @' + username + ' dengan saldo ExeCoin…' },
-            { p: 36, t: 'Antrian distributor', d: 'Memasuki antrian pengiriman Robux untuk wilayah kamu…' },
-            { p: 58, t: 'Settlement ExeCoin', d: (paidNum >= 1000 ? formatExecoinDisplay(paidNum) : paidNum.toLocaleString('id-ID')) + ' ExeCoin dikonfirmasi · mengalihkan ke saluran resmi…' },
-            { p: 80, t: 'Transfer ke Roblox', d: 'Menyinkronkan ' + robuxAmount + ' Robux ke akun Roblox kamu…' },
-            { p: 100, t: 'Pengiriman selesai', d: 'Robux telah dikreditkan. Periksa saldo Roblox di aplikasi atau roblox.com.' }
-          ];
-      let i = 0;
-      const tick = () => {
-        if (i >= steps.length) {
-          robloxTopupBusy = false;
-          setRobloxTopupButtonsDisabled(false);
-          if (isGp) {
-            if (titleEl) titleEl.textContent = 'Order terpasang';
-            if (detailEl) detailEl.textContent = 'Game Pass dalam antrian verifikasi; perkiraan hingga 5 hari.';
-            setStepVisual(99);
-            showSysNotify({
-              variant: 'success',
-              label: 'GAME PASS',
-              title: 'Order aktif',
-              subtitle: '100 Robux (net) → @' + username,
-              meta: 'Set 143 Robux · 320 ExeCoin · tunggu settlement Roblox',
-              duration: 5200
-            });
-          } else {
-            if (titleEl) titleEl.textContent = 'Selesai';
-            if (detailEl) detailEl.textContent = 'Order berhasil · Robux seharusnya sudah terlihat di akun kamu.';
-            setStepVisual(99);
-            showSysNotify({
-              variant: 'success',
-              label: 'ROBUX',
-              title: 'Pengiriman selesai',
-              subtitle: String(robuxAmount) + ' Robux → @' + username,
-              meta: 'Periksa inventaris & saldo Robux di akun kamu',
-              duration: 4500
-            });
-          }
-          return;
-        }
-        const st = steps[i];
-        if (fill) fill.style.width = st.p + '%';
-        if (pctEl) pctEl.textContent = st.p + '%';
-        if (titleEl) titleEl.textContent = st.t;
-        if (detailEl) detailEl.textContent = st.d;
-        setStepVisual(i);
-        i++;
-        setTimeout(tick, 720);
-      };
-      if (titleEl) titleEl.textContent = isGp ? 'Memproses order Game Pass…' : 'Memproses pengiriman…';
-      if (detailEl) {
-        detailEl.textContent = isGp
-          ? ('Menautkan slot harian + ' + formatExecoinDisplay(paidNum) + ' ExeCoin untuk alur Game Pass…')
-          : ('Menghubungkan ke layanan top-up untuk ' + robuxAmount + ' Robux…');
-      }
-      setTimeout(tick, 420);
-    }
     function renderEventCenter() {
       if (!auth.currentUser || !userData) return;
       const coinsEl = document.getElementById('evCoinBalance');
@@ -8744,16 +7983,6 @@
       if (dailyEl) dailyEl.innerHTML = buildDailyQuestsHtml();
       if (weeklyEl) weeklyEl.innerHTML = buildWeeklyQuestsHtml();
       if (shopEl) shopEl.innerHTML = buildShopHtml();
-      if (!robloxTopupBusy) {
-        const panel = document.getElementById('robloxTopupProgress');
-        if (panel) {
-          panel.classList.remove('show', 'rbx-mode-gamepass');
-        }
-        setRobloxTopupButtonsDisabled(false);
-      }
-      ensureRobloxGamepassStockListener();
-      updateRobloxGamepassStockUi();
-      syncExecoinRobuxInfoCard();
       updateEventSideFromTagDrop();
     }
     function getDailyKey() {
@@ -9250,6 +8479,196 @@
       currentProfileUid = null;
       applyProfileUrl(true);
     }
+
+    function renderExePremiumPackages() {
+      const packages = [
+        {
+          id: 'exepremium',
+          label: 'ExePremium',
+          price: '9.900',
+          duration: '1 Bulan',
+          description: 'Badge ExePremium, premium tag, tema hijau shiny, upload 2 music/hari',
+          features: [
+            'Badge ExePremium',
+            'Unlock premium tag baru',
+            'Tema profile & app shiny hijau',
+            'Upload 2 music/hari',
+            'Unlock theme premium di main app'
+          ]
+        },
+        {
+          id: 'exepremiumplus',
+          label: 'ExePremium Plus',
+          price: '19.900',
+          duration: '1 Bulan',
+          description: 'Semua fitur Premium + VIP semua + prioritas support + gift premium',
+          features: [
+            'Semua fitur ExePremium',
+            'Semua fitur VIP',
+            'Upload lagu seperti VIP',
+            'Prioritas support',
+            '2 tag eksklusif: Beta Access, ExePremium+',
+            'Verified badge walau foll di bawah 50',
+            'Gift Premium ke teman',
+            'Request custom role ke admin'
+          ]
+        }
+      ];
+      const container = document.getElementById('premiumPackagesContainer');
+      if (!container) return;
+      container.innerHTML = packages.map(pkg => {
+        return '<div class="premium-card" onclick="startPremiumCheckout(\'' + pkg.id + '\')">' +
+          '<div class="premium-card-content">' +
+          '<div class="premium-package-name">' + pkg.label + '</div>' +
+          '<div class="premium-price">Rp' + pkg.price + '</div>' +
+          '<div class="premium-price-period">/ bulan</div>' +
+          '<div style="font-size:14px; color:#d0d0d0; margin-bottom:14px;">' + pkg.description + '</div>' +
+          '<ul class="premium-features">' + pkg.features.map(feature => '<li>' + feature + '</li>').join('') + '</ul>' +
+          '<button type="button" class="premium-btn">Pilih Paket</button>' +
+          '</div>' +
+          '</div>';
+      }).join('');
+    }
+
+    async function startPremiumCheckout(packageId) {
+      if (!auth.currentUser) {
+        showToast('Login dulu sebelum upgrade premium.', 'warning');
+        return;
+      }
+      const settings = {
+        exepremium: { label: 'ExePremium', price: 9900, duration: '1 Bulan' },
+        exepremiumplus: { label: 'ExePremium Plus', price: 19900, duration: '1 Bulan' }
+      };
+      const config = settings[packageId];
+      if (!config) return;
+      const modal = document.getElementById('modalPremiumCheckout');
+      const checkoutName = document.getElementById('checkoutPackageName');
+      const checkoutLabel = document.getElementById('checkoutPackageLabel');
+      const checkoutPrice = document.getElementById('checkoutPrice');
+      const checkoutDuration = document.getElementById('checkoutDuration');
+      const checkoutInvoice = document.getElementById('checkoutInvoiceId');
+      const qrContainer = document.getElementById('checkoutQRCode');
+      if (!modal || !checkoutName || !checkoutLabel || !checkoutPrice || !checkoutDuration || !checkoutInvoice || !qrContainer) return;
+
+      checkoutName.textContent = config.label;
+      checkoutLabel.textContent = config.label;
+      checkoutPrice.textContent = config.price;
+      checkoutDuration.textContent = config.duration;
+      checkoutInvoice.textContent = 'Membuat invoice...';
+      qrContainer.innerHTML = '<div style="color:#999">Menyiapkan invoice...</div>';
+      modal.style.display = 'block';
+
+      try {
+        const response = await fetch('/.netlify/functions/createPayment', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ amount: config.price, packageId, uid: auth.currentUser ? auth.currentUser.uid : null, description: config.label })
+        });
+        const data = await response.json();
+        if (!data || !data.invoiceId || !data.qrCodeUrl) {
+          throw new Error('Gagal membuat invoice');
+        }
+        checkoutInvoice.textContent = data.invoiceId;
+        qrContainer.innerHTML = '<img src="' + data.qrCodeUrl + '" alt="QRIS" style="max-width:100%; max-height:100%; border-radius: 12px;" />';
+        localStorage.setItem('exePremiumInvoice', JSON.stringify({ invoiceId: data.invoiceId, packageId }));
+      } catch (err) {
+        qrContainer.innerHTML = '<div style="color:#ff6666">Gagal membuat QR. Coba lagi.</div>';
+        checkoutInvoice.textContent = 'ERROR';
+        console.error(err);
+      }
+    }
+
+    async function checkPremiumStatus() {
+      if (!auth.currentUser) {
+        showToast('Login dulu untuk memeriksa status pembayaran.', 'warning');
+        return;
+      }
+      const invoiceRaw = localStorage.getItem('exePremiumInvoice');
+      if (!invoiceRaw) {
+        showToast('Invoice tidak ditemukan. Buat order terlebih dahulu.', 'warning');
+        return;
+      }
+      let invoice;
+      try {
+        invoice = JSON.parse(invoiceRaw);
+      } catch (e) {
+        invoice = null;
+      }
+      if (!invoice || !invoice.invoiceId) {
+        showToast('Invoice tidak valid.', 'warning');
+        return;
+      }
+      try {
+        await loadCurrentUserData();
+        const premium = getPremiumStatus(userData);
+        if (premium.isPremium || premium.isPremiumPlus) {
+          showToast('Pembayaran terdeteksi. Status Premium sudah aktif.', 'success');
+          localStorage.removeItem('exePremiumInvoice');
+          closePremiumCheckout();
+        } else {
+          showToast('Belum terbayar. Silakan cek lagi setelah pembayaran.', 'warning');
+        }
+      } catch (err) {
+        showToast('Gagal memeriksa status pembayaran.', 'error');
+        console.error(err);
+      }
+    }
+
+    function applyPremiumProfileUI() {
+      if (!userData) return;
+      const premium = getPremiumStatus(userData);
+      const badge = document.getElementById('pBadge');
+      const status = document.getElementById('pVipStatus');
+      const tagDisplay = document.getElementById('pTagDisplay');
+      if (premium.isPremiumPlus) {
+        if (badge) badge.innerHTML = '<span class="premium-badge">ExePremium+</span> <span class="premium-badge" style="background:#00d4ff;">Beta Access</span>';
+        if (status) status.textContent = 'Status: ExePremium Plus • ' + premium.daysLeft + ' hari tersisa';
+      } else if (premium.isPremium) {
+        if (badge) badge.innerHTML = '<span class="premium-badge">ExePremium</span>';
+        if (status) status.textContent = 'Status: ExePremium • ' + premium.daysLeft + ' hari tersisa';
+      } else {
+        if (badge) badge.innerHTML = '';
+        if (status) status.textContent = 'Status: NONVIP';
+      }
+      if (tagDisplay) {
+        tagDisplay.innerHTML = premium.isPremiumPlus ? '<span class="premium-badge">VIP + Premium</span>' : premium.isPremium ? '<span class="premium-badge">Premium</span>' : '';
+      }
+    }
+
+    function canUploadMusicToday() {
+      if (!userData) return 1;
+      const premium = getPremiumStatus(userData);
+      if (premium.isPremiumPlus || premium.isPremium) return 2;
+      return 1;
+    }
+
+    function loadCurrentUserData() {
+      if (!auth.currentUser) return;
+      return db.ref('users/' + auth.currentUser.uid).once('value').then(snap => {
+        userData = snap.val() || {};
+        applyPremiumProfileUI();
+        return userData;
+      }).catch(() => {
+        return null;
+      });
+    }
+
+    async function showPremiumOffer() {
+      const banner = document.getElementById('premiumOfferBanner');
+      if (!banner) return;
+      if (auth.currentUser) {
+        await loadCurrentUserData();
+      }
+      const premium = getPremiumStatus(userData);
+      if (premium.isPremium || premium.isPremiumPlus) return;
+      banner.classList.add('show');
+      setTimeout(() => banner.classList.remove('show'), 12000);
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      renderExePremiumPackages();
+      setTimeout(showPremiumOffer, 9000);
+    });
 
     // ============================================================
     // CAPSULE MENU - v3.2.3
@@ -9790,6 +9209,7 @@
       if (u) {
         db.ref('users/' + u.uid).on('value', snap => {
           userData = snap.val();
+          window.userData = userData;
           if (!userData) { dismissLoader(); return; }
           if (userData.banned === true) { document.getElementById('bannedScreen').style.display = 'flex'; auth.signOut(); return; }
 
@@ -9879,6 +9299,7 @@
         });
         setupTagDropWatcher();
       } else {
+        window.userData = null;
         clearExeLoginCookies();
         stopUploadCooldownWatcher();
         if (tagDropInterval) {
@@ -10437,8 +9858,8 @@
       selectedFile = null;
       isUploading = false;
       removeSelectedFile();
-      document.getElementById('rLagu').value = '';
-      document.getElementById('rUrl').value = '';
+      const fields = ['rLagu', 'rUrl', 'rqTitle', 'rqMessage', 'guestName', 'guestLagu', 'guestMessage'];
+      fields.forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
       document.getElementById('uploadProgress').classList.remove('active');
       switchUploadTab('file');
       const postBtn = document.getElementById('postBtn');
@@ -10462,6 +9883,10 @@
       if (!auth.currentUser || !userData) return msg('Login dulu!');
       if (userData.banUpload) {
         msg('Akun ini dibanned dari upload');
+        return;
+      }
+      if (!isUploadAuthorized(userData)) {
+        msg('Akses upload tertutup. Silakan kirim request ke admin.');
         return;
       }
 
@@ -11385,13 +10810,131 @@
       btn.innerHTML = isBlacklisted ? '<i class="fas fa-check"></i>' : '<i class="fas fa-ban"></i>';
       btn.title = isBlacklisted ? 'Unblacklist Song' : 'Blacklist Song';
     }
-    function openReq() { document.getElementById('modalReq').style.display = 'block'; }
+    function isUploadAuthorized(data) {
+      if (!data) return false;
+      if (data.role === 'admin' || data.role === 'owner') return true;
+      if (data.uploadAllowed === true) return true;
+      if (getVipStatus(data)) return true;
+      return false;
+    }
+    function getPendingUploadRequest() {
+      const raw = localStorage.getItem('exeUploadRequestPending');
+      if (!raw) return null;
+      try {
+        const pending = JSON.parse(raw);
+        if (!pending || !pending.expiresAt) throw new Error('invalid');
+        if (Date.now() > pending.expiresAt) {
+          localStorage.removeItem('exeUploadRequestPending');
+          return null;
+        }
+        return pending;
+      } catch (err) {
+        localStorage.removeItem('exeUploadRequestPending');
+        return null;
+      }
+    }
+    function formatPendingExpiry(timestamp) {
+      return new Date(timestamp).toLocaleDateString('id-ID', { day: '2-digit', month: 'long', year: 'numeric' });
+    }
+    function updateRequestStatusUI() {
+      const pending = getPendingUploadRequest();
+      const statusText = pending ? `Status request: PENDING. Tunggu admin meninjau sampai ${formatPendingExpiry(pending.expiresAt)}.` : 'Belum ada request pending.';
+      const statusUser = document.getElementById('requestStatusUser');
+      const statusGuest = document.getElementById('requestStatusGuest');
+      if (statusUser) statusUser.textContent = statusText;
+      if (statusGuest) statusGuest.textContent = statusText;
+      const userBtn = document.querySelector('#requestFormUser button');
+      const guestBtn = document.querySelector('#uploadFormGuest button');
+      if (userBtn) {
+        userBtn.disabled = !!pending;
+        userBtn.textContent = pending ? 'PENDING...' : 'KIRIM REQUEST';
+      }
+      if (guestBtn) {
+        guestBtn.disabled = !!pending;
+        guestBtn.textContent = pending ? 'PENDING...' : 'KIRIM REQUEST';
+      }
+    }
+    function openReq() {
+      const modal = document.getElementById('modalReq');
+      const uploadFormUser = document.getElementById('uploadFormUser');
+      const requestFormUser = document.getElementById('requestFormUser');
+      const uploadFormGuest = document.getElementById('uploadFormGuest');
+      if (!modal || !uploadFormUser || !requestFormUser || !uploadFormGuest) return;
+      uploadFormGuest.style.display = 'none';
+      if (auth.currentUser && userData) {
+        const canUpload = isUploadAuthorized(userData);
+        if (canUpload) {
+          uploadFormUser.style.display = 'block';
+          requestFormUser.style.display = 'none';
+          document.getElementById('postBtn').textContent = 'POST SEKARANG';
+        } else {
+          uploadFormUser.style.display = 'none';
+          requestFormUser.style.display = 'block';
+        }
+      } else {
+        uploadFormUser.style.display = 'none';
+        requestFormUser.style.display = 'none';
+        uploadFormGuest.style.display = 'block';
+      }
+      modal.style.display = 'block';
+      updateRequestStatusUI();
+    }
     function openAbout() { document.getElementById('modalAbout').style.display = 'block'; }
     function openUpdateInfo() { document.getElementById('modalUpdateInfo').style.display = 'block'; }
     function openBoomboxTutorial() { document.getElementById('modalBoombox').style.display = 'block'; }
+    function openExePremiumModal() {
+      renderExePremiumPackages();
+      document.getElementById('modalExePremium').style.display = 'block';
+    }
+    function closePremiumCheckout() { document.getElementById('modalPremiumCheckout').style.display = 'none'; }
     function openTutorial() { document.getElementById('tutorialOverlay').style.display = 'flex'; }
     function closeTutorial() { const o = document.getElementById('tutorialOverlay'); o.style.display = 'none'; const v = document.getElementById('tutorialVideo'); if (v) { const src = v.src; v.src = src; } }
-    function sendWA() { window.open('https://wa.me/62895329018240?text=Halo Admin, saya ' + document.getElementById('guestName').value + ' ingin upload: ' + document.getElementById('guestLagu').value); }
+    async function submitUploadRequest(isGuest) {
+      const now = Date.now();
+      const expiresAt = now + 7 * 24 * 60 * 60 * 1000;
+      const existing = getPendingUploadRequest();
+      if (existing) return msg('Kamu masih punya request pending. Tunggu admin meninjau dulu.');
+      let payload = {
+        status: 'pending',
+        type: 'upload',
+        createdAt: now,
+        expiresAt,
+        response: '',
+        requesterType: isGuest ? 'guest' : 'user'
+      };
+
+      if (isGuest) {
+        const name = document.getElementById('guestName').value.trim();
+        const title = document.getElementById('guestLagu').value.trim();
+        const message = document.getElementById('guestMessage').value.trim();
+        if (!name || !message) return msg('Isi nama dan pesan request! Nama lagu boleh kosong.');
+        payload.requesterName = name;
+        if (title) payload.title = title;
+        payload.message = message;
+      } else {
+        if (!auth.currentUser || !userData) return msg('Login dulu untuk request upload.');
+        const title = document.getElementById('rqTitle').value.trim();
+        const message = document.getElementById('rqMessage').value.trim();
+        if (!message) return msg('Isi pesan request ke admin. Nama lagu bisa kosong.');
+        if (!auth.currentUser || !userData) return msg('Login dulu untuk request upload.');
+        if (isUploadAuthorized(userData)) return msg('Kamu sudah bisa upload langsung.');
+        payload.uid = auth.currentUser.uid;
+        payload.requesterName = userData.username || 'User';
+        if (title) payload.title = title;
+        payload.message = message;
+      }
+
+      try {
+        const reqRef = await db.ref('requests').push(payload);
+        localStorage.setItem('exeUploadRequestPending', JSON.stringify({ requestId: reqRef.key, expiresAt, status: 'pending' }));
+        msg('✅ Request terkirim. Tunggu admin meninjau dalam 7 hari.');
+        resetUploadForm();
+        document.getElementById('modalReq').style.display = 'none';
+      } catch (err) {
+        console.error('Request upload error:', err);
+        msg('Gagal mengirim request. Coba lagi.');
+      }
+    }
     function shareProfile(uid, username) { if (!uid) return; navigator.clipboard.writeText(window.location.origin + window.location.pathname + '?profile_userid=' + uid); showToast('Link profil @' + (username || 'user') + ' disalin'); }
     function closeProfileModal() {
       const modal = document.getElementById('modalProfile');
@@ -11409,24 +10952,34 @@
       currentProfileUid = null;
       applyProfileUrl(true);
     }
-    function openTagSelector() {
-      if (!auth.currentUser || !userData) { msg('Login dulu!'); return; }
-      ensureCurrentTagInAlltag(auth.currentUser.uid, userData);
-      const all = userData.alltag || {};
-      const keys = Object.keys(all).filter(k => all[k]);
-      if (!keys.length) { msg('Belum ada tag yang kebuka'); return; }
+    window.openTagSelector = function() {
+      console.log('openTagSelector called');
       const modal = document.getElementById('modalTagSelector');
       const curEl = document.getElementById('tagSelectorCurrent');
-      const grid = document.getElementById('tagSelectorChipGrid');
+      const grid = document.getElementById('tagSelectorOwnedGrid');
       const info = document.getElementById('tagSelectorAllInfo');
-      if (!modal || !curEl || !grid || !info) return;
-      const cur = (userData.tag || 'none').toLowerCase();
+      if (!modal || !curEl || !grid || !info) {
+        console.warn('Tag selector modal elements not found');
+        return;
+      }
+      const currentTag = (userData && userData.tag ? userData.tag : 'none').toLowerCase();
+      const all = userData && userData.alltag ? userData.alltag : {};
+      let ownedKeys = Object.keys(all).filter(k => all[k]);
+      if (currentTag !== 'none' && !ownedKeys.includes(currentTag)) {
+        ownedKeys.unshift(currentTag);
+      }
+      if (auth.currentUser && userData) {
+        ensureCurrentTagInAlltag(auth.currentUser.uid, userData);
+      }
+      const cur = currentTag;
       curEl.innerHTML = cur === 'none' ? 'Tanpa tag aktif' : 'Tag aktif: ' + getTagHTML(cur);
-      const chips = keys.map(k => {
+      const owned = new Set(ownedKeys);
+      const ownedChips = ownedKeys.length ? ownedKeys.map(k => {
         const meta = TAG_META[k] || { title: k.toUpperCase() };
-        return `<button class="tag-chip" data-tag="${k}"><span class="user-tag tag-${k}">${meta.title}</span></button>`;
-      }).join('') + `<button class="tag-chip tag-chip-none" data-tag="none">TANPA TAG</button>`;
-      grid.innerHTML = chips;
+        const activeLabel = k === cur ? ' <span style="font-size:9px; color:#8bffa3;">(aktif)</span>' : '';
+        return `<button class="tag-chip tag-chip-owned" data-tag="${k}"><span class="user-tag tag-${k}">${meta.title}</span>${activeLabel}</button>`;
+      }).join('') : '<div style="color:#888; font-size:11px; margin-top:6px">Belum ada tag yang dimiliki</div>';
+      grid.innerHTML = ownedChips + `<button class="tag-chip tag-chip-none" data-tag="none">TANPA TAG</button>`;
       if (!grid.dataset.bound) {
         grid.dataset.bound = '1';
         grid.addEventListener('click', function(e) {
@@ -11434,31 +10987,37 @@
           if (!btn) return;
           const tag = btn.dataset.tag;
           const uid = auth.currentUser && auth.currentUser.uid;
-          if (!uid || !userData) return;
-          const updates = {};
-          updates['users/' + uid + '/tag'] = tag === 'none' ? 'none' : tag;
-          if (tag !== 'none') {
-            updates['users/' + uid + '/alltag/' + tag] = true;
+          if (!uid || !userData) {
+            showToast('Login dulu untuk mengganti tag', 'error');
+            return;
           }
-          db.ref().update(updates).then(() => {
-            document.getElementById('modalTagSelector').style.display = 'none';
-            showToast('Tag diganti');
-          });
+          if (tag === 'none' || owned.has(tag)) {
+            const updates = {};
+            updates['users/' + uid + '/tag'] = tag === 'none' ? 'none' : tag;
+            if (tag !== 'none') {
+              updates['users/' + uid + '/alltag/' + tag] = true;
+            }
+            db.ref().update(updates).then(() => {
+              modal.style.display = 'none';
+              showToast('Tag diganti');
+            });
+          } else {
+            showToast('Tag ini belum kamu dapatkan', 'warning');
+          }
         });
       }
-      if (!info.dataset.filled) {
-        const rows = Object.keys(TAG_META).map(k => {
-          const m = TAG_META[k];
-          return `<div class="tag-meta-row">
+      const rows = Object.keys(TAG_META).map(k => {
+        const m = TAG_META[k];
+        const ownedLabel = owned.has(k) ? 'Dimiliki' : 'Belum didapat';
+        const statusClass = owned.has(k) ? 'tag-chip-owned' : 'tag-chip-locked';
+        return `<div class="tag-meta-row">
             <div><span class="user-tag tag-${k}">${m.title}</span></div>
-            <div class="tag-meta-desc">${m.desc}</div>
+            <div class="tag-meta-desc"><span class="${statusClass}">${ownedLabel}</span> · ${m.desc}</div>
           </div>`;
-        }).join('');
-        info.innerHTML = rows;
-        info.dataset.filled = '1';
-      }
-      modal.style.display = 'block';
-    }
+      }).join('');
+      info.innerHTML = rows;
+      modal.style.display = 'flex';
+    };
 
     // ============================================================
     // NOTIFICATIONS - CLEAR
@@ -11767,6 +11326,7 @@
       document.getElementById('adv-' + id).classList.add('active');
       btn.classList.add('active');
       if (id === 'songs') renderAdminSongs();
+      if (id === 'requests') renderAdminRequests();
       if (id === 'dash') {
         document.getElementById('adCountS').innerText = songs.length;
         db.ref('users').once('value').then(s => { document.getElementById('adCountU').innerText = s.numChildren(); });
@@ -11800,6 +11360,7 @@
       'exe-sahur': { title: 'EXE-SAHUR', desc: '🌙 SECRET TAG: Upload lagu jam 03:00-05:00 (waktu sahur) - Auto grant jika enabled' },
       realaccount: { title: 'REAL ACCOUNT', desc: 'Tag untuk akun asli yang terverifikasi' }
     };
+    window.TAG_META = TAG_META;
     let adSelectedUserUid = null;
 
     function initTagDropSelect() {
@@ -11887,6 +11448,11 @@
         const data = snap.val() || {};
         adAllSongs = Object.keys(data).map(key => ({ key, ...data[key] }));
         document.getElementById('adCountS').innerText = adAllSongs.length;
+      });
+      db.ref('requests').on('value', snap => {
+        const data = snap.val() || {};
+        adAllRequests = Object.keys(data).map(key => ({ id: key, ...data[key] }));
+        adRenderRequests(adAllRequests);
       });
       // Logs - realtime
       db.ref('logs').limitToLast(50).on('value', snap => {
@@ -11997,6 +11563,100 @@
     function adFilterSongs(q) {
       const filtered = adAllSongs.filter(s => s.title.toLowerCase().includes(q.toLowerCase()) || (s.by || '').toLowerCase().includes(q.toLowerCase()));
       adRenderSongs(filtered);
+    }
+
+    function renderAdminRequests() {
+      if (adAllRequests.length > 0) { adRenderRequests(adAllRequests); return; }
+      db.ref('requests').once('value').then(snap => {
+        adAllRequests = [];
+        snap.forEach(c => adAllRequests.push({ id: c.key, ...c.val() }));
+        adRenderRequests(adAllRequests);
+      });
+    }
+
+    function adRenderRequests(list) {
+      const box = document.getElementById('adRequestList');
+      if (!box) return;
+      if (!list.length) {
+        box.innerHTML = '<div style="text-align:center;padding:30px;color:#444">Tidak ada request upload.</div>';
+        return;
+      }
+      const now = Date.now();
+      box.innerHTML = list.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0)).map(r => {
+        const expires = r.expiresAt ? new Date(r.expiresAt).toLocaleString() : 'N/A';
+        const created = r.createdAt ? new Date(r.createdAt).toLocaleString() : 'N/A';
+        const status = (r.status || 'pending').toUpperCase();
+        const pending = r.status === 'pending';
+        const expired = pending && r.expiresAt && now > r.expiresAt;
+        const badge = pending ? '<span style="color:#fff;background:#4caf50;padding:2px 6px;border-radius:4px;font-size:11px">PENDING</span>'
+          : (r.status === 'accepted' ? '<span style="color:#fff;background:#009688;padding:2px 6px;border-radius:4px;font-size:11px">ACCEPTED</span>'
+          : '<span style="color:#fff;background:#f44336;padding:2px 6px;border-radius:4px;font-size:11px">REJECTED</span>');
+        const actionButtons = pending ? `
+          <button class="admin-btn admin-btn-green" onclick="adHandleRequestAction('${r.id}','accept')" style="padding:6px 10px;font-size:11px">ACCEPT</button>
+          <button class="admin-btn admin-btn-red" onclick="adHandleRequestAction('${r.id}','reject')" style="padding:6px 10px;font-size:11px">REJECT</button>
+        ` : '';
+        const requester = r.requesterType === 'guest' ? `Guest: ${escapeHtml(r.requesterName || 'Guest')}` : `User: @${escapeHtml(r.requesterName || 'User')} (${escapeHtml(r.uid || '')})`;
+        return `<div class="admin-request-row" style="margin-bottom:12px;padding:14px;border:1px solid rgba(255,255,255,0.08);border-radius:12px;">
+          <div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:8px">
+            <div style="font-weight:700;color:#fff">${escapeHtml(r.title || 'Request upload')}</div>
+            <div style="display:flex;gap:8px;align-items:center">${badge}${expired ? '<span style="color:#fdd835;font-size:11px;">EXPIRED</span>' : ''}</div>
+          </div>
+          <div style="font-size:13px;color:#bbb;line-height:1.5;">
+            <div><strong>Requester:</strong> ${requester}</div>
+            <div><strong>URL:</strong> ${escapeHtml(r.url || '')}</div>
+            <div><strong>Message:</strong> ${escapeHtml(r.message || '')}</div>
+            <div><strong>Dibuat:</strong> ${created}</div>
+            <div><strong>Kadaluarsa:</strong> ${expires}</div>
+            ${r.response ? `<div><strong>Admin Response:</strong> ${escapeHtml(r.response)}</div>` : ''}
+          </div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px">${actionButtons}</div>
+        </div>`;
+      }).join('');
+    }
+
+    function adFilterRequests(q) {
+      const filtered = adAllRequests.filter(r => {
+        const text = `${r.requesterName || ''} ${r.uid || ''} ${r.title || ''} ${r.url || ''} ${r.message || ''}`.toLowerCase();
+        return text.includes(q.toLowerCase());
+      });
+      adRenderRequests(filtered);
+    }
+
+    function adHandleRequestAction(id, action) {
+      const request = adAllRequests.find(r => r.id === id);
+      if (!request) return;
+      if (request.status && request.status !== 'pending') {
+        return showToast('Request sudah diproses.');
+      }
+      const title = action === 'accept' ? 'Accept request?' : 'Reject request?';
+      const confirmText = action === 'accept'
+        ? 'Admin akan menandai request sebagai diterima.'
+        : 'Admin akan menolak request ini.';
+      Swal.fire({
+        title,
+        text: confirmText,
+        input: 'textarea',
+        inputLabel: 'Pesan respon (opsional)',
+        inputPlaceholder: 'Tulis pesan untuk user...',
+        showCancelButton: true,
+        confirmButtonText: action === 'accept' ? 'Accept' : 'Reject',
+        background: '#0d0d15',
+        color: '#fff'
+      }).then(result => {
+        if (!result.isConfirmed) return;
+        const update = {
+          status: action === 'accept' ? 'accepted' : 'rejected',
+          response: result.value ? result.value.trim() : '',
+          processedAt: Date.now()
+        };
+        db.ref('requests/' + id).update(update).then(() => {
+          addLog(`Request ${action}ed: ${id}`);
+          showToast(`Request ${action === 'accept' ? 'diterima' : 'ditolak'}.`);
+        }).catch(err => {
+          console.error('Request update error:', err);
+          msg('Gagal memproses request. Coba lagi.');
+        });
+      });
     }
 
     function adDelSong(id) {
@@ -12573,6 +12233,138 @@
       if (!t || t === 'Ketik ID lagu dulu') { showToast('Isi ID dulu'); return; }
       navigator.clipboard.writeText(t).then(() => showToast('URL disalin!')); document.getElementById('modalAdminCopyUrl').style.display = 'none';
     }
+  </script>
+  <script>
+    (function(){
+      function attachFallbackHandlers(){
+        try{
+          const pt = document.getElementById('btnProfileTag');
+          if(pt && !pt.hasAttribute('onclick')){
+            pt.style.pointerEvents = 'auto'; pt.style.zIndex = '100100';
+            pt.addEventListener('click', function(e){
+              e && e.preventDefault && e.preventDefault();
+              e && e.stopPropagation && e.stopPropagation();
+              console.log('btnProfileTag fallback clicked');
+              if (typeof window.openTagSelector === 'function') {
+                window.openTagSelector();
+              } else if (typeof window.openTagSelectorFrame === 'function') {
+                window.openTagSelectorFrame();
+              } else {
+                window.location.href = 'tagselector.html';
+              }
+            });
+          }
+
+          console.log('Fallback handlers attached for profile tag button');
+        }catch(err){
+          console.error('Error attaching fallback handlers', err);
+        }
+      }
+      if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', attachFallbackHandlers);
+      else attachFallbackHandlers();
+      // Tag Selector V2 functions
+      window.openTagSelectorV2 = async function(){
+        const modal = document.getElementById('modalTagSelectorV2');
+        const listEl = document.getElementById('tagv2List');
+        if(!modal || !listEl) return;
+        // require auth
+        const user = auth && auth.currentUser;
+        if(!user){ showToast('Silakan login terlebih dahulu'); return; }
+        listEl.innerHTML = '<div style="color:rgba(255,255,255,0.5)">Memuat tag...</div>';
+        try{
+          const snap = await db.ref('users/' + user.uid + '/alltag').once('value');
+          const all = snap && snap.val() ? snap.val() : {};
+          // filter only true values
+          const keys = Object.keys(all).filter(k => all[k] === true || all[k] === 'true');
+          if(keys.length === 0){ listEl.innerHTML = '<div style="color:rgba(255,255,255,0.6)">Belum ada tag yang dimiliki.</div>'; }
+          else{
+            listEl.innerHTML = '';
+            keys.forEach(k => {
+              const item = document.createElement('div');
+              item.className = 'tagv2-item';
+              const left = document.createElement('div'); left.className = 'tagv2-left';
+              const name = document.createElement('div'); name.className = 'tagv2-name'; name.innerHTML = (typeof TAG_META !== 'undefined' && TAG_META[k] && TAG_META[k].title) ? TAG_META[k].title : k.toUpperCase();
+              const desc = document.createElement('div'); desc.className = 'tagv2-desc'; desc.textContent = TAG_META && TAG_META[k] && TAG_META[k].desc ? TAG_META[k].desc : '';
+              left.appendChild(name); if(desc.textContent) left.appendChild(desc);
+              const btn = document.createElement('button'); btn.className = 'tagv2-use'; btn.textContent = 'Pakai';
+              btn.onclick = function(){ useTagV2(k); };
+              item.appendChild(left); item.appendChild(btn);
+              listEl.appendChild(item);
+            });
+          }
+        }catch(err){ console.error(err); listEl.innerHTML = '<div style="color:rgba(255,100,100,0.9)">Gagal memuat tag.</div>'; }
+        modal.style.display = 'flex';
+      };
+
+      window.closeTagSelectorV2 = function(){ const m = document.getElementById('modalTagSelectorV2'); if(m) m.style.display='none'; };
+
+      window.useTagV2 = function(tagKey){
+        const user = auth && auth.currentUser;
+        if(!user){ showToast('Silakan login terlebih dahulu'); return; }
+        // set user's active tag under users/uid/tag
+        db.ref('users/' + user.uid + '/tag').set(tagKey).then(()=>{
+          showToast('Tag aktif diubah');
+          // update UI display if exists
+          if(document.getElementById('pTagDisplay')){
+            document.getElementById('pTagDisplay').innerHTML = typeof getTagHTML === 'function' ? getTagHTML(tagKey) : tagKey;
+          }
+          closeTagSelectorV2();
+        }).catch(err=>{ console.error(err); showToast('Gagal menyimpan tag'); });
+      };
+    })();
+  </script>
+  <style>
+    /* Overlay for embedded external frames */
+    .external-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.86); display: none; z-index: 200000; align-items: center; justify-content: center; }
+    .external-frame { width: min(920px, calc(100vw - 28px)); max-height: 88vh; overflow-y: auto; background: linear-gradient(180deg,#071017,#0e0f14); border-radius: 16px; padding: 18px; position: relative; box-shadow: 0 20px 60px rgba(0,0,0,0.8); }
+    .external-frame .close-btn { position: absolute; right: 10px; top: 10px; background: transparent; border: none; color: #fff; font-size:22px; cursor:pointer }
+  </style>
+
+  <div id="externalFrameOverlay" class="external-overlay">
+    <div class="external-frame" id="externalFrame">
+      <button class="close-btn" id="externalFrameClose" title="Tutup">×</button>
+      <div id="externalFrameContent"></div>
+    </div>
+  </div>
+
+
+
+
+    window.openTagSelectorFrame = function(){
+      const overlay = document.getElementById('externalFrameOverlay');
+      const content = document.getElementById('externalFrameContent');
+      if(!overlay || !content) return;
+      const currentTag = (userData && userData.tag ? userData.tag : 'none').toLowerCase();
+      const all = userData && userData.alltag ? userData.alltag : {};
+      let ownedKeys = Object.keys(all).filter(k => all[k]);
+      if (currentTag !== 'none' && !ownedKeys.includes(currentTag)) ownedKeys.unshift(currentTag);
+      const owned = new Set(ownedKeys);
+      const ownedChips = ownedKeys.length ? ownedKeys.map(k => { const meta = TAG_META && TAG_META[k] || { title: k.toUpperCase() }; return `<button class="chip owned" data-tag="${k}" style="margin:6px;padding:8px 12px;border-radius:999px;border:none;">${meta.title}</button>`; }).join('') : '<div style="color:#888; font-size:11px; margin-top:6px">Belum ada tag yang dimiliki</div>';
+      content.innerHTML = `
+        <h2 style="margin-top:0;color:var(--accent)">PILIH TAG</h2>
+        <div style="font-size:13px;color:#88c;margin-bottom:8px">Tag milikmu</div>
+        <div id="ef_tag_grid" style="display:flex;flex-wrap:wrap;gap:8px">${ownedChips}<button class="chip" data-tag="none" style="margin:6px;padding:8px 12px;border-radius:999px;border:none;">TANPA TAG</button></div>
+        <div style="margin-top:12px;font-size:13px;color:#9aa" id="ef_tag_info">Klik tag untuk mengganti.</div>
+      `;
+      overlay.style.display = 'flex';
+      document.getElementById('externalFrameClose').onclick = function(){ overlay.style.display='none'; };
+
+      const grid = document.getElementById('ef_tag_grid');
+      grid.addEventListener('click', function(e){
+        const btn = e.target.closest('button'); if(!btn) return;
+        const tag = btn.dataset.tag;
+        if(!auth || !auth.currentUser){ if(window.showToast) window.showToast('Login dulu untuk mengganti tag','error'); return; }
+        const uid = auth.currentUser.uid;
+        if(tag === 'none' || owned.has(tag)){
+          const updates = {};
+          updates['users/' + uid + '/tag'] = tag === 'none' ? 'none' : tag;
+          if(tag !== 'none') updates['users/' + uid + '/alltag/' + tag] = true;
+          db.ref().update(updates).then(() => { overlay.style.display='none'; if(window.showToast) window.showToast('Tag diganti','success'); }).catch(err=>{ console.error(err); if(window.showToast) window.showToast('Gagal mengganti tag','error'); });
+        } else {
+          if(window.showToast) window.showToast('Tag ini belum kamu dapatkan','warning');
+        }
+      });
+    };
   </script>
 </body>
 </html>
