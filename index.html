@@ -4285,6 +4285,25 @@
       font-weight: 700;
       margin-top: 8px;
     }
+    .premium-name {
+      background: linear-gradient(90deg, #8dffb3, #00ff88, #00d4ff);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+      text-shadow: 0 0 20px rgba(0, 255, 136, 0.18);
+    }
+    .premium-plus-name {
+      background: linear-gradient(90deg, #7dff8a, #00ff88, #b8ffe0);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+      text-shadow: 0 0 24px rgba(0, 255, 136, 0.28);
+      animation: premiumPlusShine 3.2s ease-in-out infinite;
+    }
+    @keyframes premiumPlusShine {
+      0%, 100% { filter: brightness(1); }
+      50% { filter: brightness(1.25); }
+    }
     .premium-offer-banner {
       position: fixed;
       right: 18px;
@@ -7035,13 +7054,13 @@
     function getPremiumStatus(u) {
       const now = Date.now();
       if (!u) return { status: 'none', daysLeft: 0, isPremium: false, isPremiumPlus: false };
-      if (u.exepremium && u.exepremium.endTime && now < u.exepremium.endTime) {
-        const daysLeft = Math.ceil((u.exepremium.endTime - now) / (24 * 60 * 60 * 1000));
-        return { status: 'premium', daysLeft, isPremium: true, isPremiumPlus: false };
-      }
       if (u.exepremiumplus && u.exepremiumplus.endTime && now < u.exepremiumplus.endTime) {
         const daysLeft = Math.ceil((u.exepremiumplus.endTime - now) / (24 * 60 * 60 * 1000));
         return { status: 'premiumplus', daysLeft, isPremium: false, isPremiumPlus: true };
+      }
+      if (u.exepremium && u.exepremium.endTime && now < u.exepremium.endTime) {
+        const daysLeft = Math.ceil((u.exepremium.endTime - now) / (24 * 60 * 60 * 1000));
+        return { status: 'premium', daysLeft, isPremium: true, isPremiumPlus: false };
       }
       return { status: 'none', daysLeft: 0, isPremium: false, isPremiumPlus: false };
     }
@@ -8620,18 +8639,30 @@
       const badge = document.getElementById('pBadge');
       const status = document.getElementById('pVipStatus');
       const tagDisplay = document.getElementById('pTagDisplay');
+      const usernameEl = document.getElementById('pUsername');
+      const fol = userData.followers;
+      const folCount = Array.isArray(fol) ? fol.length : (fol && typeof fol === 'object' ? Object.keys(fol).length : fol || 0);
+      let badgeHtml = folCount >= 50 ? '<i class="fas fa-check-circle v-badge"></i>' : '';
       if (premium.isPremiumPlus) {
-        if (badge) badge.innerHTML = '<span class="premium-badge">ExePremium+</span> <span class="premium-badge" style="background:#00d4ff;">Beta Access</span>';
+        badgeHtml += '<span class="premium-badge">ExePremium+</span> <span class="premium-badge" style="background:#00d4ff;">Beta Access</span>';
         if (status) status.textContent = 'Status: ExePremium Plus • ' + premium.daysLeft + ' hari tersisa';
       } else if (premium.isPremium) {
-        if (badge) badge.innerHTML = '<span class="premium-badge">ExePremium</span>';
+        badgeHtml += '<span class="premium-badge">ExePremium</span>';
         if (status) status.textContent = 'Status: ExePremium • ' + premium.daysLeft + ' hari tersisa';
+      } else if (userData.vip) {
+        if (status) status.textContent = 'Status: VIP PERMANENT ✨';
+      } else if (userData.trialvip && userData.trialvip.expireAt && Date.now() < userData.trialvip.expireAt) {
+        if (status) status.textContent = 'Status: VIP TRIAL AKTIF 👑';
       } else {
-        if (badge) badge.innerHTML = '';
         if (status) status.textContent = 'Status: NONVIP';
       }
+      if (badge) badge.innerHTML = badgeHtml;
       if (tagDisplay) {
-        tagDisplay.innerHTML = premium.isPremiumPlus ? '<span class="premium-badge">VIP + Premium</span>' : premium.isPremium ? '<span class="premium-badge">Premium</span>' : '';
+        tagDisplay.innerHTML = premium.isPremiumPlus ? '<span class="premium-badge">VIP + Premium</span>' : premium.isPremium ? '<span class="premium-badge">Premium</span>' : getTagHTML(userData.tag);
+      }
+      if (usernameEl) {
+        usernameEl.classList.toggle('premium-plus-name', premium.isPremiumPlus);
+        usernameEl.classList.toggle('premium-name', premium.isPremium && !premium.isPremiumPlus);
       }
     }
 
@@ -9231,12 +9262,10 @@
           const flgCount = Array.isArray(flg) ? flg.length : (flg && typeof flg === 'object' ? Object.keys(flg).length : flg || 0);
           document.getElementById('pFol').innerText = folCount;
           document.getElementById('pFollowing').innerText = flgCount;
-          document.getElementById('pTagDisplay').innerHTML = getTagHTML(userData.tag);
+          applyPremiumProfileUI();
           syncUserQuestTags(u.uid, userData, folCount, flgCount);
           ensureCurrentTagInAlltag(u.uid, userData);
           startUploadCooldownWatcher();
-
-          document.getElementById('pBadge').innerHTML = folCount >= 50 ? '<i class="fas fa-check-circle v-badge"></i>' : '';
 
         const profHeader = document.getElementById('profileHeader');
         if (profHeader) {
@@ -9269,16 +9298,6 @@
             pmRow.style.display = 'none';
             document.getElementById('profileMusicUrl').value = userData.profilemusic || '';
           }
-
-          // VIP status text
-          let statusText = 'Status: NONVIP';
-          if (userData.vip) statusText = 'Status: VIP PERMANENT ✨';
-          else if (userData.trialvip && userData.trialvip.expireAt && now < userData.trialvip.expireAt) {
-            statusText = 'Status: VIP TRIAL AKTIF 👑';
-            updateVipTrialBanner(userData.trialvip.expireAt);
-          }
-          const vs = document.getElementById('pVipStatus');
-          if (vs) vs.textContent = statusText;
 
           const emailParts = (u.email || '').split('@');
           const name = emailParts[0], domain = emailParts[1] || '';
@@ -12009,6 +12028,14 @@
             </div>
           </div>
           <div>
+            <div style="font-size:11px;color:#666;margin-bottom:6px;font-weight:700">PREMIUM MANAGEMENT</div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap">
+              <button class="swal2-confirm swal2-styled" style="background:#00ff88;color:#000;padding:8px 12px;font-size:12px;border:none;border-radius:8px;cursor:pointer" onclick="adAddExePremium('${uid}')">+ ExePremium</button>
+              <button class="swal2-confirm swal2-styled" style="background:#00d4ff;color:#000;padding:8px 12px;font-size:12px;border:none;border-radius:8px;cursor:pointer" onclick="adAddExePremiumPlus('${uid}')">+ ExePremium+</button>
+              <button class="swal2-confirm swal2-styled" style="background:#555;color:#fff;padding:8px 12px;font-size:12px;border:none;border-radius:8px;cursor:pointer" onclick="adRemoveExePremium('${uid}')">REMOVE PREMIUM</button>
+            </div>
+          </div>
+          <div>
             <div style="font-size:11px;color:#666;margin-bottom:6px;font-weight:700">FOLLOWERS</div>
             <div style="display:flex;gap:8px;flex-wrap:wrap">
               <button class="swal2-confirm swal2-styled" style="background:#2e7d32;color:#fff;padding:8px 12px;font-size:12px;border:none;border-radius:8px;cursor:pointer" onclick="adFakeDelta('${uid}',1)">+1</button>
@@ -12041,6 +12068,43 @@
           const expireAt = Date.now() + d * 24 * 60 * 60 * 1000;
           db.ref('users/' + uid + '/trialvip').set({ expireAt }).then(() => { addLog('TrialVIP ' + d + 'd: ' + uid); showToast('✅ VIP Trial ' + d + ' hari!'); adLoadData(); });
         });
+    }
+
+    function adAddExePremium(uid) {
+      Swal.fire({ title: 'Tambah ExePremium (hari)', input: 'number', inputLabel: 'Berapa hari?', inputAttributes: { min: 1, max: 365 }, background: '#0d0d15', color: '#fff' })
+        .then(r => {
+          const d = parseInt(r.value, 10); if (!d || d <= 0) return;
+          const endTime = Date.now() + d * 24 * 60 * 60 * 1000;
+          db.ref('users/' + uid + '/exepremium').set({ endTime, updatedAt: Date.now() }).then(() => {
+            addLog('ExePremium ' + d + 'd: ' + uid);
+            showToast('✅ ExePremium aktif selama ' + d + ' hari!');
+            adLoadData();
+          });
+        });
+    }
+
+    function adAddExePremiumPlus(uid) {
+      Swal.fire({ title: 'Tambah ExePremium Plus (hari)', input: 'number', inputLabel: 'Berapa hari?', inputAttributes: { min: 1, max: 365 }, background: '#0d0d15', color: '#fff' })
+        .then(r => {
+          const d = parseInt(r.value, 10); if (!d || d <= 0) return;
+          const endTime = Date.now() + d * 24 * 60 * 60 * 1000;
+          db.ref('users/' + uid + '/exepremiumplus').set({ endTime, updatedAt: Date.now() }).then(() => {
+            addLog('ExePremiumPlus ' + d + 'd: ' + uid);
+            showToast('✅ ExePremium Plus aktif selama ' + d + ' hari!');
+            adLoadData();
+          });
+        });
+    }
+
+    function adRemoveExePremium(uid) {
+      const updates = {};
+      updates['users/' + uid + '/exepremium'] = null;
+      updates['users/' + uid + '/exepremiumplus'] = null;
+      db.ref().update(updates).then(() => {
+        addLog('Remove Premium: ' + uid);
+        showToast('✅ Premium dihapus dari user');
+        adLoadData();
+      });
     }
 
     function adRemoveVip(uid) {
